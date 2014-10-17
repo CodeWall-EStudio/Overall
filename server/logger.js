@@ -1,4 +1,4 @@
-var config = require('../config');
+var config = require('./config');
 var Util = require('./util');
 
 var slice = Array.prototype.slice;

@@ -12,7 +12,7 @@ var dbUri = config.DB_URI;
 
 mongoose.connect(dbUri, function(err, res) {
     if (err) {
-        Logger.info('ERROR connecting to: ' + dbUri + '. ' + err);
+        Logger.error('ERROR connecting to: ' + dbUri + '. ' + err);
     } else {
         Logger.info('Succeeded connected to: ' + dbUri);
     }
@@ -23,37 +23,11 @@ mongoose.connect(dbUri, function(err, res) {
 // Schemas definitions
 //
 var models = {
-    OAuthAccessTokens: {
-        accessToken: String,
-        clientId: String,
-        userId: Schema.Types.ObjectId,
-        expires: Date
-    },
-    OAuthRefreshTokens: {
-        refreshToken: String,
-        clientId: String,
-        userId: Schema.Types.ObjectId,
-        expires: Date
-    },
-    OAuthClients: {
-        clientId: String,
-        clientSecret: String,
-        redirectUri: String,
-        allowGrantTypes: [ String ],
-        authType: String,
-        name: String
-    },
-    OAuthCodes: {
-        authCode: String,
-        clientId: String,
-        userId: Schema.Types.ObjectId,
-        expires: Date
-    },
-    Users: {
-        username: String,
-        password: String,
+    Teachers: {
+        id: String,
         nick: String,
-        status: Number
+        status: Number,
+        role: Number
     }
 };
 

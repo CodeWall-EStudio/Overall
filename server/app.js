@@ -5,8 +5,6 @@ var express = require('express');
 var MongoStore = require('connect-mongo')(express);
 var http = require('http');
 var path = require('path');
-var authServer = require('oauth2-server');
-var authModel = require('./models/auth');
 
 var config = require('./config');
 var routes = require('./routes');
