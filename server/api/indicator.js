@@ -7,10 +7,66 @@ var Util = require('../util');
 
 var XLS = require('xlsjs');
 
-exports.import = function(req, res){
-    debugger
-    var workbook = XLS.readFile('./' + req.files.thumbnail.path);
-    var data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+exports.import = function(req, res) {
+    var parameter = req.parameter;
+    var group = parameter.indicatorGroup;
+    var data;
+    try {
+        var workbook = XLS.readFile(req.files.file.path);
+        data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+    } catch (e) {
+        return res.json({
+            err: ERR.IMPORT_FAILURE,
+            msg: '导入失败',
+            detail: err
+        });
+    }
 
-    
+    if (!data.length) {
+        return res.json({
+            err: ERR.IMPORT_FAILURE,
+            msg: '没有数据要导入'
+        });
+    }
+
+    // 先清空原来的数据
+    db.Indicators.remove({
+        indicatorGroupId: group._id
+    }, function(err) {
+        if (err) {
+            return res.json({
+                err: ERR.DB_ERROR,
+                msg: '删除旧数据失败',
+                detail: err
+            });
+        }
+        var docs = [];
+        data.forEach(function(item) {
+            var doc = {
+                indicatorGroupId: group._id,
+                name: item['名称'],
+                order: item['序号'],
+                score: item['分值'],
+                gatherType: item['采集方式'] || 0,
+                desc: item['说明']
+            };
+            docs.push(doc);
+        });
+        db.Indicators.create(docs, function(err) {
+            if (err) {
+                return res.json({
+                    err: ERR.IMPORT_FAILURE,
+                    msg: '插入数据失败',
+                    detail: err
+                });
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                msg: '成功导入' + (arguments.length - 1) + '条数据'
+            });
+        });
+
+    });
+
+
 };

@@ -24,5 +24,15 @@ module.exports = {
         params: [
         
         ]
-    }
+    },
+    '/api/indicator/import': {
+        method: 'POST',
+        params: [
+            {
+                name: 'indicatorGroup',
+                type: 'IndicatorGroups',
+                required: true
+            }
+        ]
+    },
 };

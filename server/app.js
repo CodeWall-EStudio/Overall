@@ -5,6 +5,7 @@ var express = require('express');
 var MongoStore = require('connect-mongo')(express);
 var http = require('http');
 var path = require('path');
+var multer = require('multer');
 
 var config = require('./config');
 var routes = require('./routes');
@@ -26,6 +27,10 @@ app.enable('trust proxy');
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(multer({
+    dest: path.join(__dirname, '../uploads/')
+}));
+
 
 app.use(express.cookieParser());
 app.use(express.session({

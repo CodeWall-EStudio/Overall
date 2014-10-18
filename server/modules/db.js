@@ -36,6 +36,15 @@ var models = {
         order: { type: Number, unique: true },
         weight: Number,
         score: Number
+    },
+    // 指标
+    Indicators: {
+        indicatorGroupId: Schema.Types.ObjectId,
+        name: String,
+        order: { type: Number, unique: true },
+        score: Number,
+        gatherType: Number,
+        desc: String
     }
 };
 

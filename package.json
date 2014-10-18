@@ -12,6 +12,7 @@
     "jade": "1.7.0",
     "mongoose": "3.8.17",
     "underscore": "1.7.0",
-    "xlsjs": "0.7.1"
+    "xlsjs": "0.7.1",
+    "multer": "~0.1.6"
   }
 }
