@@ -67,6 +67,27 @@ exports.import = function(req, res) {
         });
 
     });
+};
 
+
+exports.list = function(req, res) {
+
+    var group = req.parameter.indicatorGroup;
+
+    db.Indicators.find({
+        indicatorGroupId: group._id
+    }, function(err, docs) {
+        if (err) {
+            return res.json({
+                err: ERR.DB_ERROR,
+                msg: '获取指标列表失败',
+                detail: err
+            });
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
 
 };

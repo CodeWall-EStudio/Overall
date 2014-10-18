@@ -35,4 +35,14 @@ module.exports = {
             }
         ]
     },
+    '/api/indicator/list': {
+        method: 'GET',
+        params: [
+            {
+                name: 'indicatorGroup',
+                type: 'IndicatorGroups',
+                required: true
+            }
+        ]
+    },
 };
