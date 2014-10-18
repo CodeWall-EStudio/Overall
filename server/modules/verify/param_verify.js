@@ -2,7 +2,7 @@ var EventProxy = require('eventproxy');
 var ObjectID = require('mongodb').ObjectID;
 var us = require('underscore');
 
-var db = require('../../models/db');
+var db = require('../../modules/db');
 var config = require('../../config');
 var ERR = require('../../errorcode');
 var Util = require('../../util');

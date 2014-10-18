@@ -1,7 +1,7 @@
 var querystring = require('querystring');
 
-var CAS = require('../models/cas');
-var db = require('../models/db');
+var CAS = require('../modules/cas');
+var db = require('../modules/db');
 
 var ERR = require('../errorcode');
 var Logger = require('../logger');

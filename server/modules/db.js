@@ -23,11 +23,19 @@ mongoose.connect(dbUri, function(err, res) {
 // Schemas definitions
 //
 var models = {
+    // 用户和教师
     Teachers: {
         id: String,
         nick: String,
         status: Number,
         role: Number
+    },
+    // 指标组
+    IndicatorGroups: {
+        name: String,
+        order: { type: Number, unique: true },
+        weight: Number,
+        score: Number
     }
 };
 

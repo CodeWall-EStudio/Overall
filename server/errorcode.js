@@ -4,6 +4,8 @@ module.exports = exports = {
     SERVER_ERROR: 100, // 服务器端错误
     NOT_SUPPORT: 101, // 不支持该Http方法, 如定义为POST的接口, 用GET方式调用了
 
+    DB_ERROR: 102, // DB 数据库错误
+
     MEDIA_SUCCESS: 200, // 新媒体的成功码是 200
 
     NOT_LOGIN: 1001, // 没有登录
@@ -33,7 +35,6 @@ module.exports = exports = {
 
     TIME_DUPLICATE: 1050, // 创建学年时, 时间交叉了
 
-    
 
     SUCCESS: 0
 };

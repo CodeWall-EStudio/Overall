@@ -3,14 +3,14 @@ var ObjectID = require('mongodb').ObjectID;
 var DBRef = require('mongodb').DBRef;
 var us = require('underscore');
 
-var db = require('../models/db');
+var db = require('../modules/db');
 var ERR = require('../util/errorcode.js');
 var Util = require('../util/util');
 var Logger = require('../util/logger');
 var config = require('../config');
 var AuthConfig = require('./auth_config');
-var mUser = require('../models/user');
-var mGroup = require('../models/group');
+var mUser = require('../modules/user');
+var mGroup = require('../modules/group');
 var routeUser = require('./user');
 
 

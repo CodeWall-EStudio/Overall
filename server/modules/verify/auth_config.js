@@ -5,16 +5,16 @@ var ObjectID = require('mongodb').ObjectID;
 var DBRef = require('mongodb').DBRef;
 var us = require('underscore');
 
-var db = require('../models/db');
+var db = require('../modules/db');
 var ERR = require('../errorcode.js');
 var U = require('../util');
 var config = require('../config');
 var Logger = require('../logger');
-var mUser = require('../models/user');
-var mGroup = require('../models/group');
-var mFolder = require('../models/folder');
-var mRes = require('../models/resource');
-var mMessage = require('../models/message');
+var mUser = require('../modules/user');
+var mGroup = require('../modules/group');
+var mFolder = require('../modules/folder');
+var mRes = require('../modules/resource');
+var mMessage = require('../modules/message');
 
 exports.AUTH_WHITE_LIST = [
     '/api/user/login',
