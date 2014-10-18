@@ -42,9 +42,14 @@ app.use(express.session({
     })
 }));
 
-
 app.use(app.router);
-app.use(express.static(path.join(__dirname, '../public'), {
+
+var staticDir = path.join(__dirname, '../public');
+if ('development' == app.get('env')) {
+    staticDir = path.join(__dirname, '../web');
+    Logger.debug('change web root to ' + staticDir);
+}
+app.use(express.static(staticDir, {
     maxAge: config.STATIC_FILE_EXPIRES
 }));
 

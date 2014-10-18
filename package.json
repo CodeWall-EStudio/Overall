@@ -6,11 +6,12 @@
     "start": "node server/app.js"
   },
   "dependencies": {
+    "connect-mongo": "0.4.1",
+    "eventproxy": "0.3.1",
     "express": "3.4.8",
-    "connect-mongo": "~0.4.1",
-    "underscore": "~1.7.0",
-    "mongoose": "~3.8.17",
-    "eventproxy": "~0.3.1",
-    "xlsjs": "~0.7.1"
+    "jade": "1.7.0",
+    "mongoose": "3.8.17",
+    "underscore": "1.7.0",
+    "xlsjs": "0.7.1"
   }
 }
