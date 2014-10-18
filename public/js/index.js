@@ -1,0 +1,1 @@
+angular.module("ov.services.grade",[]).service("gradeService",["$rootScope","$location","$http",function(){}]),angular.module("ov.controller.grade",["ov.constant"]).controller("gradeController",["$rootScope","$scope",function(o){o.gradeList=[],o.classList=[]}]),function(){angular.module("index",["ov.controllers.grade","ov.controllers.teachernav"])}();
