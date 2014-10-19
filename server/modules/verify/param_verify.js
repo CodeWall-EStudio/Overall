@@ -27,9 +27,9 @@ function findOne(coll, value, pcfg, callback) {
         if (!doc) {
             return callback('can\'t find ' + pcfg.name + ': ' + value, ERR.NOT_FOUND);
         }
-        if(doc.toJSON){
-            doc = doc.toJSON();
-        }
+        // if(doc.toJSON){
+        //     doc = doc.toJSON();
+        // }
         callback(null, doc);
     });
 }

@@ -45,4 +45,14 @@ module.exports = {
             }
         ]
     },
+    '/api/indicatorscore/import': {
+        method: 'POST',
+        params: [
+            {
+                name: 'indicatorGroup',
+                type: 'IndicatorGroups',
+                required: true
+            }
+        ]
+    },
 };

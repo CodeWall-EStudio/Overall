@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
+
 
 var config = require('../config');
 var Util = require('../util');
@@ -33,18 +35,36 @@ var models = {
     // 指标组
     IndicatorGroups: {
         name: String,
-        order: { type: Number, unique: true },
+        order: {
+            type: Number,
+            unique: true
+        },
         weight: Number,
-        score: Number
-    },
-    // 指标
-    Indicators: {
-        indicatorGroupId: Schema.Types.ObjectId,
-        name: String,
-        order: { type: Number, unique: true },
         score: Number,
-        gatherType: Number,
-        desc: String
+        indicators: [{ // 指标
+            name: String,
+            order: Number,
+            score: Number,
+            gatherType: Number,
+            desc: String
+        }]
+    },
+    // // 指标
+    // Indicators: {
+    //     indicatorGroupId: Schema.Types.ObjectId,
+    //     name: String,
+    //     order: Number,
+    //     score: Number,
+    //     gatherType: Number,
+    //     desc: String
+    // }
+    
+    // 指标打分结果
+    IndicatorScores: {
+        uid: String,
+        uname: String,
+        scores: [Number],
+        totalScore: Number
     }
 };
 
