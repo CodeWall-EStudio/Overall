@@ -198,15 +198,16 @@ li{
 
 
 .content-main{
-	padding-left:350px;
+	padding-left:450px;
 	position:relative;
+	min-height:500px;
 }
 .content-list,.content-userinfo,.content-assessment-info{
 	position:absolute;
 	top:0;
 	left:0;
 	padding:0 10px;
-	width:330px;
+	width:430px;
 	height: 100%;
 	overflow: hidden;
 	overflow-y: auto;	
@@ -428,4 +429,16 @@ button.close{
 	width:124px;
 	height:124px;
 	margin:0 auto;	
+}
+.import-btn{
+	opacity: 0;
+	position: absolute;
+	top:0;
+	right:0;
+	width:86px;
+	height:34px;
+}
+.model-footer{
+	text-align:right;
+	padding:20px;
 }

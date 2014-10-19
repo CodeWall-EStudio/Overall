@@ -1,2 +1,6 @@
 angular.module('ov.constant',[])
-	.constant('STATUS','status');
+	.constant('MSG.ERROR.CODE','msg.codeshow')
+	.constant('STATUS.GRADE.CHANGE','status.grade.change')
+	.constant('STATUS.GROUP.CHANGE','status.group.change')
+	.constant('STATUS.GROUP.LOAD','status.group.load')
+	.constant('STATUS.TABLE.CHANGE','status.table.change');
