@@ -1,6 +1,33 @@
 module.exports = {
-    // 学期
 
+    // 登录接口
+    '/api/login/': { //
+        method: 'GET',
+        params: []
+    },
+    '/api/login/student': { // 学生登录
+        method: 'POST',
+        params: [{
+            name: 'name',
+            required: true
+        },{
+            name: 'id',
+            required: true
+        }]
+    },
+
+    '/api/term/create': {
+        method: 'POST',
+        params: [{
+            name: 'name',
+            required: true
+        }, {
+            name: 'order',
+            type: 'number'
+        }]
+    },
+
+    // 学期
     '/api/term/create': {
         method: 'POST',
         params: [{
@@ -98,6 +125,16 @@ module.exports = {
         params: [{
             name: 'indicatorGroup',
             type: 'IndicatorGroups',
+            required: true
+        }]
+    },
+
+    // 学生的接口
+    '/api/student/import': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
             required: true
         }]
     },

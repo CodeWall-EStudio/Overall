@@ -1,6 +1,5 @@
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
-
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');
@@ -11,7 +10,8 @@ var XLS = require('xlsjs');
 exports.import = function(req, res) {
 
     var parameter = req.parameter;
-    var group = parameter.indicatorGroup;
+    var term = parameter.term;
+
     var data;
     try {
         var workbook = XLS.readFile(req.files.file.path);
@@ -31,53 +31,39 @@ exports.import = function(req, res) {
         });
     }
 
-    var indicatorNames = [];
-    var groupObj = group.toObject();
-    groupObj.indicators.forEach(function(doc) {
-        indicatorNames.push(doc.name);
-    });
 
+    var termId = term.toObject()._id;
     var docs = [];
     data.forEach(function(item) {
+
         var doc = {
-            uid: item['账号'],
-            uname: item['姓名'],
-            term: groupObj.term,
-            indicatorGroup: groupObj._id,
-            scores: [],
-            totalScore: item['总分'] || 0
+            term: termId,
+            grade: item['年级'],
+            'class': item['班级'],
+            name: item['姓名'],
+            id: item['教育Id']
         };
-
-        indicatorNames.forEach(function(name) {
-            doc.scores.push(item[name] || 0);
-        });
-
         docs.push(doc);
     });
 
-    db.IndicatorScores.remove({
-        indicatorGroup: groupObj._id
-    }, function(err) {
+
+    // 导入前先清空数据
+    db.Students.remove({
+        term: termId
+    }, function(err){
         if (err) {
             return dbHelper.handleError(err, res);
         }
-        db.IndicatorScores.create(docs, function(err) {
 
+        db.Students.create(docs, function(err) {
             if (err) {
                 return dbHelper.handleError(err, res);
             }
-            // Logger.debug(arguments);
+
             res.json({
                 err: ERR.SUCCESS,
-                msg: '成功导入' + (arguments.length - 1) + '条数据'
+                msg: '成功导入' + (docs.length) + '条数据'
             });
         });
     });
-
-
-
-};
-
-exports.search = function(req, res) {
-
 };

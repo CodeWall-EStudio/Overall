@@ -9,10 +9,12 @@ var XLS = require('xlsjs');
 
 exports.create = function(req, res) {
 
-    var name = req.parameter.name;
+    var parameter = req.parameter;
 
     db.Terms.create({
-        name: name,
+        name: parameter.name,
+        order: parameter.order || 0,
+
         status: 0 // 0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
     }, function(err, doc) {
         if (err) {
@@ -47,6 +49,10 @@ exports.modify = function(req, res) {
 
     if (parameter.name) {
         term.name = parameter.name;
+    }
+
+    if (order in parameter) {
+        term.order = parameter.order;
     }
 
     if (parameter.status) { // status 一旦经过设定值, 就不能再设置回 0

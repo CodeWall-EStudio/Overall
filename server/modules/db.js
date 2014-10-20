@@ -36,7 +36,17 @@ var models = {
     // 学期
     Terms: {
         name: String,
+        order: Number, // 排序用
         status: Number //0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
+    },
+
+    // 学生, 学生会跟学期关联
+    Students: {
+        term: ObjectId,
+        id: String, // cmis_id
+        name: String,
+        grade: Number, // 年级
+        'class': Number // 班级
     },
 
     // 指标组
@@ -63,7 +73,7 @@ var models = {
     //     gatherType: Number,
     //     desc: String
     // }
-    
+
     // 指标打分结果
     IndicatorScores: {
         uid: String,

@@ -65,6 +65,7 @@ exports.callback = function(req, res) {
         var user = {};
         user.id = data.loginName;
         user.skey = data.encodeKey;
+        user.role = 'teacher';
 
         req.session.user = user;
         res.cookie('skey', data.encodeKey);
@@ -78,7 +79,7 @@ exports.callback = function(req, res) {
                 });
             }
 
-            if(!data.success){
+            if (!data.success) {
                 return res.json({
                     err: ERR.LOGIN_FAILURE,
                     msg: data.resultMsg
@@ -121,7 +122,7 @@ exports.callback = function(req, res) {
                     return res.redirect(config.INDEX_PAGE);
 
                 });
-                
+
             }); // end of db.Teachers.findOne
 
         }); // end of decode
@@ -163,3 +164,61 @@ function decode(skey, callback) {
         }
     });
 }
+
+exports.student = function(req, res) {
+    var parameter = req.parameter;
+
+    db.Students.findOne({
+        name: parameter.name,
+        id: parameter.id
+    }, function(err, student) {
+        if (err) {
+            return res.json({
+                err: ERR.LOGIN_FAILURE,
+                msg: err
+            });
+        }
+        if (!student) {
+            return res.json({
+                err: ERR.ACCOUNT_ERROR,
+                msg: '账号或密码错误'
+            });
+        }
+        var studentObj = student.toObject();
+        db.Terms.findById(studentObj.term, function(err, term) {
+            if (err) {
+                return res.json({
+                    err: ERR.LOGIN_FAILURE,
+                    msg: err
+                });
+            }
+            if(term.status !== 1){
+                return res.json({
+                    err: ERR.ACCOUNT_CLOSE,
+                    msg: '没有激活的学期'
+                });
+            }
+            var user = studentObj;
+            var skey = Util.md5(user.name + ':' + user.id);
+            
+            user.role = 'student';
+            user.skey = skey;
+
+            req.session.user = user;
+            res.cookie('skey', skey);
+
+            res.json({
+                err: ERR.SUCCESS,
+                result: {
+                    // student: {
+                        name: studentObj.name,
+                        grade: studentObj.grade,
+                        'class': studentObj['class']
+                    // }
+                }
+            });
+        });
+    });
+
+
+};
