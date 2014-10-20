@@ -23,6 +23,9 @@ angular.module('ov.services.quota',[
 					console.log('拉取指标组成功！',data.result);
 					if(data.err === 0){
 						$root.quotaGroupList = data.result;
+						_.each(data.result,function(item,idx){
+							$root.quotaGroupMap[item._id]  = item;
+						});
 						setDefQuotaGroup();
 						$root.$emit(GROUP_LOAD);
 					}else{
@@ -59,7 +62,7 @@ angular.module('ov.services.quota',[
 				});			
 		}		
 
-		//拉指标列表
+		//拉指标列表 作废。直接改成成指标组里面读了。
 		var getQuotaList = function(param,success,error){
 			var ts = new Date().getTime();
 			$http.get('/api/indicator/list?_='+ts+'&indicatorGroup='+param.indicatorGroup,null,{responseType:'json'})
@@ -99,12 +102,48 @@ angular.module('ov.services.quota',[
 			xhr.open("POST", url);
 			xhr.send(param);			
 		}
+		//导入指标分数
+		var importQuotaScore = function(param,success,error){
+			var ts = new Date().getTime();
+			var url = '/api/indicatorscore/import';
+			var xhr = new XMLHttpRequest();
+			xhr.addEventListener('load',function(e){
+				try{
+					var json = JSON.parse(xhr.responseText);
+					console.log(json);
+				}catch(e){
+
+				}
+			});
+			xhr.addEventListener('error',function(e){
+				console.log('error',e);
+			});
+			xhr.open("POST", url);
+			xhr.send(param);			
+		}
+
+		//指标组排序函数
+		var orderQuotaGroup = function(id,type,order){
+			var list = $root.quotaGroupMap[id].indicators;
+			var sort = _.sortBy(list,function(item){
+				if(order){
+					console.log('-',item,type);
+					return -item[type];
+				}else{
+					console.log('+',item,type);
+					return +item[type];
+				}
+			});
+			$root.quotaGroupMap[id].indicators = sort;
+		}
 
 	return {
 		setDefQuotaGroup : setDefQuotaGroup,
 		getQuotaGroup : getQuotaGroup,
 		createQuotaGroup : createQuotaGroup,
 		getQuotaList : getQuotaList,
-		importQuota : importQuota
+		importQuota : importQuota,
+		importQuotaScore : importQuotaScore,
+		orderQuotaGroup : orderQuotaGroup
 	}
 }]);

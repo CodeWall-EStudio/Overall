@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1413728359226">
+	<link rel="stylesheet" href="css/main.css?t=1413821295047">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -65,14 +65,14 @@
  	<div class="content">
  		<div class="content-main"  ng-controller="quotaController">
  			<div class="content-list">
- 				<table class="table table-striped table-hover" ng-model='studentList'>
+ 				<table class="table table-striped table-hover" ng-model='quotaGroupMap[nowQuotaGroup._id].indicators'>
  					<tr>
- 						<th ng-click="orderStudent('name')" width="60">序号<span class="caret" ng-class="{uaret:order['name']}"></span></th>
- 						<th ng-click="orderStudent('sex')" width="60">指标名称<span class="caret" ng-class="{uaret:order['sex']}"></span></th>
- 						<th ng-click="orderStudent('grade')" width="60">分值<span class="caret" ng-class="{uaret:order['grade']}"></span></th>
- 						<th ng-click="orderStudent('class')" width="60">采集方式<span class="caret" ng-class="{uaret:order['class']}"></span></th>
+ 						<th ng-click="orderQuotaGroup('order')" width="60">序号<span class="caret" ng-class="{uaret:quotaOrder['order']}"></span></th>
+ 						<th ng-click="orderQuotaGroup('name')" width="60">指标名称<span class="caret" ng-class="{uaret:quotaOrder['name']}"></span></th>
+ 						<th ng-click="orderQuotaGroup('score')" width="60">分值<span class="caret" ng-class="{uaret:quotaOrder['score']}"></span></th>
+ 						<th ng-click="orderQuotaGroup('gatherType')" width="60">采集方式<span class="caret" ng-class="{uaret:quotaOrder['gatherType']}"></span></th>
  					</tr>
- 					<tr ng-repeat="item in quotaList">
+ 					<tr ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">
  						<td>{{item.order}}</td>
  						<td>{{item.name}}</td>
  						<td>{{item.score}}班</td>
@@ -130,6 +130,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1413728359226"></script>
+	<script src="js/manage.js?t=1413821295047"></script>
 </body>
 </html>
