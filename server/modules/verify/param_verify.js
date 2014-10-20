@@ -224,8 +224,10 @@ exports.checkParams = function(req, res, next) {
     }
 
     ep.after('verifyParamDone', cfgParams.length, function() {
+
+        Logger.debug('[checkParams] verifyParamDone.', 'path: ', path, ', method: ', method, ', parameter: ', parameter);
+
         next();
-        Logger.debug('[checkParams] verifyParamDone.', 'path: ', path, ', method: ', method);
     });
 
     cfgParams.forEach(function(pcfg) {

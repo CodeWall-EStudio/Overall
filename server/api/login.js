@@ -2,7 +2,7 @@ var querystring = require('querystring');
 
 var CAS = require('../modules/cas');
 var db = require('../modules/db');
-
+var dbHelper = require('../modules/db_helper');
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');

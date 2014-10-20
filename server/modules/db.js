@@ -32,6 +32,13 @@ var models = {
         status: Number,
         role: Number
     },
+
+    // 学期
+    Terms: {
+        name: String,
+        status: Number //0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
+    },
+
     // 指标组
     IndicatorGroups: {
         name: String,

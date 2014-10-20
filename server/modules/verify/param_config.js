@@ -1,5 +1,43 @@
 module.exports = {
+    // 学期
 
+    '/api/term/create': {
+        method: 'POST',
+        params: [{
+            name: 'name',
+            required: true
+        }]
+    },
+
+    '/api/term/list': {
+        method: 'GET',
+        params: []
+    },
+
+    '/api/term/modify': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        },{
+            name: 'name'
+        },{
+            name: 'status',
+            type: 'number'
+        }]
+    },
+
+    '/api/term/delete': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
+
+    // 指标组
     '/api/indicatorgroup/create': {
         method: 'POST',
         params: [{

@@ -1,4 +1,5 @@
 var db = require('../modules/db');
+var dbHelper = require('../modules/db_helper');
 
 var ERR = require('../errorcode');
 var Logger = require('../logger');
@@ -7,8 +8,8 @@ var Util = require('../util');
 
 var XLS = require('xlsjs');
 
-exports.import = function(req, res){
-    
+exports.import = function(req, res) {
+
     var parameter = req.parameter;
     var group = parameter.indicatorGroup;
     var data;
@@ -31,7 +32,7 @@ exports.import = function(req, res){
     }
 
     var indicatorNames = [];
-    group.toObject().indicators.forEach(function(doc){
+    group.toObject().indicators.forEach(function(doc) {
         indicatorNames.push(doc.name);
     });
 
@@ -44,27 +45,28 @@ exports.import = function(req, res){
             totalScore: item['总分'] || 0
         };
 
-        indicatorNames.forEach(function(name){
-            doc.scores.push(item[name] || 0 );
+        indicatorNames.forEach(function(name) {
+            doc.scores.push(item[name] || 0);
         });
 
         docs.push(doc);
     });
 
 
-    db.IndicatorScores.create(docs, function(err){
+    db.IndicatorScores.create(docs, function(err) {
 
         if (err) {
-            return res.json({
-                err: ERR.IMPORT_FAILURE,
-                msg: '插入数据失败',
-                detail: err
-            });
+            return dbHelper.handleError(err, res);
         }
+        // Logger.debug(arguments);
         res.json({
             err: ERR.SUCCESS,
             msg: '成功导入' + (arguments.length - 1) + '条数据'
         });
     });
+
+};
+
+exports.search = function(req, res){
 
 };

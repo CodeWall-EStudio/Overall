@@ -1,5 +1,5 @@
 var db = require('../modules/db');
-
+var dbHelper = require('../modules/db_helper');
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');
@@ -55,11 +55,7 @@ exports.import = function(req, res) {
     group.indicators = docs;
     group.save(function(err) {
         if (err) {
-            return res.json({
-                err: ERR.IMPORT_FAILURE,
-                msg: '插入数据失败',
-                detail: err
-            });
+            return dbHelper.handleError(err, res);
         }
         res.json({
             err: ERR.SUCCESS,
