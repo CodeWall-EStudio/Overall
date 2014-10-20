@@ -32,7 +32,8 @@ exports.import = function(req, res) {
     }
 
     var indicatorNames = [];
-    group.toObject().indicators.forEach(function(doc) {
+    var groupObj = group.toObject();
+    groupObj.indicators.forEach(function(doc) {
         indicatorNames.push(doc.name);
     });
 
@@ -41,6 +42,8 @@ exports.import = function(req, res) {
         var doc = {
             uid: item['账号'],
             uname: item['姓名'],
+            term: groupObj.term,
+            indicatorGroup: groupObj._id,
             scores: [],
             totalScore: item['总分'] || 0
         };

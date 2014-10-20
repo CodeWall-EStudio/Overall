@@ -41,11 +41,9 @@ var models = {
 
     // 指标组
     IndicatorGroups: {
+        term: ObjectId,
         name: String,
-        order: {
-            type: Number,
-            unique: true
-        },
+        order: Number,
         weight: Number,
         score: Number,
         indicators: [{ // 指标
@@ -70,6 +68,8 @@ var models = {
     IndicatorScores: {
         uid: String,
         uname: String,
+        term: ObjectId, // 所属学年
+        indicatorGroup: ObjectId, // 所属指标组
         scores: [Number],
         totalScore: Number
     }

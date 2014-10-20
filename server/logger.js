@@ -11,6 +11,7 @@ exports.info = function(){
 };
 
 exports.debug = function(){
+
     if(config.DEBUG){
         var args = slice.call(arguments);
         args.unshift('[debug]>>>', Util.formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss'),'\n');

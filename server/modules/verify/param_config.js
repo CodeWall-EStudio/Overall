@@ -6,6 +6,9 @@ module.exports = {
         params: [{
             name: 'name',
             required: true
+        }, {
+            name: 'order',
+            type: 'number'
         }]
     },
 
@@ -20,10 +23,13 @@ module.exports = {
             name: 'term',
             type: 'Terms',
             required: true
-        },{
+        }, {
             name: 'name'
-        },{
+        }, {
             name: 'status',
+            type: 'number'
+        }, {
+            name: 'order',
             type: 'number'
         }]
     },
@@ -41,6 +47,10 @@ module.exports = {
     '/api/indicatorgroup/create': {
         method: 'POST',
         params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
             name: 'name',
             required: true
         }, {
@@ -59,38 +69,36 @@ module.exports = {
     },
     '/api/indicatorgroup/list': {
         method: 'GET',
-        params: [
-        
-        ]
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
     },
+
+    // 指标接口
     '/api/indicator/import': {
         method: 'POST',
-        params: [
-            {
-                name: 'indicatorGroup',
-                type: 'IndicatorGroups',
-                required: true
-            }
-        ]
+        params: [{
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups',
+            required: true
+        }]
     },
     '/api/indicator/list': {
         method: 'GET',
-        params: [
-            {
-                name: 'indicatorGroup',
-                type: 'IndicatorGroups',
-                required: true
-            }
-        ]
+        params: [{
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups',
+            required: true
+        }]
     },
     '/api/indicatorscore/import': {
         method: 'POST',
-        params: [
-            {
-                name: 'indicatorGroup',
-                type: 'IndicatorGroups',
-                required: true
-            }
-        ]
+        params: [{
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups',
+            required: true
+        }]
     },
 };

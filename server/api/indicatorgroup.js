@@ -10,8 +10,15 @@ var Util = require('../util');
 exports.create = function(req, res) {
     var parameter = req.parameter;
 
+    var term = parameter.term;
 
-    db.IndicatorGroups.create(parameter, function(err, doc) {
+    db.IndicatorGroups.create({
+        name: parameter.name,
+        order: parameter.order,
+        weight: parameter.weight,
+        score: parameter.score,
+        term: term.toObject()._id
+    }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
@@ -25,7 +32,13 @@ exports.create = function(req, res) {
 
 exports.list = function(req, res) {
 
-    db.IndicatorGroups.find({}, function(err, docs) {
+    var parameter = req.parameter;
+
+    var term = parameter.term;
+
+    db.IndicatorGroups.find({
+        term: term.toObject()._id
+    }, function(err, docs) {
         if (err) {
             return dbHelper.handleError(err, res);
         }

@@ -18,7 +18,13 @@ var app = express();
 
 
 // all environments
+
+if (!config.DEBUG) {
+    app.set('env', 'production');
+}
+
 app.set('port', process.env.PORT || config.PORT || 3000);
+
 
 app.use(express.favicon());
 app.use(express.logger('dev'));
@@ -49,20 +55,19 @@ app.use(express.session({
 
 app.use(app.router);
 
+
 var staticDir = path.join(__dirname, '../public');
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
+
     staticDir = path.join(__dirname, '../web');
-    Logger.debug('change web root to ' + staticDir);
+
+    app.use(express.errorHandler());
+
 }
+
 app.use(express.static(staticDir, {
     maxAge: config.STATIC_FILE_EXPIRES
 }));
-
-// development only
-if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-}
-
 
 
 /////////// API 相关 ///////////////
