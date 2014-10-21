@@ -88,26 +88,26 @@ exports.callback = function(req, res) {
             data = data.userInfo;
             // Logger.debug(data);
 
-            user.nick = data.name;
+            user.name = data.name;
             user.open_id = data.id;
 
-            db.Teachers.findOne({
+            db.Users.findOne({
                 id: user.id
-            }, function(err, teacher) {
+            }, function(err, doc) {
                 if (err) {
                     return res.json({
                         err: ERR.LOGIN_FAILURE,
                         msg: err
                     });
                 }
-                if (teacher) {
-                    user.status = teacher.status;
-                    user.role = teacher.role;
-                    return res.redirect(config.INDEX_PAGE);
+                if (doc) {
+                    user.status = doc.status;
+                    user.role = doc.role;
+                } else {
+                    user.status = 0;
+                    user.role = 0;
                 }
-                user.status = 0;
-                user.role = 0;
-                db.Teachers.update({
+                db.Users.update({
                     id: user.id
                 }, user, {
                     upsert: true,
@@ -123,7 +123,7 @@ exports.callback = function(req, res) {
 
                 });
 
-            }); // end of db.Teachers.findOne
+            }); // end of db.Users.findOne
 
         }); // end of decode
 
@@ -192,7 +192,7 @@ exports.student = function(req, res) {
                     msg: err
                 });
             }
-            if(term.status !== 1){
+            if (term.status !== 1) {
                 return res.json({
                     err: ERR.ACCOUNT_CLOSE,
                     msg: '没有激活的学期'
@@ -200,7 +200,7 @@ exports.student = function(req, res) {
             }
             var user = studentObj;
             var skey = Util.md5(user.name + ':' + user.id);
-            
+
             user.role = 'student';
             user.skey = skey;
 
@@ -211,9 +211,9 @@ exports.student = function(req, res) {
                 err: ERR.SUCCESS,
                 result: {
                     // student: {
-                        name: studentObj.name,
-                        grade: studentObj.grade,
-                        'class': studentObj['class']
+                    name: studentObj.name,
+                    grade: studentObj.grade,
+                    'class': studentObj['class']
                     // }
                 }
             });
