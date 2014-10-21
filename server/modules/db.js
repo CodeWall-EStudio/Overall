@@ -103,7 +103,21 @@ var models = {
         indicatorGroup: ObjectId, // 所属指标组
         scores: [Number],
         totalScore: Number
+    },
+
+    // 评价问卷
+    Questionnaires: {
+        name: String,
+        order: Number,
+        term: ObjectId, // 所属学年
+        questions: [{ // 问卷的问题列表
+            order: Number,
+            name: String,
+            score: Number,
+            desc: String
+        }]
     }
+
 };
 
 for (var i in models) {

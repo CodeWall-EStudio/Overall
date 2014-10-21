@@ -165,4 +165,38 @@ module.exports = {
             required: true
         }]
     },
+
+    // 问卷接口
+    '/api/questionnaire/import': {
+        method: 'POST',
+        params: [{
+            name: 'questionnaire',
+            type: 'Questionnaires',
+            required: true
+        }]
+    },
+
+    '/api/questionnaire/create': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'name',
+            required: true
+        }, {
+            name: 'order',
+            type: 'number',
+            required: true
+        }]
+    },
+    '/api/questionnaire/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
 };
