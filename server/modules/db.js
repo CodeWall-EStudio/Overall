@@ -59,6 +59,14 @@ var models = {
             'class': Number // 班级
         }]
     },
+    // 教师分组
+    TeacherGroups: {
+        term: ObjectId,
+        order: Number, // 分组代码, 排序用
+        name: String,
+        teacherId: String, // 教师ID
+        teacherName: String
+    },
 
     // 指标组
     IndicatorGroups: {
@@ -87,8 +95,8 @@ var models = {
 
     // 指标打分结果
     IndicatorScores: {
-        uid: String,
-        uname: String,
+        teacherId: String,
+        teacherName: String,
         term: ObjectId, // 所属学年
         indicatorGroup: ObjectId, // 所属指标组
         scores: [Number],

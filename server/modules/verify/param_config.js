@@ -147,4 +147,13 @@ module.exports = {
             required: true
         }]
     },
+
+    '/api/teachergroup/import': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
 };
