@@ -138,4 +138,31 @@ module.exports = {
             required: true
         }]
     },
+    // 教师接口
+    '/api/teacher/import': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
+
+    '/api/teachergroup/import': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
+
+    '/api/teachergroup/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
 };

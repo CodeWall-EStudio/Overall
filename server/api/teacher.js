@@ -1,6 +1,5 @@
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
-
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');
@@ -11,7 +10,8 @@ var XLS = require('xlsjs');
 exports.import = function(req, res) {
 
     var parameter = req.parameter;
-    var group = parameter.indicatorGroup;
+    var term = parameter.term;
+
     var data;
     try {
         var workbook = XLS.readFile(req.files.file.path);
@@ -31,53 +31,47 @@ exports.import = function(req, res) {
         });
     }
 
-    var indicatorNames = [];
-    var groupObj = group.toObject();
-    groupObj.indicators.forEach(function(doc) {
-        indicatorNames.push(doc.name);
-    });
 
+    var termId = term.toObject()._id;
     var docs = [];
+    var map = {};
     data.forEach(function(item) {
-        var doc = {
-            teacherId: item['教师用户名'],
-            teacherName: item['教师姓名'],
-            term: groupObj.term,
-            indicatorGroup: groupObj._id,
-            scores: [],
-            totalScore: item['总分'] || 0
-        };
-
-        indicatorNames.forEach(function(name) {
-            doc.scores.push(item[name] || 0);
+        var id = item['教师用户名'];
+        var doc = map[id];
+        if (!doc) {
+            doc = map[id] = {
+                term: termId,
+                id: id,
+                name: item['教师姓名'],
+                classes: []
+            };
+            docs.push(doc);
+        }
+        doc.classes.push({
+            grade: item['年级'],
+            'class': item['班级']
         });
-
-        docs.push(doc);
+        
     });
 
-    db.IndicatorScores.remove({
-        indicatorGroup: groupObj._id
+
+    // 导入前先清空数据
+    db.Teachers.remove({
+        term: termId
     }, function(err) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
-        db.IndicatorScores.create(docs, function(err) {
 
+        db.Teachers.create(docs, function(err) {
             if (err) {
                 return dbHelper.handleError(err, res);
             }
-            // Logger.debug(arguments);
+
             res.json({
                 err: ERR.SUCCESS,
-                msg: '成功导入' + (arguments.length - 1) + '条数据'
+                msg: '成功导入' + (docs.length) + '条数据'
             });
         });
     });
-
-
-
-};
-
-exports.search = function(req, res) {
-
 };

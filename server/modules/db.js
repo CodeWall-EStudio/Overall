@@ -25,10 +25,10 @@ mongoose.connect(dbUri, function(err, res) {
 // Schemas definitions
 //
 var models = {
-    // 用户和教师
-    Teachers: {
+    // 系统的用户
+    Users: {
         id: String,
-        nick: String,
+        name: String,
         status: Number,
         role: Number
     },
@@ -47,6 +47,27 @@ var models = {
         name: String,
         grade: Number, // 年级
         'class': Number // 班级
+    },
+
+    // 教师
+    Teachers: {
+        term: ObjectId,
+        id: String,
+        name: String,
+        classes: [{ // 教师所属的班级
+            grade: Number, // 年级
+            'class': Number // 班级
+        }]
+    },
+    // 教师分组
+    TeacherGroups: {
+        term: ObjectId,
+        id: Number, // 分组代码
+        name: String,
+        teachers: [{
+            id: String,
+            name: String
+        }]
     },
 
     // 指标组
@@ -76,8 +97,8 @@ var models = {
 
     // 指标打分结果
     IndicatorScores: {
-        uid: String,
-        uname: String,
+        teacherId: String,
+        teacherName: String,
         term: ObjectId, // 所属学年
         indicatorGroup: ObjectId, // 所属指标组
         scores: [Number],
