@@ -442,3 +442,17 @@ button.close{
 	text-align:right;
 	padding:20px;
 }
+
+.top-nav .dropdown-menu {
+	width: 350px;
+}
+
+.top-nav .dropdown-menu a {
+	background: #fff;
+	color: #000;
+	display: inline-block;
+}
+.top-nav .dropdown-menu a.act {
+	padding: 3px;
+	text-decoration: underline;
+}

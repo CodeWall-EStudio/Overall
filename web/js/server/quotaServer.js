@@ -16,9 +16,9 @@ angular.module('ov.services.quota',[
 		/*ｈｔｔｐ　请求*/
 		//拉指标组
 		var getQuotaGroup = function(param,success,error){
-			var url = '/api/indicatorgroup/list';
+			var url = '/api/indicatorgroup/list?term='+$root.nowTerm._id;
 			var ts = new Date().getTime();
-			$http.get(url+'?t='+ts,null,{responseType:'json'})
+			$http.get(url+'&t='+ts,null,{responseType:'json'})
 				.success(function(data,status){
 					console.log('拉取指标组成功！',data.result);
 					if(data.err === 0){

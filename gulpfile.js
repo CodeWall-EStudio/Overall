@@ -50,10 +50,12 @@ var mangaejs = [
 	src+'/js/constant/contant.js',
 	src+'/js/server/importServer.js',
 	src+'/js/server/quotaServer.js',
+                src+'/js/server/studentServer.js',
 	src+'/js/server/utilServer.js',
 	src+'/js/controller/navController.js',
 	src+'/js/controller/toolbarController.js',
 	src+'/js/controller/quotaController.js',
+                src+'/js/controller/studentController.js',
 	src+'/js/controller/manageController.js',
 	src+'/js/controller/msgController.js',
 	src+'/js/manage.js'

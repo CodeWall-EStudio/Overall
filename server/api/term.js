@@ -50,11 +50,9 @@ exports.modify = function(req, res) {
     if (parameter.name) {
         term.name = parameter.name;
     }
-
-    if (order in parameter) {
+    if (parameter.order) {
         term.order = parameter.order;
     }
-
     if (parameter.status) { // status 一旦经过设定值, 就不能再设置回 0
         term.status = parameter.status;
     }

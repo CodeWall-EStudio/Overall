@@ -3,16 +3,14 @@ angular.module('ov.controllers.import',[
 		'ov.constant',
 		'ov.services.quota'
 	]).
-	controller('quotaController',['$rootScope','$scope','quotaService','STATUS.GROUP.LOAD',function($root,$scope,Quota,GROUP_LOAD){
+	controller('quotaController',['$rootScope','$scope','quotaService','STATUS.TERM.LOAD',function($root,$scope,Quota,TERM_LOAD){
 		console.log('load quotaController');
 		/*初始化数据，先拉指标组*/
 		$root.quotaGroupList = [];
 		$root.quotaGroupMap = {};
 		$root.nowQuotaGroup = {};
 		$root.quotaList = [];
-		$root.newQuotaGroup = {
-			name : 'test'
-		};
+		$root.newQuotaGroup = {};
 
 		//指标排序
 		$scope.quotaOrder = {
@@ -28,6 +26,7 @@ angular.module('ov.controllers.import',[
 		$scope.orderQuotaGroup = function(name){
 			$scope.quotaOrder[name]  = !$scope.quotaOrder[name] ;
 			Quota.orderQuotaGroup($root.nowQuotaGroup._id,name,$scope.quotaOrder[name]);
+			$('#newQuotaGroup').modal('hide');
 		}
 
 		//指标分数排序
@@ -82,14 +81,17 @@ angular.module('ov.controllers.import',[
 		}
 		//保持新建的指标组
 		$root.createNewQuotaGroup = function(){
+			$root.newQuotaGroup.term = $root.nowTerm._id;
 			Quota.createQuotaGroup();
 		}	
 
-		Quota.getQuotaGroup();
+
+		
 
 		/*观察者*/
-		//指标分组已经加载成功，或者已经改变，拉具体的指标
-		$root.$on(GROUP_LOAD,function(e,d){
+		//学期已经加载成功，或者已经改变，拉具体的指标
+		$root.$on(TERM_LOAD,function(e,d){
+			Quota.getQuotaGroup();
 			// var param = {
 			// 	indicatorGroup : $root.nowQuotaGroup._id
 			// }
