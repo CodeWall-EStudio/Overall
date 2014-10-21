@@ -62,10 +62,12 @@ var models = {
     // 教师分组
     TeacherGroups: {
         term: ObjectId,
-        order: Number, // 分组代码, 排序用
+        id: Number, // 分组代码
         name: String,
-        teacherId: String, // 教师ID
-        teacherName: String
+        teachers: [{
+            id: String,
+            name: String
+        }]
     },
 
     // 指标组

@@ -41,6 +41,7 @@ exports.import = function(req, res) {
         if (!doc) {
             doc = map[id] = {
                 term: termId,
+                id: id,
                 name: item['教师姓名'],
                 classes: []
             };

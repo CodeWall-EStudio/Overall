@@ -156,4 +156,13 @@ module.exports = {
             required: true
         }]
     },
+
+    '/api/teachergroup/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    },
 };

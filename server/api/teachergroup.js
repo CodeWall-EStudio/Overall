@@ -34,18 +34,25 @@ exports.import = function(req, res) {
 
     var termId = term.toObject()._id;
     var docs = [];
+    var map = {};
     data.forEach(function(item) {
-
-        var doc = {
-            term: termId,
-            teacherId: item['教师用户名'],
-            teacherName: item['教师姓名'],
-            order: item['分组代码'],
-            name: item['分组名称']
-        };
-        docs.push(doc);
+        var id = item['分组代码'];
+        var doc = map[id];
+        if (!doc) {
+            doc = map[id] = {
+                term: termId,
+                id: id,
+                name: item['分组名称'],
+                teachers: []
+            };
+            docs.push(doc);
+        }
+        doc.teachers.push({
+            id: item['教师用户名'],
+            name: item['教师姓名'],
+        });
+        
     });
-
 
     // 导入前先清空数据
     db.TeacherGroups.remove({
@@ -66,4 +73,26 @@ exports.import = function(req, res) {
             });
         });
     });
+};
+
+
+
+exports.list = function(req, res) {
+
+    var parameter = req.parameter;
+
+    var term = parameter.term;
+
+    db.TeacherGroups.find({
+        term: term.toObject()._id
+    }, function(err, docs) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
+
 };
