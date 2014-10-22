@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1413912856722">
+	<link rel="stylesheet" href="css/main.css?t=1413998941380">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -62,18 +62,89 @@
  		</div>
  	</div>	
  	<div class="toolbar"  ng-controller="toolbarController">
- 		<!--导入学生-->
+ 		<!--导入问卷-->
+ 		<div class="toolbar toolbar-import hide">
+ 			 <div class="toolbar-left">
+ 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowQuestion.name}}<span class="caret"></span></a>
+ 				<ul class="dropdown-menu" role="menu">
+ 					<li ng-repeat="item in questionList" ng-model="questionList">
+ 						<a ng-click="changeQuestion(item._id)">{{item.name}}</a>
+ 					</li>
+ 				</ul>  			 
+ 			 	<button type="button" class="btn btn-primary" ng-click="createQuestion()">创建问卷</button>
+			 	<div class="modal fade" id="newQuestion" tabindex="-1" role="dialog" aria-hidden="true">
+			 		<div class="modal-dialog">	 		
+			 			<div class="modal-content row">
+			 				<div class="modal-header">
+			 					<h4 class="modal-title">创建问卷</h4>
+			 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			 				</div>
+			 				<div class="modal-body">
+			 				<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="quotaGroupName" class="col-sm-3 control-label">问卷名称{{questionName}}</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="questionName" placeholder="请输入问卷名称" />
+									</div>
+								</div>	
+								<div class="form-group">
+									<label for="quotaGroupName" class="col-sm-3 control-label">问卷序号</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="questionOrder" placeholder="请输入问卷序号"  />
+									</div>
+								</div>									
+			 				</div>
+							<div class="model-footer">
+								<button type="button" class="btn btn-primary" ng-click="createNewQuestion()">创建</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							</div>	
+						</form>		 				
+			 			</div>
+		 			
+			 		</div>
+			 	</div> 	 			 	
+ 			</div>
+ 			<div class="toolbar-right">
+ 				<a>下载数据配置模板</a>
+ 				<button class="btn btn-default" >导入问卷数据</button>
+ 				<input type="file" id="importQuestion" class="import-btn" />
+ 			</div>
+ 		</div> 
+
+ 		<!--导入老师-->
  		<div class="toolbar toolbar-import">
+ 			 <div class="toolbar-left">
+ 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowTeacherGroup.name}}<span class="caret"></span></a>
+ 				<ul class="dropdown-menu" role="menu">
+ 					<li ng-repeat="item in teacherGroup" ng-model="teacherGroup">
+ 						<a ng-click="changeTeacherGroup(item._id)">{{item.name}}</a>
+ 					</li>
+ 				</ul> 
+ 			</div>
+ 			<div class="toolbar-right">
+ 				<a>下载数据配置模板</a>
+ 				<button class="btn btn-default" >导入老师分组数据</button>
+ 				<input type="file" id="importTeacherGroup" class="import-btn" />
+ 			</div> 			
+ 			<div class="toolbar-right">
+ 				<a>下载数据配置模板</a>
+ 				<button class="btn btn-default" >导入老师数据</button>
+ 				<input type="file" id="importTeacher" class="import-btn" />
+ 			</div>
+ 		</div>  	
+
+ 		<!--导入学生-->
+ 		<div class="toolbar toolbar-import hide">
  			 <div class="toolbar-left">
  			</div>
  			<div class="toolbar-right">
  				<a>下载数据配置模板</a>
- 				<button class="btn btn-default" >导入数据</button>
+ 				<button class="btn btn-default" >导入学生数据</button>
  				<input type="file" id="importStudent" class="import-btn" />
  			</div>
  		</div>  	
  		<!-- 导入工具条-->
- 		<div class="toolbar toolbar-import">
+ 		<div class="toolbar toolbar-import hide">
  			 <div class="toolbar-left">
 				选择指标组：
 				<div class="select-dom dropdown" >
@@ -98,10 +169,54 @@
  	</div>
 
  	<div class="content">
+ 		<div class="content-report hide" ng-controller="questionController">
+ 			<table class="table table-striped table-hover" ng-model='quotaGroupMap[nowQuotaGroup._id].indicators'>
+ 				<tr>
+					<th ng-click="orderQuestion('order')" width="60">序号</th>
+					<th ng-click="orderQuestion('name')" width="60">名称</th>
+					<th ng-click="orderQuestion('score')" width="60">分值</th>
+					<th ng-click="orderQuestion('gatherType')" width="60">说明</th>
+ 				</tr>
+ 				<tr ng-repeat= "item in nowQuestion.questions">
+ 					<td>{{item.order}}</td>
+ 					<td>{{item.name}}</td>
+ 					<td>{{item.score}}</td>
+ 					<td>{{item.desc}}</td>
+ 				</tr>
+ 			</table>
+ 		</div>
+
+ 		<div class="content-main" ng-controller="teacherController">
+ 			<div class="content-list">
+	 			<table class="table table-striped table-hover" ng-model='teacherGroup'>
+	 				<tr>
+						<th width="60">分组</th>
+						<th width="60">成员数</th>
+	 				</tr>
+	 				<tr ng-repeat= "item in teacherGroup">
+	 					<td>{{item.name}}</td>
+	 					<td>{{item.teachers.length}}</td>
+	 				</tr>
+	 			</table>
+ 			</div>
+ 			<div class="content-info">
+	 			<table class="table table-striped table-hover" ng-model='nowTeacherGroup.teachers'>
+	 				<tr>
+						<th width="60">id</th>
+						<th width="60">老师名称</th>
+	 				</tr>
+	 				<tr ng-repeat="item in nowTeacherGroup.teachers">
+	 					<td>{{item.id}}</td>
+	 					<td>{{item.name}}</td>
+	 				</tr>
+	 			</table> 			
+ 			</div>
+ 		</div>
+
  		<div class="content-report" ng-controller="studentController">
  		</div>
 
- 		<div class="content-main"  ng-controller="quotaController">
+ 		<div class="content-main hide"  ng-controller="quotaController">
  			<div class="content-list">
  				<table class="table table-striped table-hover" ng-model='quotaGroupMap[nowQuotaGroup._id].indicators'>
  					<tr>
@@ -167,6 +282,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1413912856722"></script>
+	<script src="js/manage.js?t=1413998941380"></script>
 </body>
 </html>
