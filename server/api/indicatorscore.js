@@ -78,6 +78,6 @@ exports.import = function(req, res) {
 
 };
 
-exports.search = function(req, res) {
+exports.report = function(req, res) {
 
 };

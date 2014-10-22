@@ -9,8 +9,7 @@ var Logger = require('../logger');
 var Util = require('../util');
 
 us.extend(exports, require('../modules/verify/param_verify'));
-
-// us.extend(exports, require('./auth_verify'));
+us.extend(exports, require('../modules/verify/auth_verify'));
 
 
 function getRouter(uri, method) {

@@ -1,5 +1,4 @@
 var EventProxy = require('eventproxy');
-var ObjectID = require('mongodb').ObjectID;
 var us = require('underscore');
 
 var db = require('../../modules/db');

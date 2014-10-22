@@ -14,7 +14,7 @@ exports.import = function(req, res) {
     try {
         var workbook = XLS.readFile(req.files.file.path);
         data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-    } catch (e) { 
+    } catch (e) {
         return res.json({
             err: ERR.IMPORT_FAILURE,
             msg: '导入失败',
@@ -91,4 +91,14 @@ exports.list = function(req, res) {
         });
     });
 
+};
+
+exports.detail = function(req, res) {
+
+    var questionnaire = req.parameter.questionnaireId;
+
+    res.json({
+        err: ERR.SUCCESS,
+        result: questionnaire
+    });
 };

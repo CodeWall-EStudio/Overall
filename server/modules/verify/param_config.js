@@ -10,7 +10,7 @@ module.exports = {
         params: [{
             name: 'name',
             required: true
-        },{
+        }, {
             name: 'id',
             required: true
         }]
@@ -120,11 +120,50 @@ module.exports = {
             required: true
         }]
     },
+
+    // 指标评分
     '/api/indicatorscore/import': {
         method: 'POST',
         params: [{
             name: 'indicatorGroup',
             type: 'IndicatorGroups',
+            required: true
+        }]
+    },
+    '/api/indicatorscore/report': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'teacherGroup',
+            type: 'TeacherGroups'
+        }, {
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups'
+        }, {
+            name: 'teacherName',
+            type: 'string'
+        }]
+    },
+    '/api/indicatorscore/reportDetail': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'teacherGroup',
+            type: 'TeacherGroups',
+            required: true
+        }, {
+            name: 'teacherId',
+            type: 'string',
+            required: true
+        }, {
+            name: 'reportType', // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
+            type: 'number',
             required: true
         }]
     },
@@ -199,4 +238,13 @@ module.exports = {
             required: true
         }]
     },
+     '/api/questionnaire/detail': {
+        method: 'GET',
+        params: [{
+            name: 'questionnaireId',
+            type: 'Questionnaires',
+            required: true
+        }]
+    },
+
 };

@@ -73,17 +73,16 @@ app.use(express.static(staticDir, {
 /////////// API 相关 ///////////////
 
 // 设置跨域请求头
-app.all('/api/*', routes.setXHR2Headers);
-
+// app.all('/api/*', routes.setXHR2Headers);
 
 // 检查是否登录, 如果登录了, 从数据库把用户信息找出; 没有登录则返回错误
-// app.all('/api/*', routes.checkAuth);
+app.all('/api/*', routes.checkAuth);
 
 // 检查参数合法性
 app.all('/api/*', routes.checkParams);
 
 // 检查 API 调用权限
-// app.all('/api/*', routes.checkAPI);
+app.all('/api/*', routes.checkAPI);
 
 // 路由请求
 app.all('/api/*', routes.route);
