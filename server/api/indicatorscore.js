@@ -79,5 +79,11 @@ exports.import = function(req, res) {
 };
 
 exports.report = function(req, res) {
+    var parameter = req.parameter;
+
+    
+};
+
+exports.detail = function(req, res){
 
 };

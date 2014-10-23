@@ -18,7 +18,7 @@ function findOne(coll, value, pcfg, callback) {
         return callback(pcfg.name + '\'s length must be ' + OBJECT_ID_LENGTH);
     }
     db[coll].findOne({
-        _id: new ObjectID(value)
+        _id: value
     }, function(err, doc) {
         if (err) {
             return callback(err);
