@@ -114,16 +114,20 @@ li{
 .toolbar {
 	position:relative;
 	padding:5px 30px;
-	height:40px;
+	height:50px;
 	line-height:30px;
 }
 .toolbar .select-dom{
 	display:inline-block;
 }
+.toolbar .toolbar-left{
+	float:left;
+}
 .toolbar .toolbar-right{
-	position:absolute;
+	position:relative;
 	top:0;
 	right:0;
+	float:right;
 }
 
 /**/

@@ -4,7 +4,9 @@
         'ov.controllers.term', //学期
         'ov.controllers.toolbar', //工具条
         'ov.controllers.import', //导入
-        'ov.controllers.student', //xu
+        'ov.controllers.question', //l问卷
+        'ov.controllers.teacher', //老师
+        'ov.controllers.student', //学生
         'ov.controllers.msg', //消息提示模块
         'ov.controllers.manage'
     ]);

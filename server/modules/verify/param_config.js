@@ -16,7 +16,6 @@ module.exports = {
         }]
     },
 
-
     // 学期
     '/api/term/create': {
         method: 'POST',
@@ -167,6 +166,18 @@ module.exports = {
             required: true
         }]
     },
+    '/api/student/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'grade',
+        }, {
+            name: 'cls'
+        }]
+    },
     // 教师接口
     '/api/teacher/import': {
         method: 'POST',
@@ -228,7 +239,7 @@ module.exports = {
             required: true
         }]
     },
-     '/api/questionnaire/detail': {
+    '/api/questionnaire/detail': {
         method: 'GET',
         params: [{
             name: 'questionnaireId',

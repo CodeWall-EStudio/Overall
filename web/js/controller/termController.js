@@ -60,7 +60,6 @@ angular.module('ov.controllers.term',[
                 status : status
             }
             Term.modifyTerm(param);
-            console.log(param);
         }
 
         Term.getTermList();
