@@ -116,8 +116,20 @@ var models = {
             score: Number,
             desc: String
         }]
-    }
+    },
 
+    // 互评关系
+    RelationShips: {
+        term: ObjectId, // 所属学年
+        id: String,
+        name: String,
+        student: Number,
+        teachers: [{
+            id: String,
+            name: String,
+            value: Number
+        }]
+    }
 };
 
 for (var i in models) {

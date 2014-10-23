@@ -16,16 +16,6 @@ module.exports = {
         }]
     },
 
-    '/api/term/create': {
-        method: 'POST',
-        params: [{
-            name: 'name',
-            required: true
-        }, {
-            name: 'order',
-            type: 'number'
-        }]
-    },
 
     // 学期
     '/api/term/create': {
@@ -246,5 +236,15 @@ module.exports = {
             required: true
         }]
     },
+
+    // 互评关系导入
+    '/api/relationship/import': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    }
 
 };
