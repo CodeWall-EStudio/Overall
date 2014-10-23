@@ -147,7 +147,7 @@ module.exports = {
             type: 'string'
         }]
     },
-    '/api/indicatorscore/reportDetail': {
+    '/api/indicatorscore/detail': {
         method: 'GET',
         params: [{
             name: 'term',
@@ -162,7 +162,7 @@ module.exports = {
             type: 'string',
             required: true
         }, {
-            name: 'reportType', // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
+            name: 'type', // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
             type: 'number',
             required: true
         }]
