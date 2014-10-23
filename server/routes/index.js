@@ -17,7 +17,7 @@ function getRouter(uri, method) {
     var arr = uri.split('/'),
         module;
     try {
-
+        console.log(arr);
         module = require(path.join(__dirname, '../' + arr[1] + '/' + arr[2]));
         if (arr[3]) {
             return module[arr[3]];

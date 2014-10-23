@@ -16,6 +16,7 @@ module.exports = {
         }]
     },
 
+
     '/api/term/create': {
         method: 'POST',
         params: [{
@@ -177,6 +178,18 @@ module.exports = {
             required: true
         }]
     },
+    '/api/student/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        },{
+            name : 'grade',
+        },{
+            name : 'cls'
+        }]
+    },    
     // 教师接口
     '/api/teacher/import': {
         method: 'POST',

@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 导入指标</title>
-	<link rel="stylesheet" href="css/main.css?t=1413998941380">
+	<link rel="stylesheet" href="css/main.css?t=1414078693958">
 </head>
 <body ng-controller="quotaController">
  	<div class="header-blue">
@@ -22,6 +22,7 @@
  		<!-- 导入工具条-->
  		<div class="toolbar toolbar-import">
  			 <div class="toolbar-left">
+ 			 	<div class="select-dom" ng-controller="termController">{{nowTerm.name}}</div>
 				选择指标组：
 				<div class="select-dom dropdown" >
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
@@ -61,6 +62,6 @@
  	</div> 	
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/import.js?t=1413998941380"></script>
+	<script src="js/import.js?t=1414078693958"></script>
  </body>
  </html>

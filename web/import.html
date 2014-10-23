@@ -32,6 +32,7 @@
  		<!-- 导入工具条-->
  		<div class="toolbar toolbar-import">
  			 <div class="toolbar-left">
+ 			 	<div class="select-dom" ng-controller="termController">{{nowTerm.name}}</div>
 				选择指标组：
 				<div class="select-dom dropdown" >
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
@@ -81,8 +82,11 @@
 	<script src="js/constant/constant.js"></script>
 	<script src="js/server/importServer.js"></script>
 	<script src="js/server/quotaServer.js"></script>
+	<script src="js/server/termServer.js"></script>
+	<script src="js/server/loginServer.js"></script>
 	<script src="js/server/utilServer.js"></script>
 	<script src="js/controller/navController.js"></script>
+	<script src="js/controller/termController.js"></script>
 	<script src="js/controller/quotaController.js"></script>
 	<script src="js/controller/toolbarController.js"></script>
 	<script src="js/controller/quotaController.js"></script>

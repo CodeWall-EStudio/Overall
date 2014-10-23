@@ -7,6 +7,36 @@ var Util = require('../util');
 
 var XLS = require('xlsjs');
 
+//学生列表
+exports.list = function(req, res) {
+
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var grade = parameter.grade;
+    var cls = parameter.cls;
+
+    var param  = {
+        term: term.toObject()._id
+    }
+    if(grade){
+        param.grade = grade;
+    }
+    if(cls){
+        param['class'] = cls;
+    }
+
+    db.Students.find(param,function(err,docs){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
+
+};
+
 exports.import = function(req, res) {
 
     var parameter = req.parameter;
