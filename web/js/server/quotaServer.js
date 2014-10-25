@@ -4,12 +4,13 @@ angular.module('ov.services.quota',[
 		'ov.services.utils'
 	])
 	.service('quotaService',[
-	'$rootScope','$location','$http','Util','MSG.ERROR.CODE','STATUS.GROUP.LOAD',function($root,$location,$http,Util,MSG,GROUP_LOAD){
+	'$rootScope','$location','$http','Util','MSG.ERROR.CODE','STATUS.QUOTA.LOAD',function($root,$location,$http,Util,MSG,QUOTA_LOAD){
 		/*工具函数＆方法*/
 		var setDefQuotaGroup = function(num){
 			num = num || 0;
 			if($root.quotaGroupList.length){
 				$root.nowQuotaGroup = $root.quotaGroupList[num];
+				$root.$emit(QUOTA_LOAD);
 			}
 		};
 
@@ -17,7 +18,6 @@ angular.module('ov.services.quota',[
 		//拉指标组
 		var getQuotaGroup = function(param,success,error){
 			var url = '/api/indicatorgroup/list?term='+$root.nowTerm._id;
-			console.log(url);
 			var ts = new Date().getTime();
 			$http.get(url+'&t='+ts,null,{responseType:'json'})
 				.success(function(data,status){
@@ -28,7 +28,7 @@ angular.module('ov.services.quota',[
 							$root.quotaGroupMap[item._id]  = item;
 						});
 						setDefQuotaGroup();
-						$root.$emit(GROUP_LOAD);
+						//$root.$emit(GROUP_LOAD);
 					}else{
 						$root.$emit(MSG,data.err);
 					}
@@ -52,16 +52,41 @@ angular.module('ov.services.quota',[
 					console.log(data);
 					//conventStudent(data.student);
 					if(data.err === 0){
+						$root.quotaGroupList.push(data.result);
+						$root.quotaGroupMap[data.result._id] = data.result;
 						console.log('新建指标组成功!', data);
 					}else{
-						$root.$emit(MSG,data.err);
 					}
+					$root.$emit(MSG,data.err);
 					if(success) success(data, status);
 				})
 				.error(function(data,status){
 					if(error) error(data, status);
 				});			
 		}		
+
+		//拉指标组评分
+		var  getQuotaScore = function(param,success,error){
+			var url = '/api/indicatorscore/report?term='+$root.nowTerm._id+'&indicatorGroup='+$root.nowQuotaGroup._id;
+			var ts = new Date().getTime();
+			$http.get(url+'&t='+ts,null,{responseType:'json'})
+				.success(function(data,status){
+					console.log('拉取指标分数成功！',data.result);
+					if(data.err === 0){
+						//$root.$emit(GROUP_LOAD);
+						$root.quotaScoreList = data.result;
+					}else{
+						$root.$emit(MSG,data.err);
+					}
+				})
+				.error(function(data,status){
+				});
+		}
+
+		//设置分数
+		var setQuotaScore = function(param,success,error){
+
+		}
 
 		//拉指标列表 作废。直接改成成指标组里面读了。
 		var getQuotaList = function(param,success,error){
@@ -145,6 +170,8 @@ angular.module('ov.services.quota',[
 		getQuotaList : getQuotaList,
 		importQuota : importQuota,
 		importQuotaScore : importQuotaScore,
-		orderQuotaGroup : orderQuotaGroup
+		orderQuotaGroup : orderQuotaGroup,
+		getQuotaScore : getQuotaScore,
+		setQuotaScore : setQuotaScore
 	}
 }]);

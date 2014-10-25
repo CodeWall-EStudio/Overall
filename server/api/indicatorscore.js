@@ -79,8 +79,28 @@ exports.import = function(req, res) {
 };
 
 exports.report = function(req, res) {
-    var parameter = req.parameter;
+    //var parameter = req.parameter;
 
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var teacherGroup = parameter.teacherGroup;
+
+    var param  = {
+        term: term.toObject()._id
+    }
+    if(teacherGroup){
+        param.teacherGroup = teacherGroup;
+    }
+
+    db.IndicatorScores.find(param,function(err,docs){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
     
 };
 

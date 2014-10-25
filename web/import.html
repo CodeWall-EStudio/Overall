@@ -46,7 +46,7 @@
  			</div>
  			<div class="toolbar-right">
  				<a>下载数据配置模板</a>
- 				<button class="btn btn-default" ng-click="importData()">导入数据</button>
+ 				<button class="btn btn-default" ng-click="importData()">导入指标评分</button>
  				<input type="file" id="importQuotaScore" class="import-btn" />
  			</div>
  		</div>  	
@@ -60,12 +60,10 @@
  					<th ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">{{item.name}}</th>
  					<th>指标组总分</th>
  				</tr>
- 				<tr>
- 					<th>姓名</th>
- 					<th>指标1</th>
- 					<th>指标2</th>
- 					<th>指标3</th>
- 					<th>指标组总分</th>
+ 				<tr ng-repeat="item in quotaScoreList">
+ 					<td>{{item.teacherName}}</td>
+ 					<td ng-repeat="obj in item.scores"></td>
+ 					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
  		</div>
