@@ -114,7 +114,7 @@ exports.import = function(req, res) {
 
         }); // end pickupUsers
 
-    });// end Util.request
+    }); // end Util.request
 };
 
 
@@ -125,5 +125,21 @@ exports.import = function(req, res) {
  * @return {[type]}     [description]
  */
 exports.info = function(req, res) {
+
+    var loginUser = req.loginUser;
+
+    // loginUser.role === 1
+    // 学生
+    (loginUser.role === 1 ? db.Students : db.Users).findOne({
+        id: loginUser.id
+    }, function(err, doc) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: doc
+        });
+    });
 
 };

@@ -86,6 +86,9 @@ exports.appraisees = function(req, res) {
             var results = [];
             teachers.forEach(function(teacher) {
                 teacher = teacher.toObject();
+                if(!('value' in teacher) && loginUser.role === 1){
+                    teacher.value = 1; // 学生的问卷类型固定是 1
+                }
                 results.push(teacher);
 
                 // 三层循环...
