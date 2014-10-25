@@ -149,21 +149,22 @@ exports.info = function(req, res) {
  * @param  {[type]} res [description]
  * @return {[type]}     [description]
  */
-exports.search =  function(req, res){
+exports.search = function(req, res) {
     var parameter = req.parameter;
 
     var keyword = parameter.keyword;
 
     var param = {};
-    if(keyword){
+    if (keyword) {
         var reg = new RegExp('.*' + Util.encodeRegexp(keyword) + '.*');
-        param['$or'] = [
-            { 'id': reg },
-            { 'name': reg }
-        ];
+        param['$or'] = [{
+            'id': reg
+        }, {
+            'name': reg
+        }];
     }
 
-    db.Users.find(param, function(err, docs){
+    db.Users.find(param, function(err, docs) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
@@ -175,6 +176,25 @@ exports.search =  function(req, res){
 
 };
 
+exports.auth = function(req, res) {
 
+    var parameter = req.parameter;
 
+    db.Users.update({
+        id: parameter.id
+    }, {
+        role: parameter.role
+    }, {
+        upsert: true,
+        multi: true
+    }, function(err) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            msg: 'ok'
+        });
+    });
 
+};

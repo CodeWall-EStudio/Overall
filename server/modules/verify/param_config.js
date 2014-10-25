@@ -31,6 +31,17 @@ module.exports = {
             name: 'keyword'
         }]
     },
+    '/api/user/auth': { // 对用户进行授权
+        method: 'POST',
+        params: [{
+            name: 'id', // 用户登录用的账号
+            required: true
+        },{
+            name: 'role',
+            type: 'number', // 1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
+            required: true
+        }]
+    },
 
     // 学期
     '/api/term/create': {
