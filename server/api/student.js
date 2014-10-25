@@ -16,7 +16,7 @@ exports.list = function(req, res) {
     var cls = parameter.cls;
 
     var param  = {
-        term: term.toObject()._id
+        term: term
     }
     if(grade){
         param.grade = grade;
@@ -62,7 +62,7 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term.toObject()._id;
+    var termId = term;
     var docs = [];
     data.forEach(function(item) {
 

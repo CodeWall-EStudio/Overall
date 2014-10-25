@@ -60,7 +60,7 @@ exports.create = function(req, res) {
     db.Questionnaires.create({
         name: parameter.name,
         order: parameter.order,
-        term: term.toObject()._id
+        term: term
     }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
@@ -80,7 +80,7 @@ exports.list = function(req, res) {
     var term = parameter.term;
 
     db.Questionnaires.find({
-        term: term.toObject()._id
+        term: term
     }, null, {
         sort: {
             order: 1

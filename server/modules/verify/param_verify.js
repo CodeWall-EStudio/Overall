@@ -121,6 +121,14 @@ var checkers = {
             }
         });
         callback(null, value);
+    },
+    'array': function(value, pcfg, callback) {
+        try {
+            value = Util.jsonParse(value);
+            callback(null, value);
+        } catch (e) {
+            callback(pcfg.name + ' must be an array, value: ' + value);
+        }
     }
 };
 

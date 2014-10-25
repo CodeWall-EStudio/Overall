@@ -52,7 +52,7 @@ exports.appraisees = function(req, res) {
 
     } else { // 互评
         param = {
-            term: term.toObject()._id,
+            term: term,
             id: loginUser.id
         };
 
@@ -81,6 +81,72 @@ exports.appraisees = function(req, res) {
 
 };
 
+
+/**
+ * 对指定人进行评价
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
 exports.appraise = function(req, res) {
+    var loginUser = req.loginUser;
+    var parameter = req.parameter;
+
+    var term = parameter.term;
+    var evaluationType = parameter.evaluationType;
+    var appraiseeId = parameter.appraiseeId;
+    var scores = parameter.scores;
+    var questionnaire = parameter.questionnaire;
+
+    var totalScore = 0;
+    scores.forEach(function(s) {
+        totalScore += s;
+    });
+
+    var appraiserId = loginUser.id;
+    // TODO 验证 appraiserId 和 appraiseeId 是否有对应的评估关系
+
+    // 先找一下有没有已经评过分
+    db.EOIndicateScores.findOne({
+        term: term,
+        type: evaluationType,
+        appraiseeId: appraiseeId,
+        appraiserId: appraiserId
+    }, function(err, doc) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        if (doc) { // 已经有的, 就覆盖
+            doc.scores = scores;
+            doc.questionnaire = questionnaire;
+            doc.save(function(err, doc){
+                if (err) {
+                    return dbHelper.handleError(err, res);
+                }
+                res.json({
+                    err: ERR.SUCCESS,
+                    result: doc
+                });
+            });
+        } else {
+            db.EOIndicateScores.create({
+                term: term,
+                type: evaluationType,
+                appraiseeId: appraiseeId,
+                appraiserId: appraiserId,
+                scores: scores,
+                questionnaire: questionnaire
+            }, function(err, doc) {
+                if (err) {
+                    return dbHelper.handleError(err, res);
+                }
+                res.json({
+                    err: ERR.SUCCESS,
+                    result: doc
+                });
+            });
+        }
+    });
+
 
 };

@@ -86,10 +86,10 @@ exports.report = function(req, res) {
     var indicatorGroup = parameter.indicatorGroup;
 
     var param = {
-        term: term.toObject()._id
+        term: term
     };
     if (indicatorGroup) {
-        param.indicatorGroup = indicatorGroup.toObject()._id;
+        param.indicatorGroup = indicatorGroup;
     }
     
     // teacherName 和 teacherGroup 是互斥的

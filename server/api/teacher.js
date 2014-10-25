@@ -32,7 +32,7 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term.toObject()._id;
+    var termId = term;
     var docs = [];
     var map = {};
     data.forEach(function(item) {
