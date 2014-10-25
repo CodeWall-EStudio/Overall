@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="login">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="author" content="Xzone"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>综合评价</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
+</head>
+
+<body>
+<div class="header"></div>
+<div class="content">
+    <div class="content-tit"></div>
+    <div class="login-area">
+        <ul id="loginTab" class="nav nav-tabs" role="tablist">
+            <!--<li><a href="#teacher" role="tab" data-toggle="tab">教师登录</a></li>-->
+            <li><a href="#student" role="tab" data-toggle="tab">学生/家长登录</a></li>
+        </ul>
+        <div id="loginTabContent" class="tab-content" ng-controller="loginController">
+            <form name="login" method="post">
+                <div id="student" class="tab-pane fade active in" >
+                    <ul>
+                        <li>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon ico-username"></span>
+                                <input type="text" name="name" class="form-control" placeholder="输入学生中文姓名" ng-model="username">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-addon ico-pwd"></span>
+                                <input type="password" id="number" class="form-control" placeholder="输入登录ID码" ng-model="pwd">
+                            </div>
+                        </li>
+                        <li>
+                            <input type="button" value="登录" class="btn btn-primary btn-lg btn-login" ng-click="studentLogin()" />
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    版权所有
+</div>
+
+    <!-- build:lib -->
+    <script src="js/lib/jquery/jquery-2.0.3.min.js"></script>
+    <script src="js/lib/underscore/underscore.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/messenger.min.js"></script>
+    <script src="js/lib/angular/angular_1.2.6.js"></script>
+    <!-- endbuild -->
+
+    <script src="js/constant/constant.js"></script>
+    <script src="js/server/loginServer.js"></script>
+    <script src="js/server/utilServer.js"></script>
+    <script src="js/controller/loginController.js"></script>
+    <script src="js/controller/msgController.js"></script>
+    <script src="js/login.js"></script>
+
+</body>
+</html>
