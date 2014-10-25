@@ -16,6 +16,22 @@ module.exports = {
         }]
     },
 
+    // 用户信息相关接口
+    '/api/user/import': { // 导入登陆中心的用户信息, 会覆盖现有用户信息
+        method: 'GET', 
+        params: []
+    },
+    '/api/user/info': { // 获取当前登陆用户的信息
+        method: 'GET',
+        params: []
+    },
+    '/api/user/search': { // 搜索用户
+        method: 'GET',
+        params: [{
+            name: 'keyword'
+        }]
+    },
+
     // 学期
     '/api/term/create': {
         method: 'POST',
@@ -304,8 +320,6 @@ module.exports = {
             name: 'questionnaire', // 问卷 id
             type: 'Questionnaires',
             required: true
-        }
-
-        ]
+        }]
     }
 };
