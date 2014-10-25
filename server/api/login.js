@@ -65,7 +65,7 @@ exports.callback = function(req, res) {
         var user = {};
         user.id = data.loginName;
         user.skey = data.encodeKey;
-        user.role = 'teacher';
+        user.role = 2;//'teacher';
 
         req.session.user = user;
         res.cookie('skey', data.encodeKey);
@@ -201,7 +201,7 @@ exports.student = function(req, res) {
             var user = studentObj;
             var skey = Util.md5(user.name + ':' + user.id);
 
-            user.role = 'student';
+            user.role = 1;//'student';
             user.skey = skey;
 
             req.session.user = user;
