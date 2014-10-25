@@ -1,5 +1,6 @@
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
+var fileHelper = require('../modules/file_helper');
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');
@@ -7,27 +8,6 @@ var Util = require('../util');
 
 var XLS = require('xlsjs');
 
-
-exports.list = function(req,res){
-
-    var parameter = req.parameter;
-    var term = parameter.term;
-
-    var param  = {
-        term: term
-    }
-
-    db.RelationShips.find(param,function(err,docs){
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            result: docs
-        });
-    });
-
-}
 
 /**
  *  教师用户名   教师姓名    生评  zhangsan    lisi    wangwu  zhaoliu
@@ -42,23 +22,9 @@ exports.import = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
 
-    var data;
-    try {
-        var workbook = XLS.readFile(req.files.file.path);
-        data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-    } catch (e) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '导入失败',
-            detail: e.message
-        });
-    }
-
-    if (!data.length) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '没有数据要导入'
-        });
+    var data = fileHelper.readExcel(req, res);
+    if(data === null){
+        return;
     }
 
 
@@ -115,4 +81,26 @@ exports.import = function(req, res) {
             });
         });
     });
+};
+
+
+exports.list = function(req,res){
+
+    var parameter = req.parameter;
+    var term = parameter.term;
+
+    var param  = {
+        term: term
+    };
+
+    db.RelationShips.find(param,function(err,docs){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
+
 };

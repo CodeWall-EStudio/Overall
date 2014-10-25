@@ -1,5 +1,6 @@
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
+var fileHelper = require('../modules/file_helper');
 var ERR = require('../errorcode');
 var Logger = require('../logger');
 var config = require('../config');
@@ -10,23 +11,9 @@ var XLS = require('xlsjs');
 exports.import = function(req, res) {
     var parameter = req.parameter;
     var questionnaire = parameter.questionnaire;
-    var data;
-    try {
-        var workbook = XLS.readFile(req.files.file.path);
-        data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-    } catch (e) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '导入失败',
-            detail: e.message
-        });
-    }
-
-    if (!data.length) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '没有数据要导入'
-        });
+    var data = fileHelper.readExcel(req, res);
+    if(data === null){
+        return;
     }
 
     var docs = [];
@@ -78,10 +65,10 @@ exports.list = function(req, res) {
     var parameter = req.parameter;
 
     var term = parameter.term;
-    var  param = {
-        term : term 
-    }
-    if(parameter.order){
+    var param = {
+        term: term
+    };
+    if (parameter.order) {
         param.order = parameter.order
     }
 
@@ -119,7 +106,7 @@ exports.detail = function(req, res) {
     }
     db.Questionnaires.findOne({
         order: order
-    }, function(err, doc){
+    }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
         }

@@ -1,5 +1,6 @@
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
+var fileHelper = require('../modules/file_helper');
 
 var ERR = require('../errorcode');
 var Logger = require('../logger');
@@ -12,23 +13,9 @@ exports.import = function(req, res) {
 
     var parameter = req.parameter;
     var group = parameter.indicatorGroup;
-    var data;
-    try {
-        var workbook = XLS.readFile(req.files.file.path);
-        data = XLS.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-    } catch (e) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '导入失败',
-            detail: e.message
-        });
-    }
-
-    if (!data.length) {
-        return res.json({
-            err: ERR.IMPORT_FAILURE,
-            msg: '没有数据要导入'
-        });
+    var data = fileHelper.readExcel(req, res);
+    if(data === null){
+        return;
     }
 
     var indicatorNames = [];
