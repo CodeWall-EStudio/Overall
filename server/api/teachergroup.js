@@ -51,7 +51,7 @@ exports.import = function(req, res) {
             id: item['教师用户名'],
             name: item['教师姓名'],
         });
-        
+
     });
 
     // 导入前先清空数据
@@ -84,15 +84,21 @@ exports.list = function(req, res) {
     var term = parameter.term;
 
     db.TeacherGroups.find({
-        term: term.toObject()._id
-    }, function(err, docs) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            result: docs
+            term: term.toObject()._id
+        }, null, {
+            sort: {
+                id: 1
+            }
+        },
+
+        function(err, docs) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                result: docs
+            });
         });
-    });
 
 };

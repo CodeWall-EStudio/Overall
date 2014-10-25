@@ -85,21 +85,27 @@ exports.report = function(req, res) {
     var teacherGroup = parameter.teacherGroup;
     var indicatorGroup = parameter.indicatorGroup;
 
-    var param  = {
+    var param = {
         term: term.toObject()._id
     };
-    if(indicatorGroup){
+    if (indicatorGroup) {
         param.indicatorGroup = indicatorGroup.toObject()._id;
     }
-    if(teacherGroup){
+    if (teacherGroup) {
         var teacherIds = [];
-        teacherGroup.teachers.forEach(function(teacher){
+        teacherGroup.teachers.forEach(function(teacher) {
             teacherIds.push(teacher.id);
         });
-        param.teacherId = {$in: teacherIds };
+        param.teacherId = {
+            $in: teacherIds
+        };
     }
+    if (teacherName) {
+        param.teacherName = teacherName;
+    }
+
     Logger.debug('[IndicatorScore.report] query: ', param);
-    db.IndicatorScores.find(param,function(err,docs){
+    db.IndicatorScores.find(param, function(err, docs) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
@@ -108,9 +114,9 @@ exports.report = function(req, res) {
             result: docs
         });
     });
-    
+
 };
 
-exports.detail = function(req, res){
+exports.detail = function(req, res) {
 
 };

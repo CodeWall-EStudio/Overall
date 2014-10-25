@@ -81,6 +81,10 @@ exports.list = function(req, res) {
 
     db.Questionnaires.find({
         term: term.toObject()._id
+    }, null, {
+        sort: {
+            order: 1
+        }
     }, function(err, docs) {
         if (err) {
             return dbHelper.handleError(err, res);

@@ -37,15 +37,20 @@ exports.list = function(req, res) {
     var term = parameter.term;
 
     db.IndicatorGroups.find({
-        term: term.toObject()._id
-    }, function(err, docs) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            result: docs
+            term: term.toObject()._id
+        }, null, {
+            sort: {
+                order: 1
+            }
+        },
+        function(err, docs) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                result: docs
+            });
         });
-    });
 
 };

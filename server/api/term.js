@@ -29,7 +29,11 @@ exports.create = function(req, res) {
 
 exports.list = function(req, res) {
 
-    db.Terms.find({}, function(err, docs) {
+    db.Terms.find({}, null, {
+        sort: {
+            name: 1
+        }
+    }, function(err, docs) {
 
         if (err) {
             return dbHelper.handleError(err, res);
