@@ -87,6 +87,8 @@ exports.appraisees = function(req, res) {
             teachers.forEach(function(teacher) {
                 teacher = teacher.toObject();
                 results.push(teacher);
+
+                // 三层循环...
                 for (var i = 0; i < teacherGroups.length; i++) {
                     var group = teacherGroups[i];
                     for (var j = 0; j < group.teachers.length; j++) {

@@ -1,3 +1,6 @@
+var querystring = require('querystring');
+var EventProxy = require('eventproxy');
+
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
 var ERR = require('../errorcode');
@@ -5,6 +8,41 @@ var Logger = require('../logger');
 var config = require('../config');
 var Util = require('../util');
 
+
+function pickupUsers(root, callback) {
+
+
+    if (root.classes === 'department') {
+        var children = root.children || [];
+        var ep = new EventProxy();
+        ep.fail(callback);
+
+        ep.after('departmentChildren', children.length, function(list) {
+            var results = [];
+
+            list.forEach(function(l) {
+                results = results.concat(l);
+            });
+
+            callback(null, results);
+        });
+
+        children.forEach(function(child) {
+
+            pickupUsers(child, ep.group('departmentChildren'));
+        });
+    } else if (root.classes === 'user') {
+        callback(null, {
+            id: root.loginName,
+            name: root.name,
+            role: 0,
+            status: 0
+        });
+    } else {
+        callback(null);
+    }
+
+}
 
 exports.import = function(req, res) {
 
@@ -41,9 +79,51 @@ exports.import = function(req, res) {
                 detail: e.message
             });
         }
-        return res.json({
-            err: ERR.SUCCESS,
-            result: data
-        });
-    });
+
+        if (!data.success || !data.departmentTree) {
+            return res.json({
+                err: ERR.IMPORT_FAILURE,
+                msg: 'SSO返回数据错误',
+                detail: data.resultMsg
+            });
+        }
+
+        pickupUsers(data.departmentTree, function(err, results) {
+            if (err) {
+                return res.json({
+                    err: ERR.IMPORT_FAILURE,
+                    msg: '处理用户数据失败',
+                    detail: err
+                });
+            }
+
+            db.Users.remove(function(err) {
+                if (err) {
+                    return dbHelper.handleError(err, res);
+                }
+                db.Users.create(results, function(err) {
+                    if (err) {
+                        return dbHelper.handleError(err, res);
+                    }
+                    res.json({
+                        err: ERR.SUCCESS,
+                        msg: '成功导入' + (arguments.length - 1) + '条数据'
+                    });
+                });
+            }); // end Users.remove
+
+        }); // end pickupUsers
+
+    });// end Util.request
+};
+
+
+/**
+ * 获取登陆用户的信息
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
+exports.info = function(req, res) {
+
 };
