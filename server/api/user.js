@@ -141,5 +141,40 @@ exports.info = function(req, res) {
             result: doc
         });
     });
+};
+
+/**
+ * 按名字搜索用户
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
+exports.search =  function(req, res){
+    var parameter = req.parameter;
+
+    var keyword = parameter.keyword;
+
+    var param = {};
+    if(keyword){
+        var reg = new RegExp('.*' + Util.encodeRegexp(keyword) + '.*');
+        param['$or'] = [
+            { 'id': reg },
+            { 'name': reg }
+        ];
+    }
+
+    db.Users.find(param, function(err, docs){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
 
 };
+
+
+
+
