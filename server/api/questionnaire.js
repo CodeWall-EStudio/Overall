@@ -98,11 +98,31 @@ exports.list = function(req, res) {
 };
 
 exports.detail = function(req, res) {
-
-    var questionnaire = req.parameter.questionnaireId;
-
-    res.json({
-        err: ERR.SUCCESS,
-        result: questionnaire
+    var parameter = req.parameter;
+    var questionnaire = parameter.questionnaireId;
+    var order = parameter.order;
+    if (questionnaire) {
+        return res.json({
+            err: ERR.SUCCESS,
+            result: questionnaire
+        });
+    }
+    if (!order) {
+        return res.json({
+            err: ERR.PARAM_ERROR,
+            msg: 'questionnaireId 和 order 必须指定一个'
+        });
+    }
+    db.Questionnaires.findOne({
+        order: order
+    }, function(err, doc){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: doc
+        });
     });
+
 };

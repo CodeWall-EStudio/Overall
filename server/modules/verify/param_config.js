@@ -243,8 +243,10 @@ module.exports = {
         method: 'GET',
         params: [{
             name: 'questionnaireId',
-            type: 'Questionnaires',
-            required: true
+            type: 'Questionnaires'
+        }, {
+            name: 'order',
+            type: 'number'
         }]
     },
 
