@@ -85,13 +85,7 @@ exports.list = function(req, res) {
         param.order = parameter.order
     }
 
-<<<<<<< HEAD
     db.Questionnaires.find(param, null, {
-=======
-    db.Questionnaires.find({
-        term: term
-    }, null, {
->>>>>>> a410e88403f9ab0f5028908bdfa03c69e77d688d
         sort: {
             order: 1
         }
