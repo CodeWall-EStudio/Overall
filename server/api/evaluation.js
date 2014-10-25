@@ -24,6 +24,14 @@ exports.appraisees = function(req, res) {
     var param;
     var ep = new EventProxy();
 
+    ep.fail(function(err) {
+        res.json({
+            err: ERR.SERVER_ERROR,
+            msg: '拉取被评价者列表出错了',
+            detail: err
+        });
+    });
+
     // TODO 这里还要判断权限 role
     if (evaluationType === 1) { // 学生评价老师
         // 先拉学生所在的班级
@@ -108,13 +116,34 @@ exports.appraisees = function(req, res) {
                 }
             }); // end teachers.forEach
 
+            ep.emitLater('fetchTeacherGroups', results);
+        });
+
+    }); // end ep.success
+
+    ep.on('fetchTeacherGroups', function(teachers) {
+
+        ep.after('totalScore', teachers.length, function() {
             res.json({
                 err: ERR.SUCCESS,
-                result: results
+                result: teachers
             });
         });
 
-    });
+        teachers.forEach(function(teacher) {
+
+            db.EOIndicateScores.findOne({
+                term: term,
+                type: evaluationType,
+                appraiseeId: teacher.id,
+                appraiserId: loginUser.id,
+            }, ep.group('totalScore', function(doc) {
+
+                teacher.totalScore = doc ? doc.totalScore : 0;
+            }));
+        });
+
+    }); // end ep.fetchTeacherGroups
 
 };
 
@@ -155,6 +184,7 @@ exports.appraise = function(req, res) {
         }
         if (doc) { // 已经有的, 就覆盖
             doc.scores = scores;
+            doc.totalScore = totalScore;
             doc.questionnaire = questionnaire;
             doc.save(function(err, doc) {
                 if (err) {
@@ -172,6 +202,7 @@ exports.appraise = function(req, res) {
                 appraiseeId: appraiseeId,
                 appraiserId: appraiserId,
                 scores: scores,
+                totalScore: totalScore,
                 questionnaire: questionnaire
             }, function(err, doc) {
                 if (err) {
