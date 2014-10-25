@@ -86,7 +86,7 @@ exports.appraisees = function(req, res) {
             var results = [];
             teachers.forEach(function(teacher) {
                 teacher = teacher.toObject();
-                if(!('value' in teacher) && loginUser.role === 1){
+                if (!('value' in teacher) && loginUser.role === 1) {
                     teacher.value = 1; // 学生的问卷类型固定是 1
                 }
                 results.push(teacher);
@@ -183,6 +183,52 @@ exports.appraise = function(req, res) {
                 });
             });
         }
+    });
+};
+
+exports.detail = function(req, res) {
+
+    var parameter = req.parameter;
+    var loginUser = req.loginUser;
+
+    var term = parameter.term;
+    var evaluationType = parameter.evaluationType;
+    var appraiseeId = parameter.appraiseeId;
+
+    var appraiserId = loginUser.id;
+
+    var param = {
+        term: term,
+        type: evaluationType,
+        appraiseeId: appraiseeId,
+        appraiserId: appraiserId,
+    };
+    Logger.debug('[evaluation.detail] param: ', param);
+    db.EOIndicateScores.findOne(param, function(err, doc) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        if (!doc) {
+            return res.json({
+                err: ERR.NOT_FOUND,
+                msg: '没有找到评价记录'
+            });
+        }
+
+        db.Questionnaires.findById(doc.questionnaire, function(err, quest) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            doc = doc.toObject();
+            doc.questionnaire = quest;
+            res.json({
+                err: ERR.SUCCESS,
+                result: doc
+            });
+        });
+
+
     });
 
 

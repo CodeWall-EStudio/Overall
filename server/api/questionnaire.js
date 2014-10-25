@@ -79,7 +79,7 @@ exports.list = function(req, res) {
 
     var term = parameter.term;
     var  param = {
-        term : term.toObject()._id 
+        term : term 
     }
     if(parameter.order){
         param.order = parameter.order

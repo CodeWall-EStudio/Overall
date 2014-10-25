@@ -32,8 +32,7 @@ exports.import = function(req, res) {
     }
 
     var indicatorNames = [];
-    var groupObj = group.toObject();
-    groupObj.indicators.forEach(function(doc) {
+    group.indicators.forEach(function(doc) {
         indicatorNames.push(doc.name);
     });
 
@@ -42,8 +41,8 @@ exports.import = function(req, res) {
         var doc = {
             teacherId: item['教师用户名'],
             teacherName: item['教师姓名'],
-            term: groupObj.term,
-            indicatorGroup: groupObj._id,
+            term: group.term,
+            indicatorGroup: group,
             scores: [],
             totalScore: item['总分'] || 0
         };
@@ -56,7 +55,7 @@ exports.import = function(req, res) {
     });
 
     db.IndicatorScores.remove({
-        indicatorGroup: groupObj._id
+        indicatorGroup: group
     }, function(err) {
         if (err) {
             return dbHelper.handleError(err, res);

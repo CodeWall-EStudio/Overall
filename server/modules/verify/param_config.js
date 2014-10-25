@@ -18,7 +18,7 @@ module.exports = {
 
     // 用户信息相关接口
     '/api/user/import': { // 导入登陆中心的用户信息, 会覆盖现有用户信息
-        method: 'GET', 
+        method: 'GET',
         params: []
     },
     '/api/user/info': { // 获取当前登陆用户的信息
@@ -36,7 +36,7 @@ module.exports = {
         params: [{
             name: 'id', // 用户登录用的账号
             required: true
-        },{
+        }, {
             name: 'role',
             type: 'number', // 1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
             required: true
@@ -264,8 +264,8 @@ module.exports = {
             name: 'term',
             type: 'Terms',
             required: true
-        },{
-            name : 'order'
+        }, {
+            name: 'order'
         }]
     },
     '/api/questionnaire/detail': {
@@ -330,6 +330,21 @@ module.exports = {
         }, {
             name: 'questionnaire', // 问卷 id
             type: 'Questionnaires',
+            required: true
+        }]
+    },
+    // 打分结果
+    '/api/evaluation/detail': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            type: 'number'
+        }, {
+            name: 'appraiseeId', // 被评价者的id
             required: true
         }]
     }
