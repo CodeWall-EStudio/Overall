@@ -27,7 +27,45 @@ angular.module('ov.services.student',[
             xhr.send(param);            
         }
 
+        var getStudentList = function(param,success,error){
+            var ts = new Date().getTime();
+             var url = '/api/student/list?term='+$root.nowTerm._id;
+             param = param || {};
+             if(param.grade){
+                url+='&grade='+param.grade;
+             }
+             if(param.cls){
+                url+='&cls='+param.cls;
+             }
+             $http.get(url+'&t='+ts,null,{responseType:'json'})
+                .success(function(data,status){
+                    if(data.err === 0){
+                        console.log('拉学生列表成功',data);
+                        $root.studentList = data.result;
+                    }else{
+                        $root.$emit(MSG,data.err);
+                    }
+                })
+                .error(function(data,status){
+
+                });
+        }
+
+        var orderStudent = function(type,order){
+            var list = $root.studentList;
+            var sort = _.sortBy(list,function(item){
+                if(order){
+                    return -item[type];
+                }else{
+                    return +item[type];
+                }
+            });
+            $root.studentList = sort;            
+        }
+
     return {
-        importStudent : importStudent
+        importStudent : importStudent,
+        getStudentList : getStudentList,
+        orderStudent : orderStudent
     }
 }]);

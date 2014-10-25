@@ -256,6 +256,14 @@ module.exports = {
             type: 'Terms',
             required: true
         }]
-    }
+    },
+    '/api/relationship/list': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }]
+    }    
 
 };

@@ -8,6 +8,27 @@ var Util = require('../util');
 var XLS = require('xlsjs');
 
 
+exports.list = function(req,res){
+
+    var parameter = req.parameter;
+    var term = parameter.term;
+
+    var param  = {
+        term: term.toObject()._id
+    }
+
+    db.RelationShips.find(param,function(err,docs){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: docs
+        });
+    });
+
+}
+
 /**
  *  教师用户名   教师姓名    生评  zhangsan    lisi    wangwu  zhaoliu
     教师用户名   教师姓名    生评  张三  李四  王五  赵六

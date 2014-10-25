@@ -53,6 +53,7 @@ var mangaejs = [
     src+'/js/server/studentServer.js',
     src+'/js/server/teacherServer.js',
     src+'/js/server/questionServer.js',
+    src+'/js/server/relatServer.js',
     src+'/js/server/utilServer.js',
     src+'/js/controller/navController.js',
     src+'/js/controller/toolbarController.js',
@@ -60,6 +61,7 @@ var mangaejs = [
     src+'/js/controller/studentController.js',
     src+'/js/controller/teacherController.js',
     src+'/js/controller/questionController.js',
+    src+'/js/controller/relatController.js',
     src+'/js/controller/manageController.js',
     src+'/js/controller/msgController.js',
     src+'/js/manage.js'
