@@ -6,8 +6,8 @@ angular.module('ov.controllers.index',[
 	controller('indexController',[
 		'$rootScope',
 		'$scope',
-		'quotaService',
-		function($root,$scope,$quota){
+		'$location',
+		function($root,$scope,$location){
 		console.log('load indexController');
 		//初始化
 		/*
@@ -25,17 +25,14 @@ angular.module('ov.controllers.index',[
 			2 : '行政员工'
 		};
 
-		//报表类型
-		$root.reportType = {
-			0 : '概要',
-			1 : '教学指标组',
-			2 : '教育指标组',
-			3 : '行政指标组'
-		};
-		//指标组
-		$root.quotaGroupList;		
-		$root.quotaGroupMap;
-		//指标
-		$root.quotaList;
-		$root.quotaMap;
+	        $scope.switchMode = function(mode){
+	            console.log(mode,$scope.getMode());
+	            if(mode !== $scope.getMode()){
+	               $location.search('mode', mode);
+	            }
+	        }
+
+	        $scope.getMode = function(mode){
+	            return $location.search()['mode'] || false;
+	        }		
 }]);

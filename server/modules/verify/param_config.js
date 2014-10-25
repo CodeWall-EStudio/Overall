@@ -237,6 +237,8 @@ module.exports = {
             name: 'term',
             type: 'Terms',
             required: true
+        },{
+            name : 'order'
         }]
     },
     '/api/questionnaire/detail': {

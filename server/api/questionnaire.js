@@ -78,10 +78,14 @@ exports.list = function(req, res) {
     var parameter = req.parameter;
 
     var term = parameter.term;
+    var  param = {
+        term : term.toObject()._id 
+    }
+    if(parameter.order){
+        param.order = parameter.order
+    }
 
-    db.Questionnaires.find({
-        term: term.toObject()._id
-    }, null, {
+    db.Questionnaires.find(param, null, {
         sort: {
             order: 1
         }
