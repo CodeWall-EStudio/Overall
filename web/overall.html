@@ -20,7 +20,10 @@
 <body ng-controller="overallController">
     <div class="header-blue">
         <ul class="nav nav-tabs top-nav">
-            <li><a>互评</a></li>
+            <li>
+                <a ng-hide="nowOverType">互评</a>
+                <a ng-show="nowOverType">评价教师</a>
+            </li>
         </ul>
         <div class="userinfo">
             <span>{{User.nick}}</span>
@@ -50,28 +53,30 @@
                         <th>分组</th>
                         <th>打分</th>
                     </tr>
-                    <tr ng-repeat="item in overList" ng-click="getQuestion(item.value)">
+                    <tr ng-repeat="item in overList" ng-click="getQuestion(item.value,item.name,item.id)">
                         <td>{{item.name}}</td>
                         <td>{{item.teacherGroup.name}}</td>
-                        <td></td>
+                        <td>{{item.totalScore}}</td>
                     </tr>
                 </table>
             </div>  
             <div class="content-info" >
                 <dl class="content-summary" ng-class="{hide:getMode() === 'record' || nowStudent.id }">
                     <dt>
-                        总分平均分： {{score}}
-                    </dt>
-                    <dt>
-                        <span class="tit">{{name}} 打分：{{score}}</span> 问卷：{{name}}
+                        <span class="tit">{{nowName}} 打分：{{allScore}}</span> 问卷：{{nowQuestion.name}} 
+                        <button class="btn btn-primary btn-save" ng-click="saveScore()">保存</button>
+                        <button class="btn btn-primary" ng-click="resetScore()">复位</button>
                     </dt>
                 </dl>
-                <dl class="content-score" > 
-                    <dt>{{name}}</dt>
+                <dl class="content-score" ng-repeat='item in nowQuestScore.questionnaire.questions'> 
+                    <dt>{{item.name}}</dt>
                     <dd class="score-info">
-                        <div>{{info}}</div>
+                        <div>{{item.desc}}</div>
                         <div class="score-num">
-                            打分 ：{{score}}
+                            打分 ：
+                            <span class="glyphicon glyphicon-plus" ng-click="addScore(item._id)"></span>
+                            <span>{{nowScores[item._id].score}}</span>
+                            <span class="glyphicon glyphicon-minus" ng-click="removeScore(item._id)"></span>
                         </div>
                     </dd>
                 </dl>           
@@ -87,10 +92,11 @@
     <script src="js/lib/angular/angular_1.2.6.js"></script>
     <!-- endbuild -->
 
-    <!-- build:importjs -->
+    <!-- build:overjs -->
     <script src="js/constant/constant.js"></script>
     <script src="js/server/importServer.js"></script>
     <script src="js/server/quotaServer.js"></script>
+    <script src="js/server/questionServer.js"></script>
     <script src="js/server/termServer.js"></script>
     <script src="js/server/relatServer.js"></script>
     <script src="js/server/teacherServer.js"></script>

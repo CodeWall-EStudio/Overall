@@ -5,15 +5,13 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1414078693958">
+	<link rel="stylesheet" href="css/main.css?t=1414252373944">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
  		<ul class="nav nav-tabs top-nav">
-	 		<li><a>报表</a></li>
-	 		<li><a>查询</a></li>
-	 		<li><a>数据导入</a></li>
-	 		<li><a>互评</a></li>
+ 			<li ng-class="{active:getMode()==='report'}" ng-click="switchMode('report')"><a>报表</a></li>
+ 			<li ng-class="{active:getMode()==='search'}" ng-click="switchMode('search')"><a>查询</a></li>
  		</ul>
  		<div class="userinfo">
  			<span>{{User.nick}}</span>
@@ -23,30 +21,34 @@
  	</div>
  	<div class="toolbar"  ng-controller="toolbarController">
  		<!-- 报表工具条-->
- 		<div class="toolbar toolbar-report hide">
+ 		<div class="toolbar toolbar-report" ng-hide="getMode() !== 'report'">
  			<div class="toolbar-left">
 				选择学期：
-				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowTerm.name}} <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in termList"><a ng-click="selectTerm(item.id)">{{item.name}}</a></li>
-					</ul>
+				<div class="select-dom dropdown"  ng-controller="termController">
+	 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowTerm.name}}<span class="caret"></span></a>
+	 				<ul class="dropdown-menu" role="menu">
+	 					<li ng-repeat="item in termList" ng-model="termList">
+	 						<a ng-click="changeTerm(item._id)">{{item.name}}</a>
+	 					</li>
+	 				</ul> 	
 				</div> 	
 
-				选择分组：	
-				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowTerm.name}} <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in termList"><a ng-click="selectTerm(item.id)">{{item.name}}</a></li>
-					</ul>
+				选择老师：	
+				<div class="select-dom dropdown"  ng-controller="teacherController">
+	 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowTeacherGroup.name}}<span class="caret"></span></a>
+	 				<ul class="dropdown-menu" role="menu">
+	 					<li ng-repeat="item in teacherGroup" ng-model="teacherGroup">
+	 						<a ng-click="changeTeacherGroup(item._id)">{{item.name}}</a>
+	 					</li>
+	 				</ul> 
 				</div> 	 		
  			</div>		
  			<div class="toolbar-right">
 				选择报表类型：
-				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowTerm.name}} <span class="caret"></span></a>
+				<div class="select-dom dropdown" >
+					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in termList"><a ng-click="selectTerm(item.id)">{{item.name}}</a></li>
+						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
 					</ul>
 				</div> 	 
 				<a>导出当前报表</a>			
@@ -54,7 +56,7 @@
  			</div>
  		</div>
  		<!-- 报表详情工具条-->
- 		<div class="toolbar toolbar-report hide">
+ 		<div class="toolbar toolbar-report"  ng-hide="getMode() !== 'reportinfo'">
  			<div class="toolbar-left">
  				<button class="btn btn-default">返回报表</button>
  				查看详情 ： {{}}（分组{{}}）
@@ -68,7 +70,7 @@
  			</div>
  		</div> 		
  		<!-- 搜索工具条-->
- 		<div class="toolbar toolbar-search hide">
+ 		<div class="toolbar toolbar-search" ng-hide="getMode() !== 'search' ">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
@@ -93,53 +95,26 @@
 				</div>  				
  			</div>
  		</div> 	
- 		<!-- 导入工具条-->
- 		<div class="toolbar toolbar-import">
- 			 <div class="toolbar-left">
-				选择：
-				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowTerm.name}} <span class="caret"></span></a>
-					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in termList"><a ng-click="selectTerm(item.id)">{{item.name}}</a></li>
-					</ul>
-				</div> 	
-				指标组序号：{{no}}
-				指标组权重：{{pre}}
-				指标组总分：{{all}}
- 			</div>
- 			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
- 				<button class="btn btn-default">导入数据</button>
- 			</div>
- 		</div> 	
- 		<!-- 互评工具条-->
- 		<div class="toolbar toolbar-access hide">
- 			{{gradename}}	 开放评价中　您的分组：{{classname}}
- 		</div>
  	</div>
 
  	<div class="content" >
  		<!--报表-->
- 		<div class="content-report" ng-controller="reportController">
+ 		<div class="content-report" ng-controller="quotaController"  ng-hide="getMode() !== 'report'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>姓名</th>
- 					<th>指标1</th>
- 					<th>指标2</th>
- 					<th>指标3</th>
+ 					<th ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">{{item.name}}</th>
  					<th>指标组总分</th>
  				</tr>
- 				<tr>
- 					<th>姓名</th>
- 					<th>指标1</th>
- 					<th>指标2</th>
- 					<th>指标3</th>
- 					<th>指标组总分</th>
+ 				<tr ng-repeat="item in quotaScoreList">
+ 					<td>{{item.teacherName}}</td>
+ 					<td ng-repeat="obj in item.scores track by $index">{{obj}}</td>
+ 					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
  		</div>
  		<!--评价报告详情-->
- 		<div class="content-report" ng-controller="reportMoreController">
+ 		<div class="content-report" ng-hide="getMode() !== 'reportinfo'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>指标组</th>
@@ -164,7 +139,7 @@
  			</table>
  		</div> 
  		<!--互评和生评明细-->
- 		<div class="content-main"  ng-controller="reportInfoController">
+ 		<div class="content-main" ng-hide="getMode() !== 'report'">
 	 		<div class="content-list">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -180,7 +155,7 @@
 	 			</table>
 	 		</div>	
 	 		<div class="content-info" >
-				<dl class="content-summary" ng-class="{hide:getMode() === 'record' || nowStudent.id }">
+				<dl class="content-summary"  ng-hide="getMode() !== 'report'">
 					<dt>
 						总分平均分： {{score}}
 					</dt>
@@ -245,6 +220,6 @@
 	</div> 	
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1414078693958"></script>
+	<script src="js/index.js?t=1414252373944"></script>
 </body>
 </html>

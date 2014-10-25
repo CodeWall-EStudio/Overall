@@ -1,6 +1,7 @@
 angular.module('ov.constant',[])
     .constant('MSG.ERROR.CODE','msg.codeshow')
     .constant('LOGINED','status.logined')
+    .constant('STATUS.QUEST.LOAD','status.quest.load')
     .constant('STATUS.LOGIN.STUDENT','status.login.student')
     .constant('STATUS.LOGIN.TEACHER','status.login.TEACHER')
     .constant('STATUS.QUOTA.LOAD','status.quota.load')

@@ -248,6 +248,10 @@ li{
 	right:10px;
 	top:0;
 }
+
+.content-info .content-summary dt button.btn-save{
+	right:80px;
+}
 .content-info .content-summary dt button.btn-sub{
 	right:80px;
 }
