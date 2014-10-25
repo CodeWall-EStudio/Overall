@@ -245,8 +245,10 @@ module.exports = {
         method: 'GET',
         params: [{
             name: 'questionnaireId',
-            type: 'Questionnaires',
-            required: true
+            type: 'Questionnaires'
+        }, {
+            name: 'order',
+            type: 'number'
         }]
     },
 
@@ -280,6 +282,30 @@ module.exports = {
             name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
             type: 'number'
         }]
-    }
+    },
+    // 进行打分
+    '/api/evaluation/appraise': {
+        method: 'POST',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            type: 'number'
+        }, {
+            name: 'appraiseeId', // 被评价者的id
+            required: true
+        }, {
+            name: 'scores',
+            type: 'array',
+            required: true
+        }, {
+            name: 'questionnaire', // 问卷 id
+            type: 'Questionnaires',
+            required: true
+        }
 
+        ]
+    }
 };

@@ -14,7 +14,7 @@ exports.list = function(req,res){
     var term = parameter.term;
 
     var param  = {
-        term: term.toObject()._id
+        term: term
     }
 
     db.RelationShips.find(param,function(err,docs){
@@ -62,7 +62,7 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term.toObject()._id;
+    var termId = term;
     var docs = [];
     var nameMap;
     // 第一行是 英文名(已经变成每个元素的key), 第二行是 中文名

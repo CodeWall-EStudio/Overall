@@ -17,7 +17,7 @@ exports.create = function(req, res) {
         order: parameter.order,
         weight: parameter.weight,
         score: parameter.score,
-        term: term.toObject()._id
+        term: term
     }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
@@ -37,7 +37,7 @@ exports.list = function(req, res) {
     var term = parameter.term;
 
     db.IndicatorGroups.find({
-            term: term.toObject()._id
+            term: term
         }, null, {
             sort: {
                 order: 1

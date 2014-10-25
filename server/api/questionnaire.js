@@ -60,7 +60,7 @@ exports.create = function(req, res) {
     db.Questionnaires.create({
         name: parameter.name,
         order: parameter.order,
-        term: term.toObject()._id
+        term: term
     }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
@@ -85,7 +85,13 @@ exports.list = function(req, res) {
         param.order = parameter.order
     }
 
+<<<<<<< HEAD
     db.Questionnaires.find(param, null, {
+=======
+    db.Questionnaires.find({
+        term: term
+    }, null, {
+>>>>>>> a410e88403f9ab0f5028908bdfa03c69e77d688d
         sort: {
             order: 1
         }
@@ -102,11 +108,31 @@ exports.list = function(req, res) {
 };
 
 exports.detail = function(req, res) {
-
-    var questionnaire = req.parameter.questionnaireId;
-
-    res.json({
-        err: ERR.SUCCESS,
-        result: questionnaire
+    var parameter = req.parameter;
+    var questionnaire = parameter.questionnaireId;
+    var order = parameter.order;
+    if (questionnaire) {
+        return res.json({
+            err: ERR.SUCCESS,
+            result: questionnaire
+        });
+    }
+    if (!order) {
+        return res.json({
+            err: ERR.PARAM_ERROR,
+            msg: 'questionnaireId 和 order 必须指定一个'
+        });
+    }
+    db.Questionnaires.findOne({
+        order: order
+    }, function(err, doc){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: doc
+        });
     });
+
 };

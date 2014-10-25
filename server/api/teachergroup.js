@@ -32,7 +32,7 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term.toObject()._id;
+    var termId = term;
     var docs = [];
     var map = {};
     data.forEach(function(item) {
@@ -69,7 +69,7 @@ exports.import = function(req, res) {
 
             res.json({
                 err: ERR.SUCCESS,
-                msg: '成功导入' + (docs.length) + '条数据'
+                msg: '成功导入' + (data.length) + '条数据'
             });
         });
     });
@@ -84,7 +84,7 @@ exports.list = function(req, res) {
     var term = parameter.term;
 
     db.TeacherGroups.find({
-            term: term.toObject()._id
+            term: term
         }, null, {
             sort: {
                 id: 1

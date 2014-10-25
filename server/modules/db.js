@@ -25,7 +25,7 @@ mongoose.connect(dbUri, function(err, res) {
 // Schemas definitions
 //
 var models = {
-    // 系统的用户
+    // 系统的用户, 用于登录和权限管理
     Users: {
         id: String,
         name: String,
@@ -42,7 +42,7 @@ var models = {
 
     // 学生, 学生会跟学期关联
     Students: {
-        term: ObjectId,
+        term: ObjectId, // 所属学年
         id: String, // cmis_id
         name: String,
         grade: Number, // 年级
@@ -51,7 +51,7 @@ var models = {
 
     // 教师
     Teachers: {
-        term: ObjectId,
+        term: ObjectId, // 所属学年
         id: String,
         name: String,
         classes: [{ // 教师所属的班级
@@ -61,7 +61,7 @@ var models = {
     },
     // 教师分组
     TeacherGroups: {
-        term: ObjectId,
+        term: ObjectId, // 所属学年
         id: Number, // 分组代码
         name: String,
         teachers: [{
@@ -72,7 +72,7 @@ var models = {
 
     // 指标组
     IndicatorGroups: {
-        term: ObjectId,
+        term: ObjectId, // 所属学年
         name: String,
         order: Number,
         weight: Number,
@@ -95,21 +95,21 @@ var models = {
     //     desc: String
     // }
 
-    // 指标打分结果
+    // 导入的指标打分结果
     IndicatorScores: {
+        term: ObjectId, // 所属学年
         teacherId: String,
         teacherName: String,
-        term: ObjectId, // 所属学年
         indicatorGroup: ObjectId, // 所属指标组
-        scores: [Number],
+        scores: [Number], // 分数数组
         totalScore: Number
     },
 
     // 评价问卷
     Questionnaires: {
+        term: ObjectId, // 所属学年
         name: String,
         order: Number,
-        term: ObjectId, // 所属学年
         questions: [{ // 问卷的问题列表
             order: Number,
             name: String,
@@ -129,6 +129,20 @@ var models = {
             name: String,
             value: Number
         }]
+    },
+
+    // 互评/生评问卷的得分记录
+    EOIndicateScores: {
+        term: ObjectId, // 所属学年
+        type: Number, // 0: 互评, 1: 生评
+        appraiseeId: String, // 被评价者的id
+        appraiserId: String, // 评价者的 id
+        scores: [{
+            question: ObjectId,
+            score: Number
+        }],
+        totalScore: Number,
+        questionnaire: ObjectId
     }
 };
 
