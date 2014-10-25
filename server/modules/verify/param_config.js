@@ -264,6 +264,20 @@ module.exports = {
             type: 'Terms',
             required: true
         }]
-    }    
+    },
+
+    // 进行生评和互评的接口
+    // 列出所有能进行评价的被评价人
+    '/api/evaluation/appraisees': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            type: 'number'
+        }]
+    }
 
 };

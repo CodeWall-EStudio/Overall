@@ -110,7 +110,7 @@ exports.import = function(req, res) {
 
             res.json({
                 err: ERR.SUCCESS,
-                result: Array.prototype.slice.apply(arguments).slice(1),
+                // result: Array.prototype.slice.apply(arguments).slice(1),
                 msg: '成功导入' + (docs.length) + '条数据'
             });
         });

@@ -91,6 +91,8 @@ exports.report = function(req, res) {
     if (indicatorGroup) {
         param.indicatorGroup = indicatorGroup.toObject()._id;
     }
+    
+    // teacherName 和 teacherGroup 是互斥的
     if (teacherGroup) {
         var teacherIds = [];
         teacherGroup.teachers.forEach(function(teacher) {
@@ -99,8 +101,7 @@ exports.report = function(req, res) {
         param.teacherId = {
             $in: teacherIds
         };
-    }
-    if (teacherName) {
+    }else if (teacherName) {
         param.teacherName = teacherName;
     }
 

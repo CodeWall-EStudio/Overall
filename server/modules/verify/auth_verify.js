@@ -19,7 +19,7 @@ exports.checkAuth = function(req, res, next) {
     var skey = req.cookies.skey || req.body.skey || req.query.skey;
     req.skey = skey;
 
-    Logger.debug('[checkAuth]', 'req.redirectPath: ', req.redirectPath);
+    // Logger.debug('[checkAuth]', 'req.redirectPath: ', req.redirectPath);
 
     if (AuthConfig.AUTH_WHITE_LIST.indexOf(path) >= 0) {
         Logger.info('[checkAuth] white list skip.', 'path: ', path, ', method: ', method);
@@ -38,7 +38,7 @@ exports.checkAuth = function(req, res, next) {
     }
 
     req.loginUser = loginUser;
-    
+    Logger.debug('[checkAuth]', 'loginUser: ', loginUser);
     next();
 
 };
