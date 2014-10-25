@@ -79,19 +79,26 @@ exports.import = function(req, res) {
 };
 
 exports.report = function(req, res) {
-    //var parameter = req.parameter;
 
     var parameter = req.parameter;
     var term = parameter.term;
     var teacherGroup = parameter.teacherGroup;
+    var indicatorGroup = parameter.indicatorGroup;
 
     var param  = {
         term: term.toObject()._id
+    };
+    if(indicatorGroup){
+        param.indicatorGroup = indicatorGroup.toObject()._id;
     }
     if(teacherGroup){
-        param.teacherGroup = teacherGroup;
+        var teacherIds = [];
+        teacherGroup.teachers.forEach(function(teacher){
+            teacherIds.push(teacher.id);
+        });
+        param.teacherId = {$in: teacherIds };
     }
-
+    Logger.debug('[IndicatorScore.report] query: ', param);
     db.IndicatorScores.find(param,function(err,docs){
         if (err) {
             return dbHelper.handleError(err, res);
