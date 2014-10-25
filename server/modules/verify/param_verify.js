@@ -125,6 +125,9 @@ var checkers = {
     'array': function(value, pcfg, callback) {
         try {
             value = Util.jsonParse(value);
+            if(!value.forEach){
+                throw new Error('not an array');
+            }
             callback(null, value);
         } catch (e) {
             callback(pcfg.name + ' must be an array, value: ' + value);

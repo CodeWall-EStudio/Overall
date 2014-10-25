@@ -1,3 +1,5 @@
+var EventProxy = require('eventproxy');
+
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
 var ERR = require('../errorcode');
@@ -20,6 +22,7 @@ exports.appraisees = function(req, res) {
     var term = parameter.term;
 
     var param;
+    var ep = new EventProxy();
 
     // TODO 这里还要判断权限 role
     if (evaluationType === 1) { // 学生评价老师
@@ -43,10 +46,7 @@ exports.appraisees = function(req, res) {
                 if (err) {
                     return dbHelper.handleError(err, res);
                 }
-                res.json({
-                    err: ERR.SUCCESS,
-                    result: docs
-                });
+                ep.emitLater('success', docs);
             });
         });
 
@@ -72,12 +72,44 @@ exports.appraisees = function(req, res) {
                     results.push(teacher);
                 }
             });
+            ep.emitLater('success', results);
+        });
+    }
+
+    ep.on('success', function(teachers) {
+        // 获取分组信息
+        db.TeacherGroups.find({}, function(err, teacherGroups) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            // 查找教师所在分组
+            var results = [];
+            teachers.forEach(function(teacher) {
+                teacher = teacher.toObject();
+                results.push(teacher);
+                for (var i = 0; i < teacherGroups.length; i++) {
+                    var group = teacherGroups[i];
+                    for (var j = 0; j < group.teachers.length; j++) {
+                        var t = group.teachers[j];
+                        if (teacher.id === t.id) {
+                            teacher.teacherGroup = {
+                                _id: group._id,
+                                id: group.id,
+                                name: group.name
+                            };
+                            return;
+                        }
+                    }
+                }
+            }); // end teachers.forEach
+
             res.json({
                 err: ERR.SUCCESS,
                 result: results
             });
         });
-    }
+
+    });
 
 };
 
@@ -100,7 +132,7 @@ exports.appraise = function(req, res) {
 
     var totalScore = 0;
     scores.forEach(function(s) {
-        totalScore += s;
+        totalScore += s.score;
     });
 
     var appraiserId = loginUser.id;
@@ -119,7 +151,7 @@ exports.appraise = function(req, res) {
         if (doc) { // 已经有的, 就覆盖
             doc.scores = scores;
             doc.questionnaire = questionnaire;
-            doc.save(function(err, doc){
+            doc.save(function(err, doc) {
                 if (err) {
                     return dbHelper.handleError(err, res);
                 }
