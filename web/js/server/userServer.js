@@ -66,9 +66,37 @@ angular.module('ov.services.user',[
             })
         }
 
+        function setAuth(param,success,error){
+            var ts = new Date().getTime();
+            var body = Util.object.toUrlencodedString(param);
+            $http.post('/api/user/auth?_='+ts,
+                body,
+                {
+                    responseType: 'json',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+                .success(function(data,status){
+                    console.log(data);
+                    //conventStudent(data.student);
+                    if(data.err === 0){
+                        console.log('设置权限成功!', data);
+                        var u = _.find($root.userList,function(item){
+                            return item._id == param._id;
+                        })     
+                        u.role = param.role;
+                    }
+                    $root.$emit(MSG,data.err);
+                    if(success) success(data, status);
+                })
+                .error(function(data,status){
+                    if(error) error(data, status);
+            });              
+        }
+
     return {
         getUserInfo : getUserInfo,
         importUser : importUser,
+        setAuth : setAuth,
         searchUser : searchUser
     }
 }]);

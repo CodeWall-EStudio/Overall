@@ -13,6 +13,23 @@ angular.module('ov.controllers.user',[
         //拉个人信息
         User.getUserInfo();
 
+        $root.showManage = function(){
+            $("#authManage").modal('show');
+        }
+
+        $root.setAuth = function(id,role,_id){
+            var param = {
+                id : id,
+                role : role,
+                _id : _id
+            }
+            User.setAuth(param);
+        }
+
+        $root.import71 = function(){
+            User.importUser();
+        }
+
         //事件
         $root.showUser = function(id){
             console.log(id);

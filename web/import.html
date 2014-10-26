@@ -22,8 +22,8 @@
  		<ul class="nav nav-tabs top-nav">
 	 		<li><a>数据导入</a></li>
  		</ul>
- 		<div class="userinfo">
- 			<span>{{User.nick}}</span>
+ 		<div class="userinfo" ng-controller="userController">
+ 			<span>{{my.name}}</span>
  			<a ng-class="{hide:User.auth===0}">管理</a>
  			<a ng-click="quitLogin()">退出</a>
  		</div>
@@ -82,13 +82,14 @@
 	<script src="js/server/importServer.js"></script>
 	<script src="js/server/quotaServer.js"></script>
 	<script src="js/server/termServer.js"></script>
+	<script src="js/server/userServer.js"></script>
 	<script src="js/server/loginServer.js"></script>
 	<script src="js/server/utilServer.js"></script>
 	<script src="js/controller/navController.js"></script>
 	<script src="js/controller/termController.js"></script>
 	<script src="js/controller/quotaController.js"></script>
 	<script src="js/controller/toolbarController.js"></script>
-	<script src="js/controller/quotaController.js"></script>
+	<script src="js/controller/userController.js"></script>
 	<script src="js/controller/msgController.js"></script>
 	<script src="js/import.js"></script>
 	<!-- endbuild --> 	

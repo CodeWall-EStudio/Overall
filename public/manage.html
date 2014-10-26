@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1414334180838">
+	<link rel="stylesheet" href="css/main.css?t=1414336584589">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -120,6 +120,9 @@
  						<a ng-click="changeTeacherGroup(item._id)">{{item.name}}</a>
  					</li>
  				</ul> 
+ 			</div>
+ 			<div class="toolbar-right">
+ 				<button class="btn btn-default" ng-click="import71">导入71用户数据</button>
  			</div>
  			<div class="toolbar-right">
  				<a>下载数据配置模板</a>
@@ -321,11 +324,48 @@
 				</tr>
 			</table> 			
  		</div>
+
+ 		 	<div class="modal fade" id="authManage" tabindex="-1" role="dialog" aria-hidden="true">
+		 		<div class="modal-dialog">	 		
+		 			<div class="modal-content row">
+		 				<div class="modal-header">
+		 					<h4 class="modal-title">授权管理</h4>
+		 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		 				</div>
+		 				<div class="modal-body" style ="max-height:400px;overflow:auto;">
+							<table class="table table-striped table-hover" ng-model='relatList'>
+								<tr>
+									<th >用户ID</th>
+									<th >老师姓名</th>
+									<th width="60">当前权限</th>
+									<th >操作
+									</th>
+								</tr>
+								<tr ng-repeat="item in userList">
+									<td>{{item.id}}</td>
+									<td>{{item.name}}</td>
+									<td>
+										<span ng-show="item.role===2">校长</span>
+										<span  ng-show="item.role===1">数据管理员</span>
+										<span ng-show="item.role===0">老师</span>
+									</td>
+									<td>
+										<span ng-show="item.role !==2 " ng-click="setAuth(item.id,2,item._id)">设置为校领导</span>
+										<span ng-show="item.role <1"  ng-click="setAuth(item.id,1,item._id)">设置为数据管理员</span>
+										<span ng-show="item.role > 0"  ng-click="setAuth(item.id,0,item._id)">设置为老师</span>
+									</td>
+								</tr>
+							</table> 		 					
+		 				</div>
+		 			</div>
+	 			
+		 		</div>
+		 	</div> 	
  	</div>
  	<div ng-controller="msgController"></div>
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1414334180838"></script>
+	<script src="js/manage.js?t=1414336584589"></script>
 </body>
 </html>

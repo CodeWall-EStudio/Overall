@@ -5,15 +5,15 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 导入指标</title>
-	<link rel="stylesheet" href="css/main.css?t=1414334180838">
+	<link rel="stylesheet" href="css/main.css?t=1414336584589">
 </head>
 <body ng-controller="quotaController">
  	<div class="header-blue">
  		<ul class="nav nav-tabs top-nav">
 	 		<li><a>数据导入</a></li>
  		</ul>
- 		<div class="userinfo">
- 			<span>{{User.nick}}</span>
+ 		<div class="userinfo" ng-controller="userController">
+ 			<span>{{my.name}}</span>
  			<a ng-class="{hide:User.auth===0}">管理</a>
  			<a ng-click="quitLogin()">退出</a>
  		</div>
@@ -61,6 +61,6 @@
  	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/import.js?t=1414334180838"></script>
+	<script src="js/import.js?t=1414336584589"></script>
  </body>
  </html>
