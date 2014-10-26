@@ -67,6 +67,7 @@ angular.module('ov.services.quota',[
 
 		//拉指标组评分
 		var  getQuotaScore = function(param,success,error){
+			return;
 			var url = '/api/indicatorscore/report?term='+$root.nowTerm._id+'&indicatorGroup='+$root.nowQuotaGroup._id;
 			var ts = new Date().getTime();
 			$http.get(url+'&t='+ts,null,{responseType:'json'})

@@ -5,7 +5,7 @@
     <meta name="author" content="hongyuan" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>综合评价-互评</title>
-    <link rel="stylesheet" href="css/main.css?t=1414252373944">
+    <link rel="stylesheet" href="css/main.css?t=1414334180838">
 </head>
 <body ng-controller="overallController">
     <div class="header-blue">
@@ -15,7 +15,7 @@
                 <a ng-show="nowOverType">评价教师</a>
             </li>
         </ul>
-        <div class="userinfo">
+        <div class="userinfo" ng-controller="userController">
             <span>{{User.nick}}</span>
             <a ng-class="{hide:User.auth===0}">管理</a>
             <a ng-click="quitLogin()">退出</a>
@@ -73,10 +73,11 @@
             </div>
         </div>
     </div>
+    <div ng-controller="msgController"></div>
 
     <script src="js/lib/jslib.js"></script>
 
-    <script src="js/over.js?t=1414252373944"></script>
+    <script src="js/over.js?t=1414334180838"></script>
 
 </body>
 </html>

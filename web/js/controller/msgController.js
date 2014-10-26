@@ -1,13 +1,15 @@
 angular.module('ov.controllers.msg',[
 		'ov.constant'
 	])
-	.controller('msgController',['$rootScope', '$scope','MSG.ERROR.CODE',function ($root,$scope,MSG) {
+	.controller('msgController',['$rootScope', '$scope','$location','MSG.ERROR.CODE',function ($root,$scope,$location,MSG) {
 		console.log('load msgcontroller');
 		// body...
 		Messenger().options = {
 		    extraClasses: 'messenger-fixed messenger-on-bottom',
 		    theme: 'flat'
 		}
+
+		var url = $location.absUrl();
 
 		var msg = {
 			0 : '操作成功!',
@@ -26,13 +28,17 @@ angular.module('ov.controllers.msg',[
 		}
 
 		$root.$on(MSG,function(e,code){
+			if(code === 1001){
+			            var url = '/api/login';
+			            location.href=url;				
+				return;
+			}
 			var obj = {
 				'message' : msg[code]
 			}
 			if(parseInt(code)){
 				obj.type = 'error'
 			}
-
 			Messenger().post(obj);	
 		});
 

@@ -3,7 +3,7 @@ angular.module('ov.controllers.teacher',[
         'ov.constant',
         'ov.services.teacher'
     ]).
-    controller('teacherController',['$rootScope','$scope','teacherService','STATUS.TERM.LOAD',function($root,$scope,Teacher,TERM_LOAD){
+    controller('teacherController',['$rootScope','$scope','teacherService','STATUS.TERM.LOAD','STATUS.TEACHERGROUP.CHANGE',function($root,$scope,Teacher,TERM_LOAD,TEACHERGROUP_CHANGE){
         console.log('load teacherController');
         /*初始化数据，先拉老师组*/
         $root.teacherList = []; //老师
@@ -36,6 +36,7 @@ angular.module('ov.controllers.teacher',[
 
         $root.changeTeacherGroup = function(id){
             $root.nowTeacherGroup = $root.teacherGroupMap[id];
+            $root.$emit(TEACHERGROUP_CHANGE);
         }
 
         $root.$on(TERM_LOAD,function(){

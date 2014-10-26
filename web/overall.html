@@ -25,7 +25,7 @@
                 <a ng-show="nowOverType">评价教师</a>
             </li>
         </ul>
-        <div class="userinfo">
+        <div class="userinfo" ng-controller="userController">
             <span>{{User.nick}}</span>
             <a ng-class="{hide:User.auth===0}">管理</a>
             <a ng-click="quitLogin()">退出</a>
@@ -83,6 +83,7 @@
             </div>
         </div>
     </div>
+    <div ng-controller="msgController"></div>
 
     <!-- build:lib -->
     <script src="js/lib/jquery/jquery-2.0.3.min.js"></script>

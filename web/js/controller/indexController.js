@@ -26,7 +26,7 @@ angular.module('ov.controllers.index',[
 		};
 
 	        $scope.switchMode = function(mode){
-	            console.log(mode,$scope.getMode());
+	            //console.log(mode,$scope.getMode());
 	            if(mode !== $scope.getMode()){
 	               $location.search('mode', mode);
 	            }

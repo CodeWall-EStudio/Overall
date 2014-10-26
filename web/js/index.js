@@ -7,6 +7,7 @@
         'ov.controllers.toolbar', //工具条
         'ov.controllers.term', //学期模块
         'ov.controllers.teacher', //老师模块
+        'ov.controllers.user', //
         'ov.controllers.index', //首页模块
         'ov.controllers.import', //导入
         'ov.controllers.msg' //消息提示模块

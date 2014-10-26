@@ -53,6 +53,7 @@ angular.module('ov.services.question',[
         }
 
         var getQuestionList = function(param,success,error){
+            param = param || {};
             var url = '/api/questionnaire/list?term='+$root.nowTerm._id;
             if(param.order){
                 url +='&order='+param.order

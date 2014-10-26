@@ -93,20 +93,25 @@ angular.module('ov.controllers.relat',[
             //重置得分数据
             $scope.nowScores = {};
             $scope.allScore = 0;
-            //$.extend($scope.nowScores,$root.nowQuestion.questions);
-            _.each($root.nowQuestScore.questionnaire.questions,function(item){
-                 $scope.nowScores[item._id] = {
-                    max : item.score,
-                    score : 0
-                 };
-            });
-            console.log($scope.nowScores);
-            if($root.nowQuestScore.scores){
-                _.each($root.nowQuestScore.scores,function(item){
-                    $scope.nowScores[item.question].score = item.score;
-                    $scope.allScore +=  item.score;
-                })
+            try{
+                //$.extend($scope.nowScores,$root.nowQuestion.questions);
+                _.each($root.nowQuestScore.questionnaire.questions,function(item){
+                     $scope.nowScores[item._id] = {
+                        max : item.score,
+                        score : 0
+                     };
+                });
+                console.log($scope.nowScores);
+                if($root.nowQuestScore.scores){
+                    _.each($root.nowQuestScore.scores,function(item){
+                        $scope.nowScores[item.question].score = item.score;
+                        $scope.allScore +=  item.score;
+                    })
+                }
+            }catch(e){
+                
             }
+
             
         }
 

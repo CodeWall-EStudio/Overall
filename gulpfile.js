@@ -54,6 +54,7 @@ var mangaejs = [
     src+'/js/server/teacherServer.js',
     src+'/js/server/questionServer.js',
     src+'/js/server/relatServer.js',
+    src+'/js/server/userServer.js',
     src+'/js/server/utilServer.js',
     src+'/js/controller/navController.js',
     src+'/js/controller/toolbarController.js',
@@ -63,6 +64,7 @@ var mangaejs = [
     src+'/js/controller/questionController.js',
     src+'/js/controller/relatController.js',
     src+'/js/controller/manageController.js',
+    src+'/js/controller/userController.js',
     src+'/js/controller/msgController.js',
     src+'/js/manage.js'
 ];
@@ -71,10 +73,12 @@ var importjs = [
 	src+'/js/server/importServer.js',
 	src+'/js/server/quotaServer.js',
 	src+'/js/server/utilServer.js',
+            src+'/js/server/userServer.js',
 	src+'/js/controller/navController.js',
 	src+'/js/controller/toolbarController.js',
 	src+'/js/controller/quotaController.js',
 	src+'/js/controller/importController.js',
+            src+'/js/controller/userController.js',
 	src+'/js/controller/msgController.js',
 	src+'/js/import.js'
 ];
@@ -85,6 +89,7 @@ var overjs = [
     src+'/js/server/questionServer.js',
     src+'/js/server/termServer.js',    
     src+'/js/server/relatServer.js',    
+    src+'/js/server/userServer.js',
     src+'/js/server/teacherServer.js',    
     src+'/js/server/loginServer.js',    
     src+'/js/server/utilServer.js',
@@ -95,6 +100,7 @@ var overjs = [
     src+'/js/controller/teacherController.js',
     src+'/js/controller/relatController.js',
     src+'/js/controller/overallController.js',
+    src+'/js/controller/userController.js',
     src+'/js/controller/msgController.js',
     src+'/js/overall.js'
 ];
@@ -114,6 +120,7 @@ var indexjs = [
     src+'/js/server/loginServer.js',
     src+'/js/server/teacherServer.js',
     src+'/js/server/quotaServer.js',
+    src+'/js/server/userServer.js',
     src+'/js/server/utilServer.js',
     src+'/js/controller/navController.js',
     src+'/js/controller/gradeController.js',
@@ -124,6 +131,7 @@ var indexjs = [
     src+'/js/controller/quotaController.js',
     src+'/js/controller/toolbarController.js',
     src+'/js/controller/teacherController.js',
+    src+'/js/controller/userController.js',
     src+'/js/controller/indexController.js',
     src+'/js/controller/msgController.js',
     src+'/js/index.js'

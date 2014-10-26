@@ -3,6 +3,7 @@
         //'ov.controllers.grade', //年级列表
         'ov.controllers.relat', //互评关系
         'ov.controllers.term', //学期
+        'ov.controllers.user', //学期
         'ov.controllers.toolbar', //工具条
         'ov.controllers.import', //导入
         'ov.controllers.question', //l问卷

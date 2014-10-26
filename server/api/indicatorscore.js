@@ -69,6 +69,7 @@ exports.report = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
     var teacherGroup = parameter.teacherGroup;
+    var teacherName = parameter.teacherName;
     var indicatorGroup = parameter.indicatorGroup;
 
     var param = {
@@ -90,7 +91,6 @@ exports.report = function(req, res) {
     }else if (teacherName) {
         param.teacherName = teacherName;
     }
-
     Logger.debug('[IndicatorScore.report] query: ', param);
     db.IndicatorScores.find(param, function(err, docs) {
         if (err) {

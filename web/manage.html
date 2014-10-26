@@ -65,9 +65,9 @@
  			<li ng-class="{active:getMode()==='relat'}" ng-click="switchMode('relat')"><a >互评关系管理</a></li>
  			<li ng-class="{active:getMode()==='student'}" ng-click="switchMode('student')"><a >学生信息管理</a></li>
  		</ul>
- 		<div class="userinfo">
- 			<span>{{User.nick}}</span>
- 			<a ng-class="{hide:User.auth===0}">管理</a>
+ 		<div class="userinfo" ng-controller="userController">
+ 			<span>{{my.name}}</span>
+ 			<a ng-click="showManage()">授权管理</a>
  			<a ng-click="quitLogin()">退出</a>
  		</div>
  	</div>	
@@ -332,6 +332,7 @@
 			</table> 			
  		</div>
  	</div>
+ 	<div ng-controller="msgController"></div>
 
 	<!-- build:lib -->
  	<script src="js/lib/jquery/jquery-2.0.3.min.js"></script>
@@ -351,6 +352,7 @@
 	<script src="js/server/questionServer.js"></script>
 	<script src="js/server/relatServer.js"></script>
 	<script src="js/server/loginServer.js"></script>
+	<script src="js/server/userServer.js"></script>
 	<script src="js/server/utilServer.js"></script>
 
 	<script src="js/controller/navController.js"></script>
@@ -361,6 +363,8 @@
 	<script src="js/controller/teacherController.js"></script>
 	<script src="js/controller/questionController.js"></script>
 	<script src="js/controller/relatController.js"></script>
+
+	<script src="js/controller/userController.js"></script>
 	<script src="js/controller/manageController.js"></script>
 	<script src="js/controller/msgController.js"></script>
 	<script src="js/manage.js"></script>
