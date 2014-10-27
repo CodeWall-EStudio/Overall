@@ -218,6 +218,12 @@ exports.appraise = function(req, res) {
     });
 };
 
+/**
+ * 查看打分结果
+ * @param  {[type]} req [description]
+ * @param  {[type]} res [description]
+ * @return {[type]}     [description]
+ */
 exports.detail = function(req, res) {
 
     var parameter = req.parameter;
@@ -262,6 +268,4 @@ exports.detail = function(req, res) {
 
 
     });
-
-
 };

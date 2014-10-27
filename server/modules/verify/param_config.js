@@ -161,6 +161,9 @@ module.exports = {
         }, {
             name: 'teacherName',
             type: 'string'
+        }, {
+            name: 'type', // 报表类型, 1: 概览
+            type: 'number'
         }]
     },
     '/api/indicatorscore/detail': {

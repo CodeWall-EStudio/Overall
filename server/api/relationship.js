@@ -28,7 +28,6 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term;
     var docs = [];
     var nameMap;
     // 第一行是 英文名(已经变成每个元素的key), 第二行是 中文名
@@ -39,7 +38,7 @@ exports.import = function(req, res) {
         }
 
         var doc = {
-            term: termId,
+            term: term,
             id: item['教师用户名'],
             name: item['教师姓名'],
             student: item['生评'] || 0,
@@ -63,7 +62,7 @@ exports.import = function(req, res) {
 
     // 导入前先清空数据
     db.RelationShips.remove({
-        term: termId
+        term: term
     }, function(err) {
         if (err) {
             return dbHelper.handleError(err, res);

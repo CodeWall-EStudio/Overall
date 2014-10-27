@@ -91,7 +91,7 @@ var models = {
     //     name: String,
     //     order: Number,
     //     score: Number,
-    //     gatherType: Number,
+    //     gatherType: Number, // 1: 文件导入, 2: 互评平均分, 3: 生评平均分
     //     desc: String
     // }
 
@@ -101,7 +101,10 @@ var models = {
         teacherId: String,
         teacherName: String,
         indicatorGroup: ObjectId, // 所属指标组
-        scores: [Number], // 分数数组
+        scores: [{
+            indicator: ObjectId, // 指标
+            score: Number // 指标得分
+        }], // 分数数组
         totalScore: Number
     },
 

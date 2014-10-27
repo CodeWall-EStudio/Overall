@@ -19,7 +19,6 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term;
     var docs = [];
     var map = {};
     data.forEach(function(item) {
@@ -27,7 +26,7 @@ exports.import = function(req, res) {
         var doc = map[id];
         if (!doc) {
             doc = map[id] = {
-                term: termId,
+                term: term,
                 id: id,
                 name: item['教师姓名'],
                 classes: []
@@ -44,7 +43,7 @@ exports.import = function(req, res) {
 
     // 导入前先清空数据
     db.Teachers.remove({
-        term: termId
+        term: term
     }, function(err) {
         if (err) {
             return dbHelper.handleError(err, res);

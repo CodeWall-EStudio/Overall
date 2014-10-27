@@ -22,7 +22,7 @@ exports.import = function(req, res) {
             name: item['名称'],
             order: item['序号'],
             score: item['分值'],
-            gatherType: item['采集方式'] || 0,
+            gatherType: item['采集方式'] || 1, // 1: 文件导入, 2: 互评平均分, 3: 生评平均分
             desc: item['说明']
         };
         docs.push(doc);

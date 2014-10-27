@@ -21,12 +21,11 @@ exports.import = function(req, res) {
     }
 
 
-    var termId = term;
     var docs = [];
     data.forEach(function(item) {
 
         var doc = {
-            term: termId,
+            term: term,
             grade: item['年级'],
             'class': item['班级'],
             name: item['姓名'],
@@ -38,7 +37,7 @@ exports.import = function(req, res) {
 
     // 导入前先清空数据
     db.Students.remove({
-        term: termId
+        term: term
     }, function(err) {
         if (err) {
             return dbHelper.handleError(err, res);
