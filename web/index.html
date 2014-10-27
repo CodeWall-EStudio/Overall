@@ -31,7 +31,7 @@
  	</div>
  	<div class="toolbar"  ng-controller="toolbarController">
  		<!-- 报表工具条-->
- 		<div class="toolbar toolbar-report" ng-hide="getMode() !== 'report'">
+ 		<div class="toolbar toolbar-report" ng-show="reportMode === 'list'">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-controller="termController">
@@ -66,13 +66,13 @@
  			</div>
  		</div>
  		<!-- 报表详情工具条-->
- 		<div class="toolbar toolbar-report"  ng-hide="getMode() !== 'reportinfo'">
+ 		<div class="toolbar toolbar-report"  ng-show="reportMode === 'show'">
  			<div class="toolbar-left">
  				<button class="btn btn-default">返回报表</button>
- 				查看详情 ： {{}}（分组{{}}）
- 				<button class="btn btn-default">评价报告</button>
- 				<button class="btn btn-default">互评详情</button>
- 				<button class="btn btn-default">生评明细</button>
+ 				查看详情 ： {{nowTeacher.teacherName}}（分组{{}}）
+ 				<button class="btn btn-default" ng-click="showReport(2)">评价报告</button>
+ 				<button class="btn btn-default" ng-click="showReport(0)">互评详情</button>
+ 				<button class="btn btn-default" ng-click="showReport(1)">生评明细</button>
 		
  			</div>		
  			<div class="toolbar-right">	
@@ -109,14 +109,14 @@
 
  	<div class="content" >
  		<!--报表-->
- 		<div class="content-report" ng-controller="reportController"  ng-hide="getMode() !== 'report'">
+ 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'list'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>姓名</th>
  					<th ng-repeat="item in nowQuotaGroup.indicators">{{item.name}}</th>
  					<th>指标组总分</th>
  				</tr>
- 				<tr ng-repeat="item in reportList">
+ 				<tr ng-repeat="item in reportList" ng-click="showOneReport(item)">
  					<td>{{item.teacherName}}</td>
  					<td ng-repeat="obj in item.scores track by $index">{{obj}}</td>
  					<td>{{item.totalScore}}</td>
@@ -124,7 +124,7 @@
  			</table>
  		</div>
  		<!--评价报告详情-->
- 		<div class="content-report" ng-hide="getMode() !== 'reportinfo'">
+ 		<div class="content-report" ng-show="reportMode === 'reportinfo'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>指标组</th>
@@ -149,36 +149,36 @@
  			</table>
  		</div> 
  		<!--互评和生评明细-->
- 		<div class="content-main" ng-hide="getMode() !== 'report'">
-	 		<div class="content-list">
+ 		<div class="content-main" ng-show="reportSMode === 'teacher' || reportSMode === 'student'">
+	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
 	 					<th>评价人</th>
 	 					<th>分组</th>
 	 					<th>打分</th>
 	 				</tr>
-	 				<tr>
+	 				<tr ng-repeat="item in teacherRelatList.teachers">
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.group}}</td>
-	 					<td>{{item.score}}</td>
+	 					<td>{{item.value}}</td>
 	 				</tr>
 	 			</table>
 	 		</div>	
 	 		<div class="content-info" >
 				<dl class="content-summary"  ng-hide="getMode() !== 'report'">
 					<dt>
-						总分平均分： {{score}}
+						总分平均分： {{oneReport.total}}
 					</dt>
 					<dt>
-						<span class="tit">{{name}} 打分：{{score}}</span> 问卷：{{name}}
+						<span class="tit">{{name}} 打分：{{score}}</span> 问卷：{{oneReport.questionnaire.name}}
 					</dt>
 				</dl>
-				<dl class="content-score" >	
-					<dt>{{name}}</dt>
+				<dl class="content-score" ng-repeat="item in oneReport.questionnaire.questions">	
+					<dt>{{item.name}}</dt>
 					<dd class="score-info">
-						<div>{{info}}</div>
+						<div>{{item.desc}}</div>
 						<div class="score-num">
-							打分 ：{{score}}
+							打分 ：{{oneReport.scoresMap[item._id].score}}
 						</div>
 					</dd>
 				</dl>			
@@ -265,7 +265,9 @@
 	<script src="js/server/loginServer.js"></script>
 	<script src="js/server/teacherServer.js"></script>
 	<script src="js/server/quotaServer.js"></script>
+	<script src="js/server/questionServer.js"></script>
 	<script src="js/server/userServer.js"></script>
+	<script src="js/server/relatServer.js"></script>
 	<script src="js/server/utilServer.js"></script>
 
 	<script src="js/controller/navController.js"></script>
@@ -276,6 +278,7 @@
 	<script src="js/controller/reportmoreController.js"></script>
 	<script src="js/controller/reportinfoController.js"></script>
 	<script src="js/controller/toolbarController.js"></script>
+	<script src="js/controller/relatController.js"></script>
 	<script src="js/controller/teacherController.js"></script>
 	<script src="js/controller/userController.js"></script>
 	<script src="js/controller/indexController.js"></script>

@@ -5,6 +5,7 @@
         'ov.controllers.reportmore', //更多报表信息
         'ov.controllers.reportinfo', //报表详情
         'ov.controllers.toolbar', //工具条
+        'ov.controllers.relat', //工具条
         'ov.controllers.term', //学期模块
         'ov.controllers.teacher', //老师模块
         'ov.controllers.user', //

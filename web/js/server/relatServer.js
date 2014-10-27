@@ -39,6 +39,11 @@ angular.module('ov.services.relat',[
                         if($root.relatTdList.length === 0){
                             getTdList();
                         }
+                        if($root.nowTeacher.teacherId){
+                            $root.teacherRelatList = _.find($root.relatList,function(item){
+                                return item.id === $root.nowTeacher.teacherId;
+                            })
+                        }
                         console.log('拉互评关系列表成功!', data);
                     }else{
                         $root.$emit(MSG,data.err);
