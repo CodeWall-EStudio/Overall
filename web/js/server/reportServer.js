@@ -13,6 +13,7 @@ angular.module('ov.services.report',[
                     param = param || {};
                     var ts = new Date().getTime();
                     var url = '/api/indicatorscore/report?_='+ts+'&term='+$root.nowTerm._id;
+                    //只有老师分组的时候是概要
                     if(param.teacherGroup){
                         url +='&teacherGroup='+param.teacherGroup;    
                     }else{
@@ -20,6 +21,8 @@ angular.module('ov.services.report',[
                     }                    
                     if(param.indicatorGroup){
                         url +='&indicatorGroup='+param.indicatorGroup;    
+                    }else{
+                        url +='&indicatorGroup='+$root.nowQuotaGroup._id;    
                     }
                     if(param.teacherName){
                         url +='&teacherName='+param.teacherName;      

@@ -118,7 +118,7 @@
  				</tr>
  				<tr ng-repeat="item in reportList" ng-click="showOneReport(item)">
  					<td>{{item.teacherName}}</td>
- 					<td ng-repeat="obj in item.scores track by $index">{{obj}}</td>
+ 					<td ng-repeat="obj in item.scores track by $index">{{obj.score}}</td>
  					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
