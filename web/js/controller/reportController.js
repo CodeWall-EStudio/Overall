@@ -16,6 +16,7 @@ angular.module('ov.controllers.report',[
             $root.oneReport = {};
             $root.nowTeacher = {};
             $root.teacherRelatList = [];
+            $root.nowTeacherReport = {};
 
             var termLoad = false,
                    quotaLoad = false;
@@ -82,7 +83,9 @@ angular.module('ov.controllers.report',[
 
             function getReport(){
                 if($root.reportSMode === 'all'){
-
+                    Report.getReportList({
+                        teacherName : $root.nowTeacher.teacherName
+                    });
                 }else if($root.reportSMode === 'teacher'){
                     Report.getOneReport({
                         appraiseeId : $root.nowTeacher.teacherId,

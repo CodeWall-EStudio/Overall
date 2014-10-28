@@ -20,11 +20,13 @@ angular.module('ov.services.report',[
                     }                    
                     if(param.indicatorGroup){
                         url +='&indicatorGroup='+param.indicatorGroup;    
+                    }
+                    if(param.teacherName){
+                        url +='&teacherName='+param.teacherName;      
                     }else{
-                        url +='&indicatorGroup='+$root.nowQuotaGroup._id;   
+
                     }
                     //var url = '/api/indicatorscore/report?term='+$root.nowTerm._id+'&indicatorGroup='+$root.nowQuotaGroup._id;
-                    //console.log(url);
                     $http.get(url,
                         null,
                         {
@@ -33,8 +35,13 @@ angular.module('ov.services.report',[
                         .success(function(data,status){
                             //conventStudent(data.student);
                             if(data.err === 0){
-                                 $root.reportList = data.result;
-                                 console.log('拉报表成功',data.result);
+                                if(param.teacherName){
+                                    $root.nowTeacherReport = data.result[0];
+                                }else{
+                                    $root.reportList = data.result;   
+                                }
+                                 
+                                    console.log('拉报表成功',data.result);
                             }else{
                                 $root.$emit(MSG,data.err);
                             }
