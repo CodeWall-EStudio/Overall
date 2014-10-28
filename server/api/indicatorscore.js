@@ -180,6 +180,125 @@ function calculateScores(teacher2Scores, callback) {
 
 }
 
+exports.summary = function(req, res) {
+
+
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var teacherGroup = parameter.teacherGroup;
+    var teacherName = parameter.teacherName;
+
+    var param = {
+        term: term
+    };
+
+    // teacherName 和 teacherGroup 是互斥的
+    if (teacherGroup) {
+        var teacherIds = [];
+        teacherGroup.teachers.forEach(function(teacher) {
+            teacherIds.push(teacher.id);
+        });
+        param.teacherId = {
+            $in: teacherIds
+        };
+    } else if (teacherName) {
+        param.teacherName = teacherName;
+    }
+
+    Logger.debug('[IndicatorScore.summary] query: ', param);
+
+    var reportStart = Date.now();
+
+    // Logger.debug('[IndicatorScore.report] query: ', param);
+    db.IndicatorScores.find(param, null, {
+        sort: {
+            teacherId: 1
+        }
+    }, function(err, indScores) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        // 不指定指标组则输出报表概览, 要先列出所有指标组, 然后计算每个指标组的总分
+
+        // 找出所有指标组, 有生评和互评的指标组, 总分还要另外再计算
+        // 这里其实不用那么麻烦的, 可以写死某个指标组就一定有互评生评
+        // 但是这样会导致修改指标组的指标类型时很麻烦
+        // 还是设计通用一点吧: 
+        // 查询每个指标组的指标, 检查指标类型, 是互评生评的, 就取计算互评生评平均分
+        db.IndicatorGroups.find({
+                term: term
+            }, null, {
+                sort: {
+                    order: 1
+                }
+            },
+
+            function(err, indGroups) {
+                if (err) {
+                    return dbHelper.handleError(err, res);
+                }
+
+                var id2Groups = {
+                    length: 0
+                };
+                // 先把指标组以及下面的指标们都用 _id 索引, 方便查找
+                indGroups.forEach(function(group) {
+                    group = group.toObject();
+                    id2Groups[group._id] = group;
+                    id2Groups[id2Groups.length++] = group;
+
+                    // 先把有互评生评的指标组表示出来
+                    for (var i = 0; i < group.indicators.length; i++) {
+                        if (group.indicators[i].gatherType !== 1) {
+                            group.hasEvaluation = true;
+                            break;
+                        }
+                    }
+                });
+
+                // 先把得分按教师归类, 已事先按 teacherId 排序
+                var teacher2Scores = {
+                    length: 0
+                };
+                indScores.forEach(function(indScore) {
+                    var item = teacher2Scores[indScore.teacherId];
+                    if (!item) {
+                        item = teacher2Scores[indScore.teacherId] = {
+                            teacherId: indScore.teacherId,
+                            teacherName: indScore.teacherName,
+                            indicatorScores: []
+                        };
+                        teacher2Scores[teacher2Scores.length++] = item;
+                    }
+                    // 把指标组详情传过去
+                    indScore = indScore.toObject();
+                    indScore.indicatorGroup = id2Groups[indScore.indicatorGroup];
+                    item.indicatorScores.push(indScore);
+                });
+
+                // 计算总分和计算互评生评份
+                calculateScores(teacher2Scores, function(err, results) {
+                    if (err) {
+                        return res.json({
+                            err: ERR.SERVER_ERROR,
+                            msg: err
+                        });
+                    }
+                    res.json({
+                        err: ERR.SUCCESS,
+                        result: results
+                    });
+                    Logger.info('[IndicatorScore.summary] end, cost: ', Date.now() - reportStart, 'ms, query: ', param);
+                });
+
+            }
+        );
+
+    });
+
+};
+
 exports.report = function(req, res) {
 
 
@@ -224,90 +343,12 @@ exports.report = function(req, res) {
             return dbHelper.handleError(err, res);
         }
 
-        if (!indicatorGroup) { // 不指定指标组则输出报表概览, 要先列出所有指标组, 然后计算每个指标组的总分
-
-            // 找出所有指标组, 有生评和互评的指标组, 总分还要另外再计算
-            // 这里其实不用那么麻烦的, 可以写死某个指标组就一定有互评生评
-            // 但是这样会导致修改指标组的指标类型时很麻烦
-            // 还是设计通用一点吧: 
-            // 查询每个指标组的指标, 检查指标类型, 是互评生评的, 就取计算互评生评平均分
-            db.IndicatorGroups.find({
-                    term: term
-                }, null, {
-                    sort: {
-                        order: 1
-                    }
-                },
-
-                function(err, indGroups) {
-                    if (err) {
-                        return dbHelper.handleError(err, res);
-                    }
-
-                    var id2Groups = {
-                        length: 0
-                    };
-                    // 先把指标组以及下面的指标们都用 _id 索引, 方便查找
-                    indGroups.forEach(function(group) {
-                        group = group.toObject();
-                        id2Groups[group._id] = group;
-                        id2Groups[id2Groups.length++] = group;
-
-                        // 先把有互评生评的指标组表示出来
-                        for (var i = 0; i < group.indicators.length; i++) {
-                            if (group.indicators[i].gatherType !== 1) {
-                                group.hasEvaluation = true;
-                                break;
-                            }
-                        }
-                    });
-
-                    // 先把得分按教师归类, 已事先按 teacherId 排序
-                    var teacher2Scores = {
-                        length: 0
-                    };
-                    indScores.forEach(function(indScore) {
-                        var item = teacher2Scores[indScore.teacherId];
-                        if (!item) {
-                            item = teacher2Scores[indScore.teacherId] = {
-                                teacherId: indScore.teacherId,
-                                teacherName: indScore.teacherName,
-                                indicatorScores: []
-                            };
-                            teacher2Scores[teacher2Scores.length++] = item;
-                        }
-                        // 把指标组详情传过去
-                        indScore = indScore.toObject();
-                        indScore.indicatorGroup = id2Groups[indScore.indicatorGroup];
-                        item.indicatorScores.push(indScore);
-                    });
-
-                    // 计算总分和计算互评生评份
-                    calculateScores(teacher2Scores, function(err, results) {
-                        if (err) {
-                            return res.json({
-                                err: ERR.SERVER_ERROR,
-                                msg: err
-                            });
-                        }
-                        res.json({
-                            err: ERR.SUCCESS,
-                            result: results
-                        });
-                        Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - reportStart, 'ms, query: ', param);
-                    });
-
-                }
-            );
-
-        } else { // 报表详情, 根据条件搜索 IndicatorScores 就可以了
-            res.json({
-                err: ERR.SUCCESS,
-                result: indScores
-            });
-            Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - reportStart, 'ms, query: ', param);
-
-        }
+        // 报表详情, 根据条件搜索 IndicatorScores 就可以了
+        res.json({
+            err: ERR.SUCCESS,
+            result: indScores
+        });
+        Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - reportStart, 'ms, query: ', param);
 
     });
 

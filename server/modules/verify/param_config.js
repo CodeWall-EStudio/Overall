@@ -153,11 +153,29 @@ module.exports = {
             type: 'Terms',
             required: true
         }, {
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups',
+            required: true
+        }, {
             name: 'teacherGroup',
             type: 'TeacherGroups'
         }, {
-            name: 'indicatorGroup',
-            type: 'IndicatorGroups'
+            name: 'teacherName',
+            type: 'string'
+        }, {
+            name: 'type', // 报表类型, 1: 概览
+            type: 'number'
+        }]
+    },
+    '/api/indicatorscore/summary': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'teacherGroup', // teacherGroup 和 teacherName 二选一
+            type: 'TeacherGroups'
         }, {
             name: 'teacherName',
             type: 'string'
@@ -301,7 +319,7 @@ module.exports = {
     },
 
     // 进行生评和互评的接口
-    // 列出所有能进行评价的被评价人
+    // 列出所有当前登录用户能进行评价的被评价人
     '/api/evaluation/appraisees': {
         method: 'GET',
         params: [{
@@ -313,7 +331,7 @@ module.exports = {
             type: 'number'
         }]
     },
-    // 进行打分
+    // 当前登录用户对被评价者进行打分
     '/api/evaluation/appraise': {
         method: 'POST',
         params: [{
@@ -336,7 +354,7 @@ module.exports = {
             required: true
         }]
     },
-    // 打分结果
+    // 当前登录用户对被评价者的打分结果
     '/api/evaluation/detail': {
         method: 'GET',
         params: [{
