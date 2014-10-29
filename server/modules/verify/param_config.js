@@ -162,9 +162,6 @@ module.exports = {
         }, {
             name: 'teacherName',
             type: 'string'
-        }, {
-            name: 'type', // 报表类型, 1: 概览
-            type: 'number'
         }]
     },
     '/api/indicatorscore/summary': {
@@ -180,7 +177,7 @@ module.exports = {
             name: 'teacherName',
             type: 'string'
         }, {
-            name: 'type', // 报表类型, 1: 概览
+            name: 'type', // 报表类型, 0: 概要, 1: 详情
             type: 'number'
         }]
     },
@@ -195,7 +192,7 @@ module.exports = {
             type: 'string',
             required: true
         }, {
-            name: 'type', // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
+            name: 'type', // 报表类型, 1: 互评明细, 2: 生评明细
             type: 'number',
             required: true
         }]

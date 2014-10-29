@@ -182,7 +182,6 @@ function calculateScores(teacher2Scores, callback) {
 
 exports.summary = function(req, res) {
 
-
     var parameter = req.parameter;
     var term = parameter.term;
     var teacherGroup = parameter.teacherGroup;
@@ -191,6 +190,8 @@ exports.summary = function(req, res) {
     var param = {
         term: term
     };
+
+    // TODO 可以先不考虑互评生评来做, 逻辑会简单清晰点
 
     // teacherName 和 teacherGroup 是互斥的
     if (teacherGroup) {
@@ -312,9 +313,7 @@ exports.report = function(req, res) {
         term: term
     };
 
-    if (indicatorGroup) {
-        param.indicatorGroup = indicatorGroup;
-    }
+    param.indicatorGroup = indicatorGroup;
 
     // teacherName 和 teacherGroup 是互斥的
     if (teacherGroup) {
@@ -343,6 +342,8 @@ exports.report = function(req, res) {
             return dbHelper.handleError(err, res);
         }
 
+        // TODO 如果是行政指标组, 这里是否也要计算互评和生评
+
         // 报表详情, 根据条件搜索 IndicatorScores 就可以了
         res.json({
             err: ERR.SUCCESS,
@@ -359,20 +360,13 @@ exports.report = function(req, res) {
  * 评分人列表和互评得分
  *
  */
-function calculateTeacherEOIScores(req, res) {
-    var parameter = req.parameter;
+function calculateTeacherEOIScores(parameter, callback) {
     var term = parameter.term;
     var appraiseeId = parameter.appraiseeId;
 
     var ep = new EventProxy();
 
-    ep.fail(function(err) {
-        res.json({
-            err: ERR.DB_ERROR,
-            msg: '获取互评列表失败',
-            detail: err
-        });
-    });
+    ep.fail(callback);
 
     // 拉被评分人
     var param = {
@@ -396,21 +390,18 @@ function calculateTeacherEOIScores(req, res) {
     Logger.debug('[calculateTeacherEOIScores] query', param);
     db.RelationShips.find(param, function(err, ships) {
         if (err) {
-            return dbHelper.handleError(err, res);
+            return callback(err);
         }
         var results = [];
         var totalScore = 0;
 
         ep.after('handleShips', ships.length * 3, function() {
-            res.json({
-                err: ERR.SUCCESS,
-                result: {
-                    summary: {
-                        totalScore: totalScore,
-                        averageScore: totalScore / (results.length || 0)
-                    },
-                    appraisers: results
-                }
+            callback(null, {
+                summary: {
+                    totalScore: totalScore,
+                    averageScore: totalScore / (results.length || 0)
+                },
+                appraisers: results
             });
         });
 
@@ -482,20 +473,14 @@ function calculateTeacherEOIScores(req, res) {
 /**
  * 列出学生打分列表
  */
-function calculateStudentEOIScores(req, res) {
-    var parameter = req.parameter;
+function calculateStudentEOIScores(parameter, callback) {
+
     var term = parameter.term;
     var appraiseeId = parameter.appraiseeId;
 
     var ep = new EventProxy();
 
-    ep.fail(function(err) {
-        res.json({
-            err: ERR.DB_ERROR,
-            msg: '获取生评列表失败',
-            detail: err
-        });
-    });
+    ep.fail(callback);
 
     // 先确认被评分人是否需要生评
     var param = {
@@ -506,14 +491,11 @@ function calculateStudentEOIScores(req, res) {
 
     db.RelationShips.findOne(param, function(err, ship) {
         if (err) {
-            return dbHelper.handleError(err, res);
+            return callback(err);
         }
 
         if (!ship) {
-            return res.json({
-                err: ERR.PARAM_ERROR,
-                msg: '该教师不需要生评'
-            });
+            return callback('该教师不需要生评');
         }
 
         // 1.
@@ -527,32 +509,27 @@ function calculateStudentEOIScores(req, res) {
     var results = [];
     var totalScore = 0;
     var questionnare = null;
+
     // 1. 拉教师所在班级, 
     // 2. 拉属于这些班级的所有学生, 
     // 3. 拉学生的打分结果
     // 4. 拉打分用的问卷
-
     ep.after('handleShips', 2, function() {
-        res.json({
-            err: ERR.SUCCESS,
-            result: {
-                summary: {
-                    totalScore: totalScore,
-                    averageScore: totalScore / (results.length || 0)
-                },
-                questionnare: questionnare,
-                students: results
-            }
+
+        callback(null, {
+            summary: {
+                totalScore: totalScore,
+                averageScore: totalScore / (results.length || 0)
+            },
+            questionnare: questionnare,
+            students: results
         });
     });
 
     ep.on('Teachers.findOne', function(tgroup) {
 
         if (!tgroup) {
-            return res.json({
-                err: ERR.PARAM_ERROR,
-                msg: '该教师没有配置班级信息'
-            });
+            return callback('该教师没有配置班级信息');
         }
 
         var classes = [];
@@ -621,18 +598,38 @@ exports.detail = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
     var appraiseeId = parameter.appraiseeId;
-    // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
+    // 报表类型, 1: 互评明细, 2: 生评明细
     var type = parameter.type;
+
+    var startTime = Date.now();
+
+    function callback(err, result) {
+        if (err) {
+            return res.json({
+                err: ERR.DB_ERROR,
+                msg: '获取评价明细失败了',
+                detail: err
+            });
+        }
+        Logger.info('[IndicatorScore.detail] type: ', type, 'time cost: ', Date.now() - startTime);
+        res.json({
+            err: ERR.SUCCESS,
+            result: result
+        });
+    }
 
     if (type === 1) {
 
+        calculateTeacherEOIScores(parameter, callback);
     } else if (type === 2) {
 
-        calculateTeacherEOIScores(req, res);
-    } else if (type === 3) {
-
-        calculateStudentEOIScores(req, res);
+        calculateStudentEOIScores(parameter, callback);
     }
+};
 
-
+/**
+ * 导出报表
+ */
+exports.export = function(req, res){
+    // TODO
 };
