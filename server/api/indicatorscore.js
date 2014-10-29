@@ -377,22 +377,18 @@ function calculateTeacherEOIScores(req, res) {
     // 拉被评分人
     var param = {
         term: term,
-        $and: [{
-                teachers: {
-                    $elemMatch: {
-                        id: appraiseeId,
-                        value: {
-                            $gt: 0
-                        }
-                    }
-                }
-            }, {
-                id: {
-                    $ne: appraiseeId
+        teachers: {
+            $elemMatch: {
+                id: appraiseeId,
+                value: {
+                    $gt: 0
                 }
             }
+        },
+        id: {
+            $ne: appraiseeId
+        }
 
-        ]
     };
 
 
@@ -483,6 +479,144 @@ function calculateTeacherEOIScores(req, res) {
 }
 
 
+/**
+ * 列出学生打分列表
+ */
+function calculateStudentEOIScores(req, res) {
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var appraiseeId = parameter.appraiseeId;
+
+    var ep = new EventProxy();
+
+    ep.fail(function(err) {
+        res.json({
+            err: ERR.DB_ERROR,
+            msg: '获取生评列表失败',
+            detail: err
+        });
+    });
+
+    // 先确认被评分人是否需要生评
+    var param = {
+        term: term,
+        student: 1,
+        id: appraiseeId
+    };
+
+    db.RelationShips.findOne(param, function(err, ship) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        if (!ship) {
+            return res.json({
+                err: ERR.PARAM_ERROR,
+                msg: '该教师不需要生评'
+            });
+        }
+
+        // 1.
+        db.Teachers.findOne({
+            term: term,
+            id: appraiseeId
+        }, ep.doneLater('Teachers.findOne'));
+
+    }); // end RelationShips.findOne
+
+    var results = [];
+    var totalScore = 0;
+    var questionnare = null;
+    // 1. 拉教师所在班级, 
+    // 2. 拉属于这些班级的所有学生, 
+    // 3. 拉学生的打分结果
+    // 4. 拉打分用的问卷
+
+    ep.after('handleShips', 2, function() {
+        res.json({
+            err: ERR.SUCCESS,
+            result: {
+                summary: {
+                    totalScore: totalScore,
+                    averageScore: totalScore / (results.length || 0)
+                },
+                questionnare: questionnare,
+                students: results
+            }
+        });
+    });
+
+    ep.on('Teachers.findOne', function(tgroup) {
+
+        if (!tgroup) {
+            return res.json({
+                err: ERR.PARAM_ERROR,
+                msg: '该教师没有配置班级信息'
+            });
+        }
+
+        var classes = [];
+        tgroup.classes.forEach(function(cls) {
+            classes.push({
+                'class': cls['class'],
+                grade: cls.grade
+            });
+        });
+
+        // 2.
+        param = {
+            term: term,
+            $or: classes
+        };
+        Logger.debug('[calculateStudentEOIScores] query', param);
+        db.Students.find(param, ep.done('Students.find'));
+    });
+
+    ep.on('Students.find', function(students) {
+
+
+        students.forEach(function(student) {
+
+            var result = {
+                id: student.id,
+                name: student.name,
+                'class': student['class'],
+                grade: student.grade,
+                eoIndicateScore: null
+            };
+            results.push(result);
+
+            // 3.
+            param = {
+                term: term,
+                appraiseeId: appraiseeId,
+                appraiserId: student.id,
+                type: 1
+            };
+            Logger.debug('[calculateStudentEOIScores#EOIndicateScores.findOne] query', param);
+            db.EOIndicateScores.findOne(param, ep.group('handleShips', function(doc) {
+                if (doc) {
+                    result.eoIndicateScore = doc;
+                    totalScore += doc.totalScore;
+                }
+
+            }));
+
+        });
+
+    }); // end Students.find
+
+    // 4.
+    db.Questionnaires.findOne({
+        term: term,
+        order: 1
+    }, ep.group('handleShips', function(doc) {
+        questionnare = doc;
+    }));
+
+}
+
+
 exports.detail = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
@@ -492,9 +626,12 @@ exports.detail = function(req, res) {
 
     if (type === 1) {
 
+    } else if (type === 2) {
+
         calculateTeacherEOIScores(req, res);
+    } else if (type === 3) {
 
-
+        calculateStudentEOIScores(req, res);
     }
 
 
