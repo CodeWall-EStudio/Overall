@@ -191,11 +191,7 @@ module.exports = {
             type: 'Terms',
             required: true
         }, {
-            name: 'teacherGroup',
-            type: 'TeacherGroups',
-            required: true
-        }, {
-            name: 'teacherId',
+            name: 'appraiseeId', // 被评价人的 id
             type: 'string',
             required: true
         }, {

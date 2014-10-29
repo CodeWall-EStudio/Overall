@@ -354,6 +354,148 @@ exports.report = function(req, res) {
 
 };
 
+
+/**
+ * 评分人列表和互评得分
+ *
+ */
+function calculateTeacherEOIScores(req, res) {
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var appraiseeId = parameter.appraiseeId;
+
+    var ep = new EventProxy();
+
+    ep.fail(function(err) {
+        res.json({
+            err: ERR.DB_ERROR,
+            msg: '获取互评列表失败',
+            detail: err
+        });
+    });
+
+    // 拉被评分人
+    var param = {
+        term: term,
+        $and: [{
+                teachers: {
+                    $elemMatch: {
+                        id: appraiseeId,
+                        value: {
+                            $gt: 0
+                        }
+                    }
+                }
+            }, {
+                id: {
+                    $ne: appraiseeId
+                }
+            }
+
+        ]
+    };
+
+
+
+    Logger.debug('[calculateTeacherEOIScores] query', param);
+    db.RelationShips.find(param, function(err, ships) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        var results = [];
+        var totalScore = 0;
+
+        ep.after('handleShips', ships.length * 3, function() {
+            res.json({
+                err: ERR.SUCCESS,
+                result: {
+                    summary: {
+                        totalScore: totalScore,
+                        averageScore: totalScore / (results.length || 0)
+                    },
+                    appraisers: results
+                }
+            });
+        });
+
+        ships.forEach(function(ship) {
+            // 1. 拉评分人所在教师分组, 
+            // 2. 拉评分人的打分结果, 
+            // 3. 拉打分用的问卷
+            var evaluationType = 0;
+            for (var i = 0; i < ship.teachers.length; i++) {
+                if (ship.teachers[i].id === appraiseeId) {
+                    evaluationType = ship.teachers[i].value;
+                    break;
+                }
+            }
+
+            var result = {
+                id: ship.id,
+                name: ship.name,
+                teacherGroup: null,
+                eoIndicateScore: null,
+                questionnare: null
+            };
+            results.push(result);
+            var count = 0;
+
+            // 1.
+            db.TeacherGroups.findOne({
+                term: term,
+                'teachers.id': ship.id
+            }, {
+                id: 1,
+                name: 1
+            }, ep.group('handleShips', function(doc) {
+                result.teacherGroup = doc;
+                console.log(ship.id, count++, evaluationType);
+            }));
+
+            // 2.
+            param = {
+                term: term,
+                appraiseeId: appraiseeId,
+                appraiserId: ship.id,
+                type: 0
+            };
+            Logger.debug('[calculateTeacherEOIScores#EOIndicateScores.findOne] query', param);
+            db.EOIndicateScores.findOne(param, ep.group('handleShips', function(doc) {
+                if (doc) {
+                    result.eoIndicateScore = doc;
+                    totalScore += doc.totalScore;
+                    console.log(ship.id, count++);
+                }
+
+            }));
+
+            // 3.
+            db.Questionnaires.findOne({
+                term: term,
+                order: evaluationType
+            }, ep.group('handleShips', function(doc) {
+                result.questionnare = doc;
+                console.log(ship.id, count++);
+            }));
+        });
+
+    });
+}
+
+
 exports.detail = function(req, res) {
+    var parameter = req.parameter;
+    var term = parameter.term;
+    var appraiseeId = parameter.appraiseeId;
+    // 报表类型, 1: 评价报告, 2: 互评明细, 3: 生评明细
+    var type = parameter.type;
+
+    if (type === 1) {
+
+        calculateTeacherEOIScores(req, res);
+
+
+    }
+
 
 };

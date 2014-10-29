@@ -44,8 +44,12 @@ exports.appraisees = function(req, res) {
             }
             // 通过班级找到对应的老师们
             param = {
-                'classes.grade': doc.grade,
-                'classes.class': doc['class']
+                classes: {
+                    $elemMatch: {
+                        grade: doc.grade,
+                        'class': doc['class']
+                    }
+                }
             };
             Logger.debug('[evaluation.appraisees] evaluationType: ', evaluationType, 'query: ', param);
             db.Teachers.find(param, {
