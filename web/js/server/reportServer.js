@@ -58,14 +58,14 @@ angular.module('ov.services.report',[
                 function getOneReport(param,success,error){
                     param = param || {};
                     var ts = new Date().getTime();
-                    var url = '/api/evaluation/detail?_='+ts+'&term='+$root.nowTerm._id;
+                    var url = '/api/indicatorscore/detail?_='+ts+'&term='+$root.nowTerm._id;
                     if(param.appraiseeId){
                         url +='&appraiseeId='+param.appraiseeId;
                     }
-                    if(typeof param.evaluationType !== 'undefined'){
-                        url  +='&evaluationType='+param.evaluationType;
+                    if(typeof param.type !== 'undefined'){
+                        url  +='&type='+param.type;
                     }
-       
+                    console.log(url);
                     $http.get(url,
                         null,
                         {
@@ -76,12 +76,13 @@ angular.module('ov.services.report',[
                             if(data.err === 0){
                                 //$root.userList = data.result;
                                 $root.oneReport= data.result;
-                                $root.oneReport.scoresMap = {};
-                                $root.oneReport.total = 0;
-                                _.each( $root.oneReport.scores,function(item){
-                                    $root.oneReport.scoresMap[item.question] = item;
-                                    $root.oneReport.total += item.score;
-                                });
+                                console.log($root.oneReport);
+                                //$root.oneReport.scoresMap = {};
+                                //$root.oneReport.total = 0;
+                                // _.each( $root.oneReport.scores,function(item){
+                                //     $root.oneReport.scoresMap[item.question] = item;
+                                //     $root.oneReport.total += item.score;
+                                // });
                                 console.log('拉个人报表成功',data.result);
                             }else{
                                 $root.$emit(MSG,data.err);

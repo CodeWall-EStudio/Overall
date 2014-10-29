@@ -18,6 +18,8 @@ angular.module('ov.controllers.report',[
             $root.teacherRelatList = [];
             $root.nowTeacherReport = {};
 
+            $root.nowSelectedUserIdx = 0;
+
             var termLoad = false,
                    quotaLoad = false;
 
@@ -51,7 +53,12 @@ angular.module('ov.controllers.report',[
             //事件通知 指标组变更
             $root.$on(QUOTAGROUP_CHANGE,function(){
                 Report.getReportList();
-            });                        
+            });    
+
+            //选中了一个老师
+            $root.showOneUser =  function(idx){
+                $root.nowSelectedUserIdx = idx
+            }
 
             $root.showReport = function(type){
                 switch(type){
@@ -89,12 +96,12 @@ angular.module('ov.controllers.report',[
                 }else if($root.reportSMode === 'teacher'){
                     Report.getOneReport({
                         appraiseeId : $root.nowTeacher.teacherId,
-                        evaluationType : 0
+                        type : 1
                     });                    
                 }else if($root.reportSMode === 'student'){
                     Report.getOneReport({
                         appraiseeId : $root.nowTeacher.teacherId,
-                        evaluationType : 1
+                        type : 0
                     });                                        
                 }                
             }
