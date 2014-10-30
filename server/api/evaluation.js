@@ -1,4 +1,5 @@
 var EventProxy = require('eventproxy');
+var _ = require('underscore');
 
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
@@ -234,42 +235,87 @@ exports.detail = function(req, res) {
     var loginUser = req.loginUser;
 
     var term = parameter.term;
+
+    //  评估类型, 0: 教师互评, 1: 生评
     var evaluationType = parameter.evaluationType;
     var appraiseeId = parameter.appraiseeId;
 
     var appraiserId = loginUser.id;
 
+    // 1. 获取互评关系
+    // 2. 获取问卷
+    // 3. 获取打分细节
+
     var param = {
         term: term,
-        type: evaluationType,
-        appraiseeId: appraiseeId,
-        appraiserId: appraiserId,
+        id: appraiseeId // 以被评论教师的维度去找, 避免学生没办法找 RelationShips 的问题
     };
-    Logger.debug('[evaluation.detail#EOIndicateScores.findOne] query: ', param);
-    db.EOIndicateScores.findOne(param, function(err, doc) {
+
+    // 1.
+    db.RelationShips.findOne(param, function(err, ship) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
 
-        if (!doc) {
+        if (!ship) {
             return res.json({
                 err: ERR.NOT_FOUND,
-                msg: '没有找到评价记录'
+                msg: '还没有给该教师配置互评关系'
             });
         }
 
-        db.Questionnaires.findById(doc.questionnaire, function(err, quest) {
+        // 2.
+        param = {
+            term: term
+        };
+        if (evaluationType === 1) {
+            param.order = ship.student;
+        } else {
+            var item = _.find(ship.teachers, function(item) {
+                return item.id === appraiserId;
+            });
+            if (!item) {
+                return res.json({
+                    err: ERR.NOT_FOUND,
+                    msg: '你与该教师没有互评关系!'
+                });
+            }
+            param.order = item.value;
+        }
+        db.Questionnaires.findOne(param, function(err, quest) {
             if (err) {
                 return dbHelper.handleError(err, res);
             }
-            doc = doc.toObject();
-            doc.questionnaire = quest;
-            res.json({
-                err: ERR.SUCCESS,
-                result: doc
+
+            var result = {
+                appraiserId: appraiserId,
+                appraiseeId: appraiseeId,
+                questionnaire: quest
+            }
+
+            param = {
+                term: term,
+                type: evaluationType,
+                appraiseeId: appraiseeId,
+                appraiserId: appraiserId,
+            };
+
+            Logger.debug('[evaluation.detail#EOIndicateScores.findOne] query: ', param);
+            db.EOIndicateScores.findOne(param, function(err, doc) {
+                if (err) {
+                    return dbHelper.handleError(err, res);
+                }
+                
+                result.detail = doc;
+
+                return res.json({
+                    err: ERR.SUCCESS,
+                    result: result
+                });
+
             });
-        });
+        }); // end Questionnaires.findOne
 
+    }); // end RelationShips.findOne
 
-    });
 };
