@@ -24,7 +24,7 @@
  		</ul>
  		<div class="userinfo" ng-controller="userController">
  			<span>{{my.name}}</span>
- 			<a ng-class="{hide:User.auth===0}">管理</a>
+ 			<a ng-class="{hide:my.auth===0}">管理</a>
  			<a ng-click="quitLogin()">退出</a>
  		</div>
  	</div>

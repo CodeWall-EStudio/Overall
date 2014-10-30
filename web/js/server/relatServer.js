@@ -39,7 +39,7 @@ angular.module('ov.services.relat',[
                         if($root.relatTdList.length === 0){
                             getTdList();
                         }
-                        if($root.nowTeacher.teacherId){
+                        if($root.nowTeacher && $root.nowTeacher.teacherId){
                             $root.teacherRelatList = _.find($root.relatList,function(item){
                                 return item.id === $root.nowTeacher.teacherId;
                             })

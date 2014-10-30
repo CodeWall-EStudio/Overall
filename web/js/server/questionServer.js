@@ -88,7 +88,7 @@ angular.module('ov.services.question',[
             var ts = new Date().getTime();
             $http.get(url+'&t='+ts,null,{responseType:'json'})
                 .success(function(data,status){
-                    console.log('拉取问卷分组成功！',data.result);
+                    console.log('拉取打分结果成功！',data.result);
                     if(data.err === 0){
                         $root.nowQuestScore = data.result;
                         $root.$emit(QUEST_LOAD);
