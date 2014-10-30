@@ -51,7 +51,7 @@ exports.appraisees = function(req, res) {
                     }
                 }
             };
-            Logger.debug('[evaluation.appraisees] evaluationType: ', evaluationType, 'query: ', param);
+            Logger.debug('[evaluation.appraisees#Teachers.find] evaluationType: ', evaluationType, 'query: ', param);
             db.Teachers.find(param, {
                 id: 1,
                 name: 1
@@ -245,7 +245,7 @@ exports.detail = function(req, res) {
         appraiseeId: appraiseeId,
         appraiserId: appraiserId,
     };
-    Logger.debug('[evaluation.detail] param: ', param);
+    Logger.debug('[evaluation.detail#EOIndicateScores.findOne] query: ', param);
     db.EOIndicateScores.findOne(param, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);

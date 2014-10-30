@@ -482,29 +482,6 @@ function calculateStudentEOIScores(parameter, callback) {
 
     ep.fail(callback);
 
-    // 先确认被评分人是否需要生评
-    var param = {
-        term: term,
-        student: 1,
-        id: appraiseeId
-    };
-
-    db.RelationShips.findOne(param, function(err, ship) {
-        if (err) {
-            return callback(err);
-        }
-
-        if (!ship) {
-            return callback('该教师不需要生评');
-        }
-
-        // 1.
-        db.Teachers.findOne({
-            term: term,
-            id: appraiseeId
-        }, ep.doneLater('Teachers.findOne'));
-
-    }); // end RelationShips.findOne
 
     var results = [];
     var totalScore = 0;
@@ -526,6 +503,41 @@ function calculateStudentEOIScores(parameter, callback) {
         });
     });
 
+    // 先确认被评分人是否需要生评
+    var param = {
+        term: term,
+        // student: 1,
+        id: appraiseeId
+    };
+
+    db.RelationShips.findOne(param, function(err, ship) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!ship) {
+            return callback('没有配置该教师的互评关系');
+        } else if (!ship.student) {
+            return callback('该教师不需要生评');
+        }
+
+        // 1.
+        db.Teachers.findOne({
+            term: term,
+            id: appraiseeId
+        }, ep.doneLater('Teachers.findOne'));
+
+        // 4.
+        db.Questionnaires.findOne({
+            term: term,
+            order: ship.student
+        }, ep.group('handleShips', function(doc) {
+            questionnare = doc;
+        }));
+
+    }); // end RelationShips.findOne
+
+
     ep.on('Teachers.findOne', function(tgroup) {
 
         if (!tgroup) {
@@ -545,13 +557,15 @@ function calculateStudentEOIScores(parameter, callback) {
             term: term,
             $or: classes
         };
-        Logger.debug('[calculateStudentEOIScores] query', param);
+        Logger.debug('[calculateStudentEOIScores#Students.find] query', param);
         db.Students.find(param, ep.done('Students.find'));
     });
 
     ep.on('Students.find', function(students) {
 
-
+        if (!students.length) {
+            return ep.group('handleShips')();
+        }
         students.forEach(function(student) {
 
             var result = {
@@ -583,13 +597,6 @@ function calculateStudentEOIScores(parameter, callback) {
 
     }); // end Students.find
 
-    // 4.
-    db.Questionnaires.findOne({
-        term: term,
-        order: 1
-    }, ep.group('handleShips', function(doc) {
-        questionnare = doc;
-    }));
 
 }
 
@@ -630,6 +637,6 @@ exports.detail = function(req, res) {
 /**
  * 导出报表
  */
-exports.export = function(req, res){
+exports.export = function(req, res) {
     // TODO
 };
