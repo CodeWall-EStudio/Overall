@@ -17,6 +17,7 @@ function cas(req, res) {
             service: req.appDomain + '/api/login/callback'
         });
     }
+    return cas.ins;
 }
 
 /**
