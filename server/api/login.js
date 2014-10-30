@@ -9,10 +9,15 @@ var Logger = require('../logger');
 var config = require('../config');
 var Util = require('../util');
 
-var cas = new CAS({
-    base_url: config.CAS_BASE_URL,
-    service: config.APP_DOMAIN + '/api/login/callback'
-});
+
+function cas(req, res) {
+    if (!cas.ins) {
+        cas.ins = new CAS({
+            base_url: config.CAS_BASE_URL,
+            service: req.appDomain + '/api/login/callback'
+        });
+    }
+}
 
 /**
  * 教师登录
@@ -22,7 +27,7 @@ var cas = new CAS({
  */
 exports.get = function(req, res) {
 
-    var url = cas.login();
+    var url = cas(req, res).login();
     Logger.info('[login] redirect to: ' + url);
     res.redirect(url);
 
@@ -40,7 +45,7 @@ exports.callback = function(req, res) {
         return;
     }
 
-    cas.validate(ticket, function(err, status, data) {
+    cas(req, res).validate(ticket, function(err, status, data) {
 
         if (err) {
             return res.json({
@@ -66,7 +71,7 @@ exports.callback = function(req, res) {
         var user = {};
         user.id = data.loginName;
         user.skey = data.encodeKey;
-        user.role = 2;//'teacher';
+        user.role = 2; //'teacher';
 
         req.session.user = user;
         res.cookie('skey', data.encodeKey);
@@ -202,7 +207,7 @@ exports.student = function(req, res) {
             var user = studentObj;
             var skey = Util.md5(user.name + ':' + user.id);
 
-            user.role = 1;//'student';
+            user.role = 1; //'student';
             user.skey = skey;
 
             req.session.user = user;
@@ -222,10 +227,12 @@ exports.student = function(req, res) {
     });
 };
 
-exports.logout = function(req, res){
+exports.logout = function(req, res) {
     req.session.destroy();
 
     res.clearCookie('skey');
     res.clearCookie('overall.sid');
 
-}
+    res.redirect(cas(req, res).logout());
+
+};
