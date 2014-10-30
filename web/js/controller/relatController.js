@@ -69,10 +69,11 @@ angular.module('ov.controllers.relat',[
         }     
         //保存
         $scope.saveScore = function(){
+            console.log($root.nowQuestion);
             var param = {
                 appraiseeId : $scope.nowId,
                 evaluationType : $root.nowOverType,
-                questionnaire : $root.nowQuestion._id,
+                questionnaire : $root.nowQuestScore.questionnaire._id,
                 scores : JSON.stringify(getNowScores())
             }
             Question.saveScores(param);

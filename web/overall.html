@@ -63,7 +63,7 @@
             <div class="content-info" >
                 <dl class="content-summary" ng-class="{hide:getMode() === 'record' || nowStudent.id }">
                     <dt>
-                        <span class="tit">{{nowName}} 打分：{{allScore}}</span> 问卷：{{nowQuestion.name}} 
+                        <span class="tit">{{nowName}} 打分：{{allScore}}</span> 问卷：{{nowQuestScore.questionnaire.name}} 
                         <button class="btn btn-primary btn-save" ng-click="saveScore()">保存</button>
                         <button class="btn btn-primary" ng-click="resetScore()">复位</button>
                     </dt>
@@ -75,7 +75,7 @@
                         <div class="score-num">
                             打分 ：
                             <span class="glyphicon glyphicon-plus" ng-click="addScore(item._id)"></span>
-                            <span>{{nowScores[item._id].score}}</span>
+                            <span>{{nowQuestScore.detail.scores[item._id].score}}</span>
                             <span class="glyphicon glyphicon-minus" ng-click="removeScore(item._id)"></span>
                         </div>
                     </dd>

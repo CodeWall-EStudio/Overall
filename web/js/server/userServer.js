@@ -26,6 +26,10 @@ angular.module('ov.services.user',[
                 }) ;          
         }
 
+        function logout(){
+            location.href="/api/login/logout";
+        }
+
         function searchUser(param,success,error){
             param = param || {};
             var ts = new Date().getTime();
@@ -96,6 +100,7 @@ angular.module('ov.services.user',[
     return {
         getUserInfo : getUserInfo,
         importUser : importUser,
+        logout : logout,
         setAuth : setAuth,
         searchUser : searchUser
     }

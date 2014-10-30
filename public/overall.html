@@ -5,7 +5,7 @@
     <meta name="author" content="hongyuan" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>综合评价-互评</title>
-    <link rel="stylesheet" href="css/main.css?t=1414689785127">
+    <link rel="stylesheet" href="css/main.css?t=1414713052703">
 </head>
 <body ng-controller="overallController">
     <div class="header-blue">
@@ -53,7 +53,7 @@
             <div class="content-info" >
                 <dl class="content-summary" ng-class="{hide:getMode() === 'record' || nowStudent.id }">
                     <dt>
-                        <span class="tit">{{nowName}} 打分：{{allScore}}</span> 问卷：{{nowQuestion.name}} 
+                        <span class="tit">{{nowName}} 打分：{{allScore}}</span> 问卷：{{nowQuestScore.questionnaire.name}} 
                         <button class="btn btn-primary btn-save" ng-click="saveScore()">保存</button>
                         <button class="btn btn-primary" ng-click="resetScore()">复位</button>
                     </dt>
@@ -65,7 +65,7 @@
                         <div class="score-num">
                             打分 ：
                             <span class="glyphicon glyphicon-plus" ng-click="addScore(item._id)"></span>
-                            <span>{{nowScores[item._id].score}}</span>
+                            <span>{{nowQuestScore.detail.scores[item._id].score}}</span>
                             <span class="glyphicon glyphicon-minus" ng-click="removeScore(item._id)"></span>
                         </div>
                     </dd>
@@ -77,7 +77,7 @@
 
     <script src="js/lib/jslib.js"></script>
 
-    <script src="js/over.js?t=1414689785127"></script>
+    <script src="js/over.js?t=1414713052703"></script>
 
 </body>
 </html>

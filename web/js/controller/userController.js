@@ -26,6 +26,11 @@ angular.module('ov.controllers.user',[
             User.setAuth(param);
         }
 
+        $root.quitLogin = function(){
+            console.log(2222);
+            User.logout();
+        }
+
         $root.import71 = function(){
             User.importUser();
         }
