@@ -171,8 +171,13 @@ exports.appraise = function(req, res) {
     var questionnaire = parameter.questionnaire;
 
     var totalScore = 0;
+    var scoresMap = {};
     scores.forEach(function(s) {
         totalScore += s.score;
+        scoresMap[s.question] = {
+            question: s.question,
+            score: s.score
+        };
     });
 
     var appraiserId = loginUser.id;
@@ -189,7 +194,7 @@ exports.appraise = function(req, res) {
             return dbHelper.handleError(err, res);
         }
         if (doc) { // 已经有的, 就覆盖
-            doc.scores = scores;
+            doc.scores = scoresMap;
             doc.totalScore = totalScore;
             doc.questionnaire = questionnaire;
             doc.save(function(err, doc) {
@@ -207,7 +212,7 @@ exports.appraise = function(req, res) {
                 type: evaluationType,
                 appraiseeId: appraiseeId,
                 appraiserId: appraiserId,
-                scores: scores,
+                scores: scoresMap,
                 totalScore: totalScore,
                 questionnaire: questionnaire
             }, function(err, doc) {
@@ -291,7 +296,7 @@ exports.detail = function(req, res) {
                 appraiserId: appraiserId,
                 appraiseeId: appraiseeId,
                 questionnaire: quest
-            }
+            };
 
             param = {
                 term: term,
@@ -305,7 +310,7 @@ exports.detail = function(req, res) {
                 if (err) {
                     return dbHelper.handleError(err, res);
                 }
-                
+
                 result.detail = doc;
 
                 return res.json({

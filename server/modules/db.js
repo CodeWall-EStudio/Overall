@@ -101,10 +101,11 @@ var models = {
         teacherId: String,
         teacherName: String,
         indicatorGroup: ObjectId, // 所属指标组
-        scores: [{
-            indicator: ObjectId, // 指标
-            score: Number // 指标得分
-        }], // 分数数组
+        scores: {}, // 指标得分
+        // indicator: {
+        //     indicator: ObjectId, // 指标
+        //     score: Number // 指标得分
+        // }, // 分数数组
         totalScore: Number
     },
 
@@ -140,10 +141,11 @@ var models = {
         type: Number, // 0: 互评, 1: 生评
         appraiseeId: String, // 被评价者的id
         appraiserId: String, // 评价者的 id
-        scores: [{
-            question: ObjectId,
-            score: Number
-        }],
+        scores: {}, // 互评生评的打分
+        // question: {
+        //     question: ObjectId,
+        //     score: Number
+        // },
         totalScore: Number,
         questionnaire: ObjectId
     }

@@ -27,15 +27,15 @@ exports.import = function(req, res) {
             teacherName: item['教师姓名'],
             term: group.term,
             indicatorGroup: group,
-            scores: [],
+            scores: {},
             totalScore: item['总分'] || 0
         };
 
         group.indicators.forEach(function(indicator) {
-            doc.scores.push({
+            doc.scores[indicator._id]={
                 indicator: indicator,
                 score: item[indicator.name] || 0
-            });
+            };
         });
 
         docs.push(doc);
@@ -180,9 +180,12 @@ function calculateScores(teacher2Scores, callback) {
 
 }
 
-exports.summary = function(req, res) {
-
-    var parameter = req.parameter;
+/**
+ * 创建评价报告
+ * 1. 同一教师分组的人的总分都要计算, 因为要计算同组平均分和排名
+ * 2. 每一个指标也要算同组平均分
+ */
+function createIndicatorDetail(parameter, callback) {
     var term = parameter.term;
     var teacherGroup = parameter.teacherGroup;
     var teacherName = parameter.teacherName;
@@ -298,12 +301,73 @@ exports.summary = function(req, res) {
 
     });
 
-};
 
-exports.report = function(req, res) {
+}
 
+/**
+ * 创建评价概览, 与 createIndicatorDetail 相比, 少了各个指标的平均分
+ */
+function createIndicatorSummary(parameter, callback) {
+
+    var term = parameter.term;
+    var teacherGroup = parameter.teacherGroup;
+    var teacherName = parameter.teacherName;
+
+    var param = {
+        term: term
+    };
+
+    // TODO 可以先不考虑互评生评来做, 逻辑会简单清晰点
+
+    // 1. 获取需要生成报告的老师(们)
+    // 2. 针对每个老师生成单独的报告
+    // 3. 有生评互评的, 要另外走逻辑计算
+
+    // teacherName 和 teacherGroup 是互斥的
+    if (teacherGroup) {
+        ep.emitLater('')
+    } else if (teacherName) {
+        db.Teachers
+        param.teacherName = teacherName;
+    }
+
+}
+
+exports.summary = function(req, res) {
 
     var parameter = req.parameter;
+
+    var startTime = Date.now();
+
+    function callback(err, result) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        res.json({
+            err: ERR.SUCCESS,
+            result: result
+        });
+        Logger.info('[IndicatorScore.summary] end, cost: ', Date.now() - startTime, 'ms');
+
+    }
+
+    // 报表类型, 0: 概要, 1: 详情
+    if (parameter.type === 1) {
+        createIndicatorDetail(parameter, callback);
+    } else {
+        createIndicatorSummary(parameter, callback);
+    }
+
+
+};
+
+
+/**
+ * 获取评价列表
+ *
+ */
+function fetchIndicatorScores(parameter, callback) {
     var term = parameter.term;
     var teacherGroup = parameter.teacherGroup;
     var teacherName = parameter.teacherName;
@@ -328,28 +392,40 @@ exports.report = function(req, res) {
         param.teacherName = teacherName;
     }
 
-    Logger.debug('[IndicatorScore.report] query: ', param);
-
-    var reportStart = Date.now();
-
-    // Logger.debug('[IndicatorScore.report] query: ', param);
+    Logger.debug('[IndicatorScore.report#fetchIndicatorScores] query: ', param);
     db.IndicatorScores.find(param, null, {
         sort: {
             teacherId: 1
         }
     }, function(err, indScores) {
         if (err) {
+            return callback(err);
+        }
+
+        // 报表详情, 根据条件搜索 IndicatorScores 就可以了
+        // TODO 如果是行政指标组, 这里是否也要计算互评和生评 ?
+        callback(null, indScores);
+
+    });
+}
+
+exports.report = function(req, res) {
+
+
+    var parameter = req.parameter;
+
+    var startTime = Date.now();
+
+    fetchIndicatorScores(parameter, function(err, result) {
+        if (err) {
             return dbHelper.handleError(err, res);
         }
 
-        // TODO 如果是行政指标组, 这里是否也要计算互评和生评
-
-        // 报表详情, 根据条件搜索 IndicatorScores 就可以了
         res.json({
             err: ERR.SUCCESS,
-            result: indScores
+            result: result
         });
-        Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - reportStart, 'ms, query: ', param);
+        Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - startTime, 'ms');
 
     });
 
@@ -612,11 +688,7 @@ exports.detail = function(req, res) {
 
     function callback(err, result) {
         if (err) {
-            return res.json({
-                err: ERR.DB_ERROR,
-                msg: '获取评价明细失败了',
-                detail: err
-            });
+            return dbHelper.handleError(err, res);
         }
         Logger.info('[IndicatorScore.detail] type: ', type, 'time cost: ', Date.now() - startTime);
         res.json({
