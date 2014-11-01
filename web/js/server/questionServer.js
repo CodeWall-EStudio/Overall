@@ -116,8 +116,9 @@ angular.module('ov.services.question',[
                     if(data.err === 0){
 
                     }else{
-                        $root.$emit(MSG,data.err);
+                        
                     }
+                    $root.$emit(MSG,data.err);
                 }) 
                 .error(function(data,status){
 
@@ -134,6 +135,7 @@ angular.module('ov.services.question',[
                             score: $root.nowQuestScore.detail.scores[idx].score,
                             name : item.name,
                             desc : item.desc,
+                            max : item.score,
                             _id : item._id
                         };
                     });
@@ -144,6 +146,7 @@ angular.module('ov.services.question',[
                         score: 0,
                         name : item.name,
                         desc : item.desc,
+                        max : item.score,
                         _id : item._id
                     };
                 });

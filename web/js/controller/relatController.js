@@ -70,7 +70,7 @@ angular.module('ov.controllers.relat',[
         }     
         //保存
         $scope.saveScore = function(){
-            console.log($root.nowQuestion);
+            //console.log($root.nowQuestion);
             var param = {
                 appraiseeId : $scope.nowId,
                 evaluationType : $root.nowOverType,
@@ -97,19 +97,21 @@ angular.module('ov.controllers.relat',[
             $scope.allScore = 0;
             try{
                 //$.extend($scope.nowScores,$root.nowQuestion.questions);
-                _.each($root.nowQuestScore.questionnaire.questions,function(item){
+                _.each($root.nowQuestScore.scoremap,function(item){
                      $scope.nowScores[item._id] = {
-                        max : item.score,
-                        score : 0
+                        max : item.max,
+                        score : item.score
                      };
+                     $scope.allScore +=  item.score;
                 });
+                console.log($scope.nowScores);
                 //console.log($scope.nowScores);
-                if($root.nowQuestScore.scores){
-                    _.each($root.nowQuestScore.scores,function(item){
-                        $scope.nowScores[item.question].score = item.score;
-                        $scope.allScore +=  item.score;
-                    })
-                }
+                // if($root.nowQuestScore.scores){
+                //     _.each($root.nowQuestScore.scores,function(item){
+                //         $scope.nowScores[item.question].score = item.score;
+                //         $scope.allScore +=  item.score;
+                //     })
+                // }
             }catch(e){
                 
             }
