@@ -76,7 +76,7 @@ angular.module('ov.services.question',[
                 });            
         }
 
-
+        //拉一个老师的详细得分数据
         var getOneUserScore = function(param,success,error){
             var url = '/api/evaluation/detail?term='+$root.nowTerm._id;
             if(param.appraiseeId){
@@ -91,6 +91,8 @@ angular.module('ov.services.question',[
                     console.log('拉取打分结果成功！',data.result);
                     if(data.err === 0){
                         $root.nowQuestScore = data.result;
+                        setScores();
+                        console.log($root.nowQuestScore);
                         $root.$emit(QUEST_LOAD);
                     }else{
                         $root.$emit(MSG,data.err);
@@ -120,6 +122,33 @@ angular.module('ov.services.question',[
                 .error(function(data,status){
 
                 })       
+        }
+
+        //工具方法
+        function setScores(){
+            $root.nowQuestScore.scoremap = {};
+            //r如果已经有评分了。
+            if($root.nowQuestScore.detail){
+                    _.each($root.nowQuestScore.questionnaire.questions,function(item,idx){
+                        $root.nowQuestScore.scoremap[item._id] = {
+                            score: $root.nowQuestScore.detail.scores[idx].score,
+                            name : item.name,
+                            desc : item.desc,
+                            _id : item._id
+                        };
+                    });
+            //如果没有评分
+            }else{
+                _.each($root.nowQuestScore.questionnaire.questions,function(item){
+                    $root.nowQuestScore.scoremap[item._id] = {
+                        score: 0,
+                        name : item.name,
+                        desc : item.desc,
+                        _id : item._id
+                    };
+                });
+            }
+
         }
 
     return {

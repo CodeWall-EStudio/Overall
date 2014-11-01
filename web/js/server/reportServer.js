@@ -1,5 +1,8 @@
 /*
 报表的ｓｅｒｖｅｒ
+summary 概要＆报表
+report  选定指标组之后的分数
+detail  生评和互评详情
 */
 angular.module('ov.services.report',[
 		'ov.constant',

@@ -35,13 +35,14 @@ angular.module('ov.controllers.relat',[
         $scope.getQuestion = function(value,name,id){
             $scope.nowName = name;
             $scope.nowId = id;
-            if($scope.nowQuestionOrder !== value){
+            //console.log(value,$scope.nowQuestionOrder);
+            //if($scope.nowQuestionOrder !== value){
                 Question.getOneUserScore({
                     appraiseeId : id,
                     evaluationType : $root.nowOverType
                 });
                 $scope.nowQuestionOrder = value;
-            }
+            //}
         }
 
         //分数+1
@@ -102,7 +103,7 @@ angular.module('ov.controllers.relat',[
                         score : 0
                      };
                 });
-                console.log($scope.nowScores);
+                //console.log($scope.nowScores);
                 if($root.nowQuestScore.scores){
                     _.each($root.nowQuestScore.scores,function(item){
                         $scope.nowScores[item.question].score = item.score;
@@ -137,7 +138,7 @@ angular.module('ov.controllers.relat',[
             if($root.relatList.length === 0){
                 Relat.getRelatList();
             }
-            console.log($root.relatList,$root.nowTeacher);
+            // console.log($root.relatList,$root.nowTeacher);
         });
 
         //拉到问题分组了
