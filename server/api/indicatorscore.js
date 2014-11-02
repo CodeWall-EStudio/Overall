@@ -35,7 +35,7 @@ exports.import = function(req, res) {
         group.indicators.forEach(function(indicator) {
             doc.scores[indicator._id] = {
                 indicator: indicator,
-                score: item[indicator.name] || 0
+                score: Number(item[indicator.name] || 0)
             };
         });
 
@@ -187,38 +187,6 @@ function createIndicatorSummary(parameter, callback) {
 }
 
 /**
- * 评分概要和详情
- */
-exports.summary = function(req, res) {
-
-    var parameter = req.parameter;
-
-    var startTime = Date.now();
-
-    function callback(err, result) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-
-        res.json({
-            err: ERR.SUCCESS,
-            result: result
-        });
-        Logger.info('[IndicatorScore.summary] end, cost: ', Date.now() - startTime, 'ms');
-
-    }
-
-    // 传了[指标组]就查询指定指标组, 否则就是吐概要
-    if (parameter.indicatorGroup) {
-        fetchIndicatorScores(parameter, callback);
-    } else {
-        createIndicatorSummary(parameter, callback);
-    }
-
-};
-
-
-/**
  * 获取评价列表
  *
  */
@@ -264,6 +232,186 @@ function fetchIndicatorScores(parameter, callback) {
     });
 }
 
+
+/**
+ * 评分概要和详情
+ */
+exports.summary = function(req, res) {
+
+    var parameter = req.parameter;
+
+    var startTime = Date.now();
+
+    function callback(err, result) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        res.json({
+            err: ERR.SUCCESS,
+            result: result
+        });
+        Logger.info('[IndicatorScore.summary] end, indicatorGroup: ',
+            parameter.indicatorGroup, ', cost: ', Date.now() - startTime, 'ms');
+
+    }
+
+    // 传了[指标组]就查询指定指标组, 否则就是吐概要
+    if (parameter.indicatorGroup) {
+        fetchIndicatorScores(parameter, callback);
+    } else {
+        createIndicatorSummary(parameter, callback);
+    }
+
+};
+
+function createReport(teacher, indGroups, callback){
+    var ep = new EventProxy();
+    ep.fail(callback);
+
+    // 把计算出来的结果都放在 result 里方便使用
+    var result = {
+        teacherId: teacher.id,
+        teacherName: teacher.name,
+        totalScore: 0,
+        scores: {}
+    };
+
+    ep.after('indGroups.forEach', indGroups.length, function() {
+
+        for (var i in result.scores) {
+            result.totalScore += result.scores[i];
+        }
+
+        callback(null, result);
+
+    });
+
+    indGroups.forEach(function(indGroup) {
+
+
+        db.IndicatorScores.findOne({
+            term: indGroup.term,
+            teacherId: teacher.id,
+            indicatorGroup: indGroup
+        }, function(err, indScore) {
+            if (err) {
+                return callback(err);
+            }
+
+            ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
+                Logger.debug('[createSummary#EOIndicateAverageScores.findOne] result: ', list);
+                var totalScore = 0;
+                list.forEach(function(item) {
+                    totalScore += item && item.score || 0;
+                });
+
+                result.scores[indGroup._id] = {
+                    totalScore: totalScore,
+                    list: list
+                };
+                ep.group('indGroups.forEach')();
+
+            });
+
+            indGroup.indicators.forEach(function(ind) {
+                // gatherType 1: 文件导入, 2: 互评平均分, 3: 生评平均分
+                var score = indScore ? indScore.scores[ind._id] : {
+                    score: 0,
+                    indicator: ind
+                };
+                if (ind.gatherType === 2 || ind.gatherType === 3) {
+
+                    db.EOIndicateAverageScores.findOne({
+                        term: indGroup.term,
+                        type: ind.gatherType === 2 ? 0 : 1,
+                        appraiseeId: teacher.id
+                    }, ep.group('EOIndicateAverageScores.findOne', function(doc){
+                        score.score = doc && doc.averageScore || 0;
+                        return score;
+                    }));
+                } else {
+                    ep.group('EOIndicateAverageScores.findOne')(null, score);
+                }
+            });
+
+        }); // end IndicatorScores.findOne
+
+    }); // end indGroups.forEach
+
+}
+
+/**
+ * 创建评价报告
+ * 1. 同一教师分组的人的总分都要计算, 因为要计算同组平均分和排名
+ * 2. 每一个指标也要算同组平均分
+ */
+function createIndicatorReport(parameter, callback) {
+    var term = parameter.term;
+    var teacherId = parameter.teacherId;
+
+    var ep = new EventProxy();
+    ep.fail(callback);
+
+    // 1. 获取需要生成报告的老师所在的分组
+    // 1. 获取当前学期的指标组们
+    // 2. 针对每个老师生成单独的报告
+    // 3. 有生评互评的, 要另外走逻辑计算
+    // 4. 列表中找到目标老师
+    // 5. 计算同组平均分和排名
+
+    db.Users.find({
+        id: teacherId
+    }, function(err, teacher) {
+        if (err) {
+            return callback(err);
+        }
+        if (!teacher) {
+            return callback('没找到这个人');
+        }
+
+        // 1. 获取需要生成报告的老师所在的分组
+        db.TeacherGroups.findOne({
+            term: term,
+            'teachers.id': teacherId
+        }, ep.done('TeacherGroups.findOne'));
+    });
+
+    // 1. 获取当前学期的指标组们
+    db.IndicatorGroups.find({
+        term: term
+    }, ep.done('IndicatorGroups.find'));
+
+    ep.all('TeacherGroups.findOne', 'IndicatorGroups.find', function(teacherGroup, indGroups) {
+        if (!teacherGroup) {
+            return callback('该教师没有配置教师组');
+        }
+        ep.after('teacherGroup.teachers.forEach', teacherGroup.teachers.length, function(list){
+            
+            // 4. 列表中找到目标老师和计算平均分
+            var result = list;
+            // TODO
+            // var target = null;
+            // for (var i = 0; i < list.length; i++) {
+            //     if(list[i].teacherId === teacherId){
+            //         target = list[i];
+            //     }
+            // }
+            callback(null, result);
+        });
+
+        teacherGroup.teachers.forEach(function(teacher){
+            
+            // 2. 针对每个老师生成单独的报告
+            createReport(teacher, indGroups, ep.group('teacherGroup.teachers.forEach'));
+        });
+
+    });
+
+
+}
+
+
 /**
  * 评分报表列表
  */
@@ -274,7 +422,7 @@ exports.report = function(req, res) {
 
     var startTime = Date.now();
 
-    fetchIndicatorScores(parameter, function(err, result) {
+    createIndicatorReport(parameter, function(err, result) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
@@ -289,64 +437,6 @@ exports.report = function(req, res) {
 
 };
 
-exports.a = function(req, res) {
-
-    /**
-     * 创建评价报告
-     * 1. 同一教师分组的人的总分都要计算, 因为要计算同组平均分和排名
-     * 2. 每一个指标也要算同组平均分
-     */
-    function createIndicatorDetail(parameter, callback) {
-        var term = parameter.term;
-        var teacherGroup = parameter.teacherGroup;
-        var teacherName = parameter.teacherName;
-
-        var ep = new EventProxy();
-        ep.fail(callback);
-
-        // 1. 获取需要生成报告的老师所在的分组
-        // 1.1 获取指标组们
-        // 1.2 获取属于改分组的老师们
-        // 2. 针对每个老师生成单独的报告
-        // 3. 有生评互评的, 要另外走逻辑计算
-        // 4. 计算同组平均分和排名
-
-        // 1.
-        // teacherName 和 teacherGroup 是互斥的
-        if (teacherGroup) {
-            ep.emitLater('Users.find', teacherGroup.teachers);
-        } else if (teacherName) {
-            db.Users.find({
-                name: teacherName
-            }, ep.doneLater('Users.find'));
-        }
-
-        // 1.1
-        db.IndicatorGroups.find({
-            term: term
-        }, ep.doneLater('IndicatorGroups.find'));
-
-
-        ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
-
-            ep.after('createSummary', teachers.length, function(list) {
-
-                callback(null, {
-                    indicatorGroups: indGroups,
-                    results: list
-                });
-            });
-
-            // 2.
-            teachers.forEach(function(teacher) {
-                createSummary(teacher, indGroups, ep.group('createSummary'));
-            });
-
-        });
-
-    }
-
-};
 
 
 /**

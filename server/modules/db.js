@@ -30,7 +30,7 @@ var models = {
         id: String,
         name: String,
         status: Number,
-        role: Number
+        role: Number  // 1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
     },
 
     // 学期
@@ -109,19 +109,6 @@ var models = {
         totalScore: Number
     },
 
-    // 评价问卷
-    Questionnaires: {
-        term: ObjectId, // 所属学年
-        name: String,
-        order: Number,
-        questions: [{ // 问卷的问题列表
-            order: Number,
-            name: String,
-            score: Number,
-            desc: String
-        }]
-    },
-
     // 互评关系
     RelationShips: {
         term: ObjectId, // 所属学年
@@ -132,6 +119,19 @@ var models = {
             id: String,
             name: String,
             value: Number
+        }]
+    },
+
+    // 评价问卷
+    Questionnaires: {
+        term: ObjectId, // 所属学年
+        name: String,
+        order: Number,
+        questions: [{ // 问卷的问题列表
+            order: Number,
+            name: String,
+            score: Number,
+            desc: String
         }]
     },
 

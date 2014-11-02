@@ -210,6 +210,8 @@ exports.appraise = function(req, res) {
     var parameter = req.parameter;
 
     var term = parameter.term;
+
+    // 评估类型, 0: 教师互评, 1: 生评
     var evaluationType = parameter.evaluationType;
     var appraiseeId = parameter.appraiseeId;
     var scores = parameter.scores;
@@ -247,18 +249,18 @@ exports.appraise = function(req, res) {
 
     // 先找一下有没有已经评过分
     db.EOIndicateScores.findOneAndUpdate({
-        term: term,
+        term: term._id,
         type: evaluationType,
         appraiseeId: appraiseeId,
         appraiserId: appraiserId
     }, {
-        term: term,
+        term: term._id,
         type: evaluationType,
         appraiseeId: appraiseeId,
         appraiserId: appraiserId,
         scores: scoresMap,
         totalScore: totalScore,
-        questionnaire: questionnaire
+        questionnaire: questionnaire._id
     }, {
         upsert: true
     }, callback);

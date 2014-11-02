@@ -112,8 +112,13 @@ exports.callback = function(req, res) {
                     user.role = doc.role;
                 } else {
                     user.status = 0;
-                    user.role = 0;
+                    // user.role = 0;
+                    if(user.id === 'hongyuan'){
+                        // hongyuan 第一次登陆时, 强制设置为系统管理员
+                        user.role = 16;
+                    }
                 }
+
                 db.Users.update({
                     id: user.id
                 }, user, {

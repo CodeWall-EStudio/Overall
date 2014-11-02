@@ -146,24 +146,8 @@ module.exports = {
             required: true
         }]
     },
-    '/api/indicatorscore/report': {
-        method: 'GET',
-        params: [{
-            name: 'term',
-            type: 'Terms',
-            required: true
-        }, {
-            name: 'indicatorGroup',
-            type: 'IndicatorGroups',
-            required: true
-        }, {
-            name: 'teacherGroup',
-            type: 'TeacherGroups'
-        }, {
-            name: 'teacherName',
-            type: 'string'
-        }]
-    },
+
+    // 概要和指标组的结果列表
     '/api/indicatorscore/summary': {
         method: 'GET',
         params: [{
@@ -174,13 +158,27 @@ module.exports = {
             name: 'teacherGroup', // teacherGroup 和 teacherName 二选一
             type: 'TeacherGroups'
         }, {
-            name: 'teacherName',
+            name: 'teacherName', // 不支持模糊搜索
             type: 'string'
         }, {
-            name: 'indicatorGroup',
+            name: 'indicatorGroup', // 传了 indicatorGroup 就显示指标组详情, 否则显示概要
             type: 'IndicatorGroups'
         }]
     },
+    // 输出评价报表
+    '/api/indicatorscore/report': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'teacherId', // 教师 id
+            type: 'string',
+            required: true
+        }]
+    },
+    // 互评和生评详情
     '/api/indicatorscore/detail': {
         method: 'GET',
         params: [{
