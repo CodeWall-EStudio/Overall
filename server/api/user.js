@@ -127,11 +127,8 @@ exports.import = function(req, res) {
  */
 exports.info = function(req, res) {
 
-    /*
-	horde修改。。这里好像没有ｌｏｇｉｎＵｓｅｒ。。先改成从ｓｅｓｓｉｏｎ里面取
-	var loginUser = req.loginUser;
-	*/
-	var loginUser = req.session.user;
+    var loginUser = req.loginUser;
+
     // loginUser.role === 1
     // 学生
     (loginUser.role === 1 ? db.Students : db.Users).findOne({
