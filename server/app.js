@@ -76,7 +76,7 @@ app.use(express.static(staticDir, {
 // app.all('/api/*', routes.setXHR2Headers);
 
 // 检查是否登录, 如果登录了, 从数据库把用户信息找出; 没有登录则返回错误
-// app.all('/api/*', routes.checkAuth);
+app.all('/api/*', routes.checkAuth);
 
 // 检查参数合法性
 app.all('/api/*', routes.checkParams);
