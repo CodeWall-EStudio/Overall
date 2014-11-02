@@ -208,13 +208,12 @@ exports.summary = function(req, res) {
 
     }
 
-    // 报表类型, 0: 概要, 1: 详情
-    if (parameter.type === 1) {
-        createIndicatorDetail(parameter, callback);
+    // 传了[指标组]就查询指定指标组, 否则就是吐概要
+    if (parameter.indicatorGroup) {
+        fetchIndicatorScores(parameter, callback);
     } else {
         createIndicatorSummary(parameter, callback);
     }
-
 
 };
 
@@ -290,62 +289,62 @@ exports.report = function(req, res) {
 
 };
 
-exports.a = function(req, res){
+exports.a = function(req, res) {
 
-/**
- * 创建评价报告
- * 1. 同一教师分组的人的总分都要计算, 因为要计算同组平均分和排名
- * 2. 每一个指标也要算同组平均分
- */
-function createIndicatorDetail(parameter, callback) {
-    var term = parameter.term;
-    var teacherGroup = parameter.teacherGroup;
-    var teacherName = parameter.teacherName;
+    /**
+     * 创建评价报告
+     * 1. 同一教师分组的人的总分都要计算, 因为要计算同组平均分和排名
+     * 2. 每一个指标也要算同组平均分
+     */
+    function createIndicatorDetail(parameter, callback) {
+        var term = parameter.term;
+        var teacherGroup = parameter.teacherGroup;
+        var teacherName = parameter.teacherName;
 
-    var ep = new EventProxy();
-    ep.fail(callback);
+        var ep = new EventProxy();
+        ep.fail(callback);
 
-    // 1. 获取需要生成报告的老师所在的分组
-    // 1.1 获取指标组们
-    // 1.2 获取属于改分组的老师们
-    // 2. 针对每个老师生成单独的报告
-    // 3. 有生评互评的, 要另外走逻辑计算
-    // 4. 计算同组平均分和排名
+        // 1. 获取需要生成报告的老师所在的分组
+        // 1.1 获取指标组们
+        // 1.2 获取属于改分组的老师们
+        // 2. 针对每个老师生成单独的报告
+        // 3. 有生评互评的, 要另外走逻辑计算
+        // 4. 计算同组平均分和排名
 
-    // 1.
-    // teacherName 和 teacherGroup 是互斥的
-    if (teacherGroup) {
-        ep.emitLater('Users.find', teacherGroup.teachers);
-    } else if (teacherName) {
-        db.Users.find({
-            name: teacherName
-        }, ep.doneLater('Users.find'));
-    }
+        // 1.
+        // teacherName 和 teacherGroup 是互斥的
+        if (teacherGroup) {
+            ep.emitLater('Users.find', teacherGroup.teachers);
+        } else if (teacherName) {
+            db.Users.find({
+                name: teacherName
+            }, ep.doneLater('Users.find'));
+        }
 
-    // 1.1
-    db.IndicatorGroups.find({
-        term: term
-    }, ep.doneLater('IndicatorGroups.find'));
+        // 1.1
+        db.IndicatorGroups.find({
+            term: term
+        }, ep.doneLater('IndicatorGroups.find'));
 
 
-    ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
+        ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
 
-        ep.after('createSummary', teachers.length, function(list) {
+            ep.after('createSummary', teachers.length, function(list) {
 
-            callback(null, {
-                indicatorGroups: indGroups,
-                results: list
+                callback(null, {
+                    indicatorGroups: indGroups,
+                    results: list
+                });
             });
+
+            // 2.
+            teachers.forEach(function(teacher) {
+                createSummary(teacher, indGroups, ep.group('createSummary'));
+            });
+
         });
 
-        // 2.
-        teachers.forEach(function(teacher) {
-            createSummary(teacher, indGroups, ep.group('createSummary'));
-        });
-
-    });
-
-}
+    }
 
 };
 

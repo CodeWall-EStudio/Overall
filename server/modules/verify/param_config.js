@@ -177,8 +177,8 @@ module.exports = {
             name: 'teacherName',
             type: 'string'
         }, {
-            name: 'type', // 报表类型, 0: 概要, 1: 详情
-            type: 'number'
+            name: 'indicatorGroup',
+            type: 'IndicatorGroups'
         }]
     },
     '/api/indicatorscore/detail': {
