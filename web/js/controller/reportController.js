@@ -11,14 +11,27 @@ angular.module('ov.controllers.report',[
             /*初始化变量*/
             $root.reportList = [];
 
-            $root.reportMode = 'list';
+            /*
+            summary 概要，
+            quotalist  指定了指标组
+            search 搜索结果
+            oneuser 查看单个老师的详情
+            teacher 　互评
+            student 　生评
+            */
+            $root.reportMode = 'summary';
+
             $root.reportSMode = 'all';
+
+
             $root.oneReport = {};
             $root.reportSummary = {}; //评分概要
             $root.reportDetail = {};//评分详情
             $root.nowTeacher = {};
             $root.teacherRelatList = [];
             $root.nowTeacherReport = {};
+            $root.searchKeyWord = '';//搜索关键字
+
 
             $root.nowSelectedUserIdx = 0;
 
@@ -35,12 +48,11 @@ angular.module('ov.controllers.report',[
             //这里指标组在学期之后。。。。囧
             $root.$on(QUOTALOAD,function(){
                 quotaLoad = true;
-                //     Report.getSummary({
-                //         type : 0
-                //     });                
-                // return;
                 if(quotaLoad && termLoad){
-                    Report.getReportList();
+                    //Report.getReportList();
+                    Report.getSummary({
+                        teacherGroup : $root.nowTeacherGroup._id
+                    });
                 }
             });
 
@@ -65,7 +77,19 @@ angular.module('ov.controllers.report',[
             $root.showOneUser =  function(idx){
                 $root.nowSelectedUserIdx = idx
             }
+            //返回报表概要
+            $root.returnReport = function(){
+                $root.reportMode = 'summary';
+            }
+            //开始搜索
+            $root.startSearch = function(){
+                $root.searchKeyWord = $('#searchKey').val();
+                    Report.getSummary({
+                        teacherName : $root.searchKeyWord
+                    });
+            }
 
+            //显示一种类型的报表
             $root.showReport = function(type){
                 switch(type){
                     case 0: //互评

@@ -4,7 +4,7 @@ angular.module('ov.controllers.user',[
         'ov.services.utils',
         'ov.services.user'
     ]).
-    controller('userController',['$rootScope','$scope','Util','userService','STATUS.USER.LOAD',function($root,$scope,Util,User,USERLOAD){
+    controller('userController',['$rootScope','$scope','$location','Util','userService','STATUS.USER.LOAD',function($root,$scope,$location,Util,User,USERLOAD){
         console.log('load userController');
 
         $root.my = {};
@@ -40,7 +40,38 @@ angular.module('ov.controllers.user',[
             console.log(id);
         }
 
+        /*
+        role 1 : 学生
+        ２　老师
+        ４　管理干部
+        ８　校领导
+        16  系统管理员
+        */
+
         $root.$on(USERLOAD,function(){
-            User.searchUser();
+            //User.searchUser();
+            var role = $root.my.role;
+            var url = $location.absUrl();
+            if(role & 0x1 || role & 0x2){
+                if(url.indexOf('overall.html') < 0){
+                    window.location.href='/overall.html';
+                }
+            }
+            if(role & 0x4){
+                if(url.indexOf('import.html') < 0){
+                    window.location.href='/import.html';
+                }
+            }            
+            if(role & 0x8){
+                if(url.indexOf('index.html') < 0){
+                    window.location.href='/index.html';
+                }
+            }    
+            if(role & 0x16){
+                if(url.indexOf('mange.html') < 0){
+                    window.location.href='/mange.html';
+                }
+            }                
+
         });        
 }]);

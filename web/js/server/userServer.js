@@ -16,6 +16,7 @@ angular.module('ov.services.user',[
                 .success(function(data,status){
                     if(data.err === 0){
                         $root.my = data.result;
+                        console.log($root.my);
                         $root.$emit(USERLOAD);
                     }else{
                         $root.$emit(MSG,data.err);

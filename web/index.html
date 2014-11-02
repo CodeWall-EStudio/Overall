@@ -58,7 +58,9 @@
 				<div class="select-dom dropdown" ng-controller="quotaController">
 					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
+						<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
+						<li><a ng-click="selectQuotaGroup(-2)">行政指标组</a></li>
 					</ul>
 				</div> 	 
 				<a>导出当前报表</a>			
@@ -68,8 +70,8 @@
  		<!-- 报表详情工具条-->
  		<div class="toolbar toolbar-report"  ng-show="reportMode === 'show'">
  			<div class="toolbar-left">
- 				<button class="btn btn-default">返回报表</button>
- 				查看详情 ： {{nowTeacher.teacherName}}（分组{{}}）
+ 				<button class="btn btn-default" ng-click="returnReport()">返回报表</button>
+ 				查看详情 ： {{nowTeacher.teacherName}}（分组{{nowTeacherGroup.name}}）
  				<button class="btn btn-default" ng-click="showReport(2)">评价报告</button>
  				<button class="btn btn-default" ng-click="showReport(0)">互评详情</button>
  				<button class="btn btn-default" ng-click="showReport(1)">生评明细</button>
@@ -80,7 +82,7 @@
  			</div>
  		</div> 		
  		<!-- 搜索工具条-->
- 		<div class="toolbar toolbar-search" ng-hide="getMode() !== 'search' ">
+ 		<div class="toolbar toolbar-search" ng-show="getMode() == 'search' ">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
@@ -91,7 +93,7 @@
 				</div> 	
 				查询被评价人 ：
 	 			<div class="search-zone">
-					<input type="text" ng-enter="startSearch()" ng-model="searchKeyWord" placeholder="查询被评价人" />
+					<input type="text" id="searchKey" value="{{searchKeyWord}}" ng-enter="startSearch()" ng-model="searchKeyWord" placeholder="查询被评价人" />
 					<button type="submit" ng-click="startSearch()"  />
 	 			</div>
  			</div>
@@ -108,8 +110,24 @@
  	</div>
 
  	<div class="content" >
- 		<!--报表-->
- 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'list'">
+ 		<!--概要表-->
+ 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'summary'">
+ 			<table class="table table-striped table-hover">
+ 				<tr>
+ 					<th>姓名</th>
+ 					<th ng-repeat="item in reportSummary.quotaMap">{{item.name}}</th>
+ 					<th>总分</th>
+ 				</tr>
+ 				<tr ng-repeat="item in reportSummary.results" ng-click="showOneReport(item)">
+ 					<td>
+ 						{{item.teacherName}}
+ 					</td>
+ 					<td ng-repeat="obj in item.scores">{{obj}}</td>
+ 					<td>{{item.totalScore}}</td>
+ 				</tr>
+ 			</table>
+ 		</div>
+ 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'quotalist'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>姓名</th>
@@ -122,9 +140,9 @@
  					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
- 		</div>
+ 		</div> 		
  		<!--评价报告详情-->
- 		<div class="content-report" ng-show="reportSMode === 'all'">
+ 		<div class="content-report" ng-show="reportMode === 'all'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>指标组</th>
@@ -224,21 +242,19 @@
  		</div>
 
  		<!--搜索结果-->
- 		<div class="content-report" ng-hide="getMode() !== 'search'">
+ 		<div class="content-report" ng-show="reportMode === 'search'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>姓名</th>
- 					<th>教育得分</th>
- 					<th>教学得分</th>
- 					<th>行政得分</th>
+ 					<th ng-repeat="item in reportSummary.quotaMap">{{item.name}}</th>
  					<th>总分</th>
  				</tr>
- 				<tr ng-repeat="item in userList" ng-click="showUser(item._id)">
- 					<td>{{item.name}}</td>
- 					<td></td>
- 					<td></td>
- 					<td></td>
- 					<td></td>
+ 				<tr ng-repeat="item in reportSummary.results" ng-click="showOneReport(item)">
+ 					<td>
+ 						{{item.teacherName}}
+ 					</td>
+ 					<td ng-repeat="obj in item.scores">{{obj}}</td>
+ 					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
  		</div>  		
