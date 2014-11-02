@@ -14,6 +14,8 @@ angular.module('ov.controllers.report',[
             $root.reportMode = 'list';
             $root.reportSMode = 'all';
             $root.oneReport = {};
+            $root.reportSummary = {}; //评分概要
+            $root.reportDetail = {};//评分详情
             $root.nowTeacher = {};
             $root.teacherRelatList = [];
             $root.nowTeacherReport = {};
@@ -33,6 +35,10 @@ angular.module('ov.controllers.report',[
             //这里指标组在学期之后。。。。囧
             $root.$on(QUOTALOAD,function(){
                 quotaLoad = true;
+                //     Report.getSummary({
+                //         type : 0
+                //     });                
+                // return;
                 if(quotaLoad && termLoad){
                     Report.getReportList();
                 }
@@ -90,18 +96,21 @@ angular.module('ov.controllers.report',[
 
             function getReport(){
                 if($root.reportSMode === 'all'){
-                    Report.getReportList({
-                        teacherName : $root.nowTeacher.teacherName
+                    Report.getSummary({
+                        type : 1
                     });
+                    // Report.getReportList({
+                    //     teacherName : $root.nowTeacher.teacherName
+                    // });
                 }else if($root.reportSMode === 'teacher'){
-                    Report.getOneReport({
+                    Report.getReportDetail({
                         appraiseeId : $root.nowTeacher.teacherId,
                         type : 1
                     });                    
                 }else if($root.reportSMode === 'student'){
-                    Report.getOneReport({
+                    Report.getReportDetail({
                         appraiseeId : $root.nowTeacher.teacherId,
-                        type : 0
+                        type : 2
                     });                                        
                 }                
             }

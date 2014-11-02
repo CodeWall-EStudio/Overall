@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1414860293661">
+	<link rel="stylesheet" href="css/main.css?t=1414911953526">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -138,8 +138,8 @@
  				</tr>
  			</table>
  		</div> 
- 		<!--互评和生评明细-->
- 		<div class="content-main" ng-show="reportSMode === 'teacher' || reportSMode === 'student'">
+ 		<!--互评明细-->
+ 		<div class="content-main" ng-show="reportSMode === 'teacher'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -150,14 +150,14 @@
 	 				<tr ng-repeat="item in oneReport.appraisers" ng-click="showOneUser($index)">
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.teacherGroup.name}}</td>
-	 					<td>{{item.eoIndicateScore.totalScore}}</td>
+	 					<td>{{item.eoIndicateScore.totalScore || 0}}</td>
 	 				</tr>
 	 			</table>
 	 		</div>	
 	 		<div class="content-info" >
 				<dl class="content-summary" >
 					<dt>
-						总分平均分： {{oneReport.summary.averageScore}}
+						总分：{{oneReport.summary.totalScore}} 平均分： {{oneReport.summary.averageScore}}
 					</dt>
 					<dt>
 						<span class="tit">{{oneReport.appraisers[nowSelectedUserIdx].name}} 打分：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.appraisers[nowSelectedUserIdx].questionnare.name}}
@@ -168,12 +168,51 @@
 					<dd class="score-info">
 						<div>{{item.desc}}</div>
 						<div class="score-num">
-							打分 ：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.scores[$index].score}}
+							打分 ：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.scores[$index].score || 0}}
 						</div>
 					</dd>
 				</dl>			
 	 		</div>
  		</div>
+ 		<!--生评明细-->
+ 		<div class="content-main" ng-show="reportSMode === 'student'">
+	 		<div class="content-list" ng-controller="relatController">
+	 			<table class="table table-striped table-hover">
+	 				<tr>
+	 					<th>评价人</th>
+	 					<th>年级</th>
+	 					<th>班级</th>
+	 					<th>打分</th>
+	 				</tr>
+	 				<tr ng-repeat="item in oneReport.students" ng-click="showOneUser($index)">
+	 					<td>{{item.name}}</td>
+	 					<td>{{item.grade}}</td>
+	 					<td>{{item.class}}</td>
+	 					<td>{{item.eoIndicateScore.totalScore || 0}}</td>
+	 				</tr>
+	 			</table>
+	 		</div>	
+	 		<div class="content-info" >
+				<dl class="content-summary" >
+					<dt>
+						总分：{{oneReport.summary.totalScore}} 平均分： {{oneReport.summary.averageScore}}
+					</dt>
+					<dt>
+						<span class="tit">{{oneReport.students[nowSelectedUserIdx].name}} 打分：{{oneReport.students[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.questionnare.name}}
+					</dt>
+				</dl>
+				<dl class="content-score" ng-repeat="item in oneReport.students[nowSelectedUserIdx].eoIndicateScore.scores">	
+					<dt>{{oneReport.questionMap[item.question].name}}</dt>
+					<dd class="score-info">
+						<div>{{oneReport.questionMap[item.question].desc}}</div>
+						<div class="score-num">
+							打分 ：{{item.score}}
+						</div>
+					</dd>
+				</dl>			
+	 		</div>
+ 		</div>
+
  		<!--搜索结果-->
  		<div class="content-report" ng-hide="getMode() !== 'search'">
  			<table class="table table-striped table-hover">
@@ -240,6 +279,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1414860293661"></script>
+	<script src="js/index.js?t=1414911953526"></script>
 </body>
 </html>
