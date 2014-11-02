@@ -265,7 +265,7 @@ exports.summary = function(req, res) {
 
 };
 
-function createReport(teacher, indGroups, callback){
+function createReport(teacher, indGroups, callback) {
     var ep = new EventProxy();
     ep.fail(callback);
 
@@ -280,7 +280,7 @@ function createReport(teacher, indGroups, callback){
     ep.after('indGroups.forEach', indGroups.length, function() {
 
         for (var i in result.scores) {
-            result.totalScore += result.scores[i];
+            result.totalScore += result.scores[i].totalScore;
         }
 
         callback(null, result);
@@ -326,7 +326,7 @@ function createReport(teacher, indGroups, callback){
                         term: indGroup.term,
                         type: ind.gatherType === 2 ? 0 : 1,
                         appraiseeId: teacher.id
-                    }, ep.group('EOIndicateAverageScores.findOne', function(doc){
+                    }, ep.group('EOIndicateAverageScores.findOne', function(doc) {
                         score.score = doc && doc.averageScore || 0;
                         return score;
                     }));
@@ -386,22 +386,57 @@ function createIndicatorReport(parameter, callback) {
         if (!teacherGroup) {
             return callback('该教师没有配置教师组');
         }
-        ep.after('teacherGroup.teachers.forEach', teacherGroup.teachers.length, function(list){
-            
+        ep.after('teacherGroup.teachers.forEach', teacherGroup.teachers.length, function(list) {
+
             // 4. 列表中找到目标老师和计算平均分
-            var result = list;
-            // TODO
-            // var target = null;
-            // for (var i = 0; i < list.length; i++) {
-            //     if(list[i].teacherId === teacherId){
-            //         target = list[i];
-            //     }
-            // }
+            
+            var teacherGroupObj = teacherGroup.toObject();
+            delete teacherGroupObj.teachers;
+
+            var result = {
+                teacherId: teacherId,
+                teacherGroup: teacherGroupObj, // 教师所在分组
+                indicatorGroups: indGroups, // 当前学期的所有指标组
+                results: {}, // 
+                totalScore: 0, // 当前所有指标组的总得分
+                totalTeacher: teacherGroup.teachers.length, // 同组教师人数
+                averageScore: 0, // 同组平均分
+                ranking: 0 // 同组排名
+            };
+            result.__for__test = list;
+
+            var totalScore = 0;
+
+            /*list[{
+                teacherId: teacher.id,
+                teacherName: teacher.name,
+                totalScore: 0,
+                scores: {}
+            }]*/
+
+            list.sort(function(a, b){
+                return a.totalScore - b.totalScore;
+            });
+
+            var groupTotalScore = 0;
+
+            list.forEach(function(item, i){
+                if(item.teacherId === teacherId){
+                    result.ranking = i;
+                    result.totalScore = item.totalScore;
+                    result.results = item.scores;
+                }
+                groupTotalScore += item.totalScore;
+
+            });
+
+            result.averageScore = totalScore / (result.totalTeacher || 0);
+
             callback(null, result);
         });
 
-        teacherGroup.teachers.forEach(function(teacher){
-            
+        teacherGroup.teachers.forEach(function(teacher) {
+
             // 2. 针对每个老师生成单独的报告
             createReport(teacher, indGroups, ep.group('teacherGroup.teachers.forEach'));
         });
