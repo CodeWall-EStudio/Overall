@@ -1,4 +1,5 @@
 var EventProxy = require('eventproxy');
+var _ = require('underscore');
 
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
@@ -32,7 +33,7 @@ exports.import = function(req, res) {
         };
 
         group.indicators.forEach(function(indicator) {
-            doc.scores[indicator._id]={
+            doc.scores[indicator._id] = {
                 indicator: indicator,
                 score: item[indicator.name] || 0
             };
@@ -301,6 +302,70 @@ function createIndicatorDetail(parameter, callback) {
 
     });
 
+}
+
+function createSummary(teacher, indGroups, callback) {
+
+    var ep = new EventProxy();
+    ep.fail(callback);
+
+    // 把计算出来的结果都放在 result 里方便使用
+    var result = {
+        teacherId: teacher.id,
+        teacherName: teacher.name,
+        scores: {}
+    };
+
+    ep.after('indGroups.forEach', indGroups.length, function() {
+
+        callback(null, result);
+
+    });
+
+    indGroups.forEach(function(indGroup) {
+
+
+        db.IndicatorScores.findOne({
+            term: indGroup.term,
+            teacherId: teacher.id,
+            indicatorGroup: indGroup
+        }, function(err, indScore) {
+            if (err) {
+                return callback(err);
+            }
+
+            ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
+                Logger.debug('[createSummary#EOIndicateAverageScores.findOne] result: ', list);
+                var totalScore = 0;
+                list.forEach(function(item) {
+                    totalScore += item && item.averageScore || 0;
+                });
+
+                result.scores[indGroup._id] = totalScore;
+                ep.group('indGroups.forEach')();
+
+            });
+
+            indGroup.indicators.forEach(function(ind) {
+                // gatherType 1: 文件导入, 2: 互评平均分, 3: 生评平均分
+                if (ind.gatherType === 2 || ind.gatherType === 3) {
+
+                    db.EOIndicateAverageScores.findOne({
+                        term: indGroup.term,
+                        type: ind.gatherType === 2 ? 0 : 1,
+                        appraiseeId: teacher.id
+                    }, ep.group('EOIndicateAverageScores.findOne'));
+                } else {
+                    var score = indScore ? indScore.scores[ind._id] : {};
+                    ep.group('EOIndicateAverageScores.findOne')(null, {
+                        averageScore: Number(score && score.score || 0)
+                    });
+                }
+            });
+
+        }); // end IndicatorScores.findOne
+
+    }); // end indGroups.forEach
 
 }
 
@@ -313,26 +378,52 @@ function createIndicatorSummary(parameter, callback) {
     var teacherGroup = parameter.teacherGroup;
     var teacherName = parameter.teacherName;
 
-    var param = {
-        term: term
-    };
-
-    // TODO 可以先不考虑互评生评来做, 逻辑会简单清晰点
+    var ep = new EventProxy();
+    ep.fail(callback);
 
     // 1. 获取需要生成报告的老师(们)
+    // 1.1 获取指标组们
     // 2. 针对每个老师生成单独的报告
     // 3. 有生评互评的, 要另外走逻辑计算
 
+    // 1.
     // teacherName 和 teacherGroup 是互斥的
     if (teacherGroup) {
-        ep.emitLater('')
+        ep.emitLater('Users.find', teacherGroup.teachers);
     } else if (teacherName) {
-        db.Teachers
-        param.teacherName = teacherName;
+        db.Users.find({
+            name: teacherName
+        }, ep.doneLater('Users.find'));
     }
+
+    // 1.1
+    db.IndicatorGroups.find({
+        term: term
+    }, ep.doneLater('IndicatorGroups.find'));
+
+
+    ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
+
+        ep.after('createSummary', teachers.length, function(list) {
+
+            callback(null, {
+                indicatorGroups: indGroups,
+                results: list
+            });
+        });
+
+        // 2.
+        teachers.forEach(function(teacher) {
+            createSummary(teacher, indGroups, ep.group('createSummary'));
+        });
+
+    });
 
 }
 
+/**
+ * 评分概要和详情
+ */
 exports.summary = function(req, res) {
 
     var parameter = req.parameter;
@@ -409,6 +500,9 @@ function fetchIndicatorScores(parameter, callback) {
     });
 }
 
+/**
+ * 评分报表列表
+ */
 exports.report = function(req, res) {
 
 
@@ -676,7 +770,9 @@ function calculateStudentEOIScores(parameter, callback) {
 
 }
 
-
+/**
+ * 互评和生评详情
+ */
 exports.detail = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
@@ -703,6 +799,11 @@ exports.detail = function(req, res) {
     } else if (type === 2) {
 
         calculateStudentEOIScores(parameter, callback);
+    } else {
+        res.json({
+            err: ERR.PARAM_ERROR,
+            msg: 'type 只能取值 1: 互评明细, 2: 生评明细'
+        });
     }
 };
 

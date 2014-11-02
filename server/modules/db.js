@@ -81,13 +81,13 @@ var models = {
             name: String,
             order: Number,
             score: Number,
-            gatherType: Number,
+            gatherType: Number, // 1: 文件导入, 2: 互评平均分, 3: 生评平均分
             desc: String
         }]
     },
     // // 指标
     // Indicators: {
-    //     indicatorGroupId: Schema.Types.ObjectId,
+    //     indicatorGroupId: ObjectId,
     //     name: String,
     //     order: Number,
     //     score: Number,
@@ -148,6 +148,17 @@ var models = {
         // },
         totalScore: Number,
         questionnaire: ObjectId
+    },
+
+    // 单个教师的互评/生评的平均分, 用于加速报表生成
+    EOIndicateAverageScores: {
+        term: ObjectId, // 所属学年
+        type: Number, // 0: 互评, 1: 生评
+        appraiseeId: String, // 被评价者的id,
+        appraiserCount: Number, // 进行评价的人数
+        totalScore: Number, // 总分
+        averageScore: Number, // 平均分
+        calculateTime: Date // 生成时间
     }
 };
 

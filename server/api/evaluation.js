@@ -155,6 +155,51 @@ exports.appraisees = function(req, res) {
 
 
 /**
+ * 每次互评或生评有变更, 就重新生成平均分, 方便输出报表
+ */
+function calculateEOIScores(eoiScore, callback) {
+
+    var appraiseeId = eoiScore.appraiseeId;
+
+    // 搜索所有对该教师的互评/生评, 生成总分和平均分
+    var param = {
+        term: eoiScore.term,
+        type: eoiScore.type,
+        appraiseeId: appraiseeId
+    };
+
+    db.EOIndicateScores.find(param, function(err, docs) {
+        if (err) {
+            return callback(err);
+        }
+        if (!docs) {
+            return callback('数据库出错了, 找不到刚刚的评分记录');
+        }
+
+        var totalScore = 0;
+        var appraiserCount = docs.length;
+        docs.forEach(function(doc) {
+            totalScore += doc.totalScore;
+        });
+        var result = {
+            term: eoiScore.term,
+            type: eoiScore.type,
+            appraiseeId: appraiseeId,
+            totalScore: totalScore,
+            appraiserCount: appraiserCount,
+            averageScore: totalScore / (appraiserCount || 1),
+            calculateTime: new Date()
+        };
+
+        db.EOIndicateAverageScores.findOneAndUpdate(param, result, {
+            upsert: true
+        }, callback);
+    });
+
+}
+
+
+/**
  * 对指定人进行评价
  * @param  {[type]} req [description]
  * @param  {[type]} res [description]
@@ -183,49 +228,40 @@ exports.appraise = function(req, res) {
     var appraiserId = loginUser.id;
     // TODO 验证 appraiserId 和 appraiseeId 是否有对应的评估关系
 
+
+    function callback(err, doc) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        // 先生成互评平均分, 避免出报表的时候麻烦到要死
+        calculateEOIScores(doc, function(err) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                result: doc
+            });
+        });
+    }
+
     // 先找一下有没有已经评过分
-    db.EOIndicateScores.findOne({
+    db.EOIndicateScores.findOneAndUpdate({
         term: term,
         type: evaluationType,
         appraiseeId: appraiseeId,
         appraiserId: appraiserId
-    }, function(err, doc) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        if (doc) { // 已经有的, 就覆盖
-            doc.scores = scoresMap;
-            doc.totalScore = totalScore;
-            doc.questionnaire = questionnaire;
-            doc.save(function(err, doc) {
-                if (err) {
-                    return dbHelper.handleError(err, res);
-                }
-                res.json({
-                    err: ERR.SUCCESS,
-                    result: doc
-                });
-            });
-        } else {
-            db.EOIndicateScores.create({
-                term: term,
-                type: evaluationType,
-                appraiseeId: appraiseeId,
-                appraiserId: appraiserId,
-                scores: scoresMap,
-                totalScore: totalScore,
-                questionnaire: questionnaire
-            }, function(err, doc) {
-                if (err) {
-                    return dbHelper.handleError(err, res);
-                }
-                res.json({
-                    err: ERR.SUCCESS,
-                    result: doc
-                });
-            });
-        }
-    });
+    }, {
+        term: term,
+        type: evaluationType,
+        appraiseeId: appraiseeId,
+        appraiserId: appraiserId,
+        scores: scoresMap,
+        totalScore: totalScore,
+        questionnaire: questionnaire
+    }, {
+        upsert: true
+    }, callback);
 };
 
 /**
