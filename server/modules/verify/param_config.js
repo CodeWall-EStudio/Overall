@@ -147,8 +147,23 @@ module.exports = {
         }]
     },
 
-    // 概要和指标组的结果列表
+    // 概要
     '/api/indicatorscore/summary': {
+        method: 'GET',
+        params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'teacherGroup', // teacherGroup 和 teacherName 二选一
+            type: 'TeacherGroups'
+        }, {
+            name: 'teacherName', // 不支持模糊搜索
+            type: 'string'
+        }]
+    },
+    // 指标组的结果列表
+    '/api/indicatorscore/summarylist': {
         method: 'GET',
         params: [{
             name: 'term',

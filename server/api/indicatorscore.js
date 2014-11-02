@@ -255,14 +255,32 @@ exports.summary = function(req, res) {
             parameter.indicatorGroup, ', cost: ', Date.now() - startTime, 'ms');
 
     }
+    createIndicatorSummary(parameter, callback);
 
-    // 传了[指标组]就查询指定指标组, 否则就是吐概要
-    if (parameter.indicatorGroup) {
-        fetchIndicatorScores(parameter, callback);
-    } else {
-        createIndicatorSummary(parameter, callback);
+
+};
+
+exports.summarylist = function(req, res) {
+    var parameter = req.parameter;
+
+    var startTime = Date.now();
+
+    function callback(err, result) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+
+        res.json({
+            err: ERR.SUCCESS,
+            result: result
+        });
+        Logger.info('[IndicatorScore.summaryList] end, indicatorGroup: ',
+            parameter.indicatorGroup, ', cost: ', Date.now() - startTime, 'ms');
+
     }
 
+    // 传了[指标组]就查询指定指标组, 否则就是吐概要
+    fetchIndicatorScores(parameter, callback);
 };
 
 function createReport(teacher, indGroups, callback) {
@@ -389,7 +407,7 @@ function createIndicatorReport(parameter, callback) {
         ep.after('teacherGroup.teachers.forEach', teacherGroup.teachers.length, function(list) {
 
             // 4. 列表中找到目标老师和计算平均分
-            
+
             var teacherGroupObj = teacherGroup.toObject();
             delete teacherGroupObj.teachers;
 
@@ -414,14 +432,14 @@ function createIndicatorReport(parameter, callback) {
                 scores: {}
             }]*/
 
-            list.sort(function(a, b){
+            list.sort(function(a, b) {
                 return a.totalScore - b.totalScore;
             });
 
             var groupTotalScore = 0;
 
-            list.forEach(function(item, i){
-                if(item.teacherId === teacherId){
+            list.forEach(function(item, i) {
+                if (item.teacherId === teacherId) {
                     result.ranking = i;
                     result.totalScore = item.totalScore;
                     result.results = item.scores;
