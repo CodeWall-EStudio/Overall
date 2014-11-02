@@ -15,7 +15,7 @@ angular.module('ov.services.report',[
                 function getReportList(param,success,error){
                     param = param || {};
                     var ts = new Date().getTime();
-                    var url = '/api/indicatorscore/report?_='+ts+'&term='+$root.nowTerm._id;
+                    var url = '/api/indicatorscore/summarylist?_='+ts+'&term='+$root.nowTerm._id;
 
                     if(param.teacherGroup){
                         url +='&teacherGroup='+param.teacherGroup;    
@@ -53,6 +53,37 @@ angular.module('ov.services.report',[
                             if(error) error(data, status);
                     }); 
                 }
+
+                //输出个人的详细资料
+                function getReport(param,success,error){
+                    param = param || {};
+                    var ts = new Date().getTime();
+                    var url = '/api/indicatorscore/report?_='+ts+'&term='+$root.nowTerm._id;
+
+                    if(param.teacherId){
+                        url +='&teacherId='+param.teacherId;    
+                    }else{
+                        url +='&teacherId='+$root.nowTeacher.teacherId;
+                    }                    
+
+                    //var url = '/api/indicatorscore/report?term='+$root.nowTerm._id+'&indicatorGroup='+$root.nowQuotaGroup._id;
+                    $http.get(url,null,{responseType: 'json'})
+                        .success(function(data,status){
+                            //conventStudent(data.student);
+                            if(data.err === 0){
+                                    $root.reportDetail = data.result;     
+                                    console.log('拉报表成功',data.result);
+                            }else{
+                                $root.$emit(MSG,data.err);
+                            }
+                            if(success) success(data, status);
+                        })
+                        .error(function(data,status){
+                            if(error) error(data, status);
+                    }); 
+                }                
+
+
                 //互评和生评详情
                 function getReportDetail(param,success,error){
                     param = param || {};
@@ -149,6 +180,7 @@ angular.module('ov.services.report',[
 
                 return {
                     getReportList : getReportList,
+                    getReport : getReport,
                     getSummary : getSummary,
                     getReportDetail : getReportDetail
                 }

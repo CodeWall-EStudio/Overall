@@ -10,7 +10,11 @@ angular.module('ov.services.quota',[
 			num = num || 0;
 			if($root.quotaGroupList.length){
 				$root.nowQuotaGroup = $root.quotaGroupList[num];
-				$root.$emit(QUOTA_LOAD);
+				if(!num){
+					$root.$emit(QUOTA_LOAD);
+
+					console.log('quota_load');
+				}
 			}
 		};
 

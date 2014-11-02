@@ -355,14 +355,14 @@
 									<td>{{item.id}}</td>
 									<td>{{item.name}}</td>
 									<td>
-										<span ng-show="item.role===2">校长</span>
-										<span  ng-show="item.role===1">数据管理员</span>
-										<span ng-show="item.role===0">老师</span>
+										<span ng-show="item.role===8">校长</span>
+										<span  ng-show="item.role===4">数据管理员</span>
+										<span ng-show="item.role===2">老师</span>
 									</td>
 									<td>
-										<span ng-show="item.role !==2 " ng-click="setAuth(item.id,2,item._id)">设置为校领导</span>
-										<span ng-show="item.role <1"  ng-click="setAuth(item.id,1,item._id)">设置为数据管理员</span>
-										<span ng-show="item.role > 0"  ng-click="setAuth(item.id,0,item._id)">设置为老师</span>
+										<span ng-show="item.role !==2 " ng-click="setAuth(item.id,8,item._id)">设置为校领导</span>
+										<span ng-show="item.role <1"  ng-click="setAuth(item.id,4,item._id)">设置为数据管理员</span>
+										<span ng-show="item.role > 0"  ng-click="setAuth(item.id,2,item._id)">设置为老师</span>
 									</td>
 								</tr>
 							</table> 		 					

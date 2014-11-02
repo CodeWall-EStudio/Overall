@@ -13,20 +13,22 @@ angular.module('ov.controllers.report',[
 
             /*
             summary 概要，
-            quotalist  指定了指标组
+            group  指定了指标组或者老师分组
             search 搜索结果
-            oneuser 查看单个老师的详情
-            teacher 　互评
-            student 　生评
             */
             $root.reportMode = 'summary';
-
-            $root.reportSMode = 'all';
-
+            /*
+            oneuse 查看单个老师的详情
+            teacher 　互评
+            student 　生评            
+            */
+            $root.reportSMode = 'oneuse';
 
             $root.oneReport = {};
             $root.reportSummary = {}; //评分概要
             $root.reportDetail = {};//评分详情
+            $root.reportMore = {};//
+
             $root.nowTeacher = {};
             $root.teacherRelatList = [];
             $root.nowTeacherReport = {};
@@ -48,6 +50,10 @@ angular.module('ov.controllers.report',[
             //这里指标组在学期之后。。。。囧
             $root.$on(QUOTALOAD,function(){
                 quotaLoad = true;
+                if($root.reportMode !== 'summary'){
+                    return;
+                }
+                console.log(222222);
                 if(quotaLoad && termLoad){
                     //Report.getReportList();
                     Report.getSummary({
@@ -57,7 +63,7 @@ angular.module('ov.controllers.report',[
             });
 
             $root.$on(USERLOAD,function(){
-                console.log('load')
+                //console.log('load')
             }); 
 
             //事件通知 学期变更
@@ -66,15 +72,32 @@ angular.module('ov.controllers.report',[
             });
             //事件通知 老师分组变更
             $root.$on(TEACHREGROUP_CHANGE,function(){
-                Report.getReportList();
+                //Report.getReportList();
+                Report.getSummary({
+                    teacherGroup : $root.nowTeacherGroup._id
+                });                
             });
             //事件通知 指标组变更
+            /*切换到指标组的时候需要显示详细的得分，只切换老师分组不用该显示模式*/
             $root.$on(QUOTAGROUP_CHANGE,function(){
-                Report.getReportList();
+                $root.reportMode  = 'group';
+                Report.getSummary({
+                    teacherGroup : $root.nowTeacherGroup._id,
+                    indicatorGroup : $root.nowQuotaGroup._id
+                });                                
             });    
 
+            //显示详情
+            $root.showMore = function(id,name){
+                var tmp  = {};
+                tmp.name = name;
+                $root.reportMore = $.extend(tmp,$root.reportDetail.results[id]);
+            }
+
             //选中了一个老师
-            $root.showOneUser =  function(idx){
+            $root.showoneuse =  function(idx){
+                $root.reportMode = 'show';
+                $root.reportSMode = 'oneuse';
                 $root.nowSelectedUserIdx = idx
             }
             //返回报表概要
@@ -101,7 +124,7 @@ angular.module('ov.controllers.report',[
                         $root.reportSMode = 'student';
                         break;
                     case 2: //总览
-                        $root.reportSMode = 'all';
+                        $root.reportSMode = 'oneuse';
                         break;
                 }
                 getReport();
@@ -114,15 +137,18 @@ angular.module('ov.controllers.report',[
                     teacherName : obj.teacherName
                 }
                 $root.reportMode = 'show';
-                $root.reportSMode = 'all';
+                $root.reportSMode = 'oneuse';
                 getReport();
             }
 
             function getReport(){
-                if($root.reportSMode === 'all'){
-                    Report.getSummary({
-                        type : 1
+                if($root.reportSMode === 'oneuse'){
+                    Report.getReport({
+                        teacherId : $root.nowTeacher.teacherId
                     });
+                    // Report.getSummary({
+                    //     type : 1
+                    // });
                     // Report.getReportList({
                     //     teacherName : $root.nowTeacher.teacherName
                     // });

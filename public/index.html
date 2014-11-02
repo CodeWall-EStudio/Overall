@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1414919880123">
+	<link rel="stylesheet" href="css/main.css?t=1414928305549">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -21,7 +21,7 @@
  	</div>
  	<div class="toolbar"  ng-controller="toolbarController">
  		<!-- 报表工具条-->
- 		<div class="toolbar toolbar-report" ng-show="reportMode === 'list'">
+ 		<div class="toolbar toolbar-report" ng-show="reportMode === 'list' && getMode() === 'report' ">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-controller="termController">
@@ -117,7 +117,7 @@
  				</tr>
  			</table>
  		</div>
- 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'quotalist'">
+ 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'group'">
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>姓名</th>
@@ -132,7 +132,10 @@
  			</table>
  		</div> 		
  		<!--评价报告详情-->
- 		<div class="content-report" ng-show="reportMode === 'all'">
+ 		<div class="content-report" ng-show="reportMode === 'show' && reportSMode === 'oneuse'">
+ 			<div>
+ 				总分:{{reportDetail.totalScore}}　同组平均分　同组排名:{{reportDetail.ranking}}　同组人数:{{reportDetail.totalTeacher}}
+ 			</div>
  			<table class="table table-striped table-hover">
  				<tr>
  					<th>指标组</th>
@@ -143,12 +146,12 @@
  					<th>加权总分</th>
  					<th>同组加权平均分</th>
  				</tr>
- 				<tr ng-repeat="item in nowTeacherReport.indicatorGroupScores">
+ 				<tr ng-repeat="item in reportDetail.indicatorGroups">
 					<td>
-						{{item.name}} <a  data-toggle="modal" data-target="#quotaMore"  href="#">查看详情</a>
+						{{item.name}} <a  data-toggle="modal" data-target="#quotaMore"  href="#" ng-click="showMore(item._id,item.name)">查看详情</a>
 					</td>
- 					<td>指标</td>
- 					<td>得分</td>
+ 					<td>{{item.indicators[0].name}}</td>
+ 					<td>{{reportDetail.results[item._id].list[0].score}}</td>
  					<td>{{item.totalScore}}</td>
  					<td>同组平均分</td>
  					<td>加权总分</td>
@@ -165,7 +168,7 @@
 	 					<th>分组</th>
 	 					<th>打分</th>
 	 				</tr>
-	 				<tr ng-repeat="item in oneReport.appraisers" ng-click="showOneUser($index)">
+	 				<tr ng-repeat="item in oneReport.appraisers" ng-click="showoneuse($index)">
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.teacherGroup.name}}</td>
 	 					<td>{{item.eoIndicateScore.totalScore || 0}}</td>
@@ -202,7 +205,7 @@
 	 					<th>班级</th>
 	 					<th>打分</th>
 	 				</tr>
-	 				<tr ng-repeat="item in oneReport.students" ng-click="showOneUser($index)">
+	 				<tr ng-repeat="item in oneReport.students" ng-click="showoneuse($index)">
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.grade}}</td>
 	 					<td>{{item.class}}</td>
@@ -254,6 +257,7 @@
  		<div class="modal-dialog">
  			<div class="modal-content">
  				<div class="modal-header">
+ 					<h3>{{reportMore.name}}</h3>
  					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
  				</div>
  				<div class="modal-body">
@@ -263,9 +267,9 @@
 		 					<th>得分</th>
 		 					<th>同组平均分</th>
 	 					</tr>
-	 					<tr>
-							<td>指标</td>
-		 					<td>得分</td>
+	 					<tr ng-repeat="item in reportMore.list">
+							<td>{{item.indicator.name}}</td>
+		 					<td>{{item.score}}</td>
 		 					<td>同组平均分</td>
 	 					</tr>
  					</table>
@@ -295,6 +299,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1414919880123"></script>
+	<script src="js/index.js?t=1414928305549"></script>
 </body>
 </html>
