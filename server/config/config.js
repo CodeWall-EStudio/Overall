@@ -20,7 +20,7 @@ exports.APP_DOMAIN = 'http://localhost:8199';
 exports.COOKIE_SECRET= 'HeMHFxTAMPAjlRVH_secret';
 
 // cookie 的有效时间
-exports.COOKIE_TIME = 24 * 60 * 60 * 1000; // 24 小时
+exports.COOKIE_TIME = 3 * 24 * 60 * 60 * 1000; // 3 * 24 小时
 
 exports.STATIC_FILE_EXPIRES = 7 * 24 * 60 * 60 * 1000; // 静态文件的过期时间 7 天
 

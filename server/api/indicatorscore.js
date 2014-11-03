@@ -318,7 +318,7 @@ function createReport(teacher, indGroups, callback) {
             }
 
             ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
-                Logger.debug('[createSummary#EOIndicateAverageScores.findOne] result: ', list);
+                Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
                 var totalScore = 0;
                 list.forEach(function(item) {
                     totalScore += item && item.score || 0;
@@ -421,7 +421,7 @@ function createIndicatorReport(parameter, callback) {
                 averageScore: 0, // 同组平均分
                 ranking: 0 // 同组排名
             };
-            result.__for__test = list;
+            // result.__for__test = list;
 
             var totalScore = 0;
 
@@ -429,14 +429,23 @@ function createIndicatorReport(parameter, callback) {
                 teacherId: teacher.id,
                 teacherName: teacher.name,
                 totalScore: 0,
-                scores: {}
+                scores: {
+                    indGoup: {
+                        totalScore: totalScore,
+                        list: [{
+                            score: 0,
+                            indicator: ind
+                        }]
+                    }
+                }
             }]*/
 
             list.sort(function(a, b) {
-                return a.totalScore - b.totalScore;
+                return b.totalScore - a.totalScore;
             });
 
             var groupTotalScore = 0;
+            var groupIndicatorTotalScore = {};
 
             list.forEach(function(item, i) {
                 if (item.teacherId === teacherId) {
@@ -446,8 +455,39 @@ function createIndicatorReport(parameter, callback) {
                 }
                 groupTotalScore += item.totalScore;
 
+                // 计算每个指标的总分
+                for (var j in item.scores) { // 每个 score 是一个指标组的得分
+
+                    if (!groupIndicatorTotalScore[j]) {
+                        groupIndicatorTotalScore[j] = 0;
+                    }
+                    groupIndicatorTotalScore[j] += item.scores[j].totalScore || 0;
+                    for (var k = 0; k < item.scores[j].list.length; k++) {
+                        var it = item.scores[j].list[k];
+
+                        var key = j + '.' + it.indicator._id;
+                        if (!groupIndicatorTotalScore[key]) {
+                            groupIndicatorTotalScore[key] = 0;
+                        }
+                        groupIndicatorTotalScore[key] += it.score || 0;
+                    }
+                }
             });
 
+            // 计算指标的平均分
+            for (var j in result.results) {
+                result.results[j].averageScore = (groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1);
+                for (var k = 0; k < result.results[j].list.length; k++) {
+                    var it = result.results[j].list[k];
+                    result.results[j].list[k] = it = it.toObject ? it.toObject() : it;
+                    var key = j + '.' + it.indicator._id;
+
+                    it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
+
+                }
+            }
+
+            // 指标组的平均分
             result.averageScore = totalScore / (result.totalTeacher || 0);
 
             callback(null, result);
