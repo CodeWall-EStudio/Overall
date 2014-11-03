@@ -163,7 +163,7 @@
  					<td>{{item.indicators[0].name}}</td>
  					<td>{{reportDetail.results[item._id].list[0].score}}</td>
  					<td>{{item.totalScore}}</td>
- 					<td>同组平均分</td>
+ 					<td>{{item.averageScore}}</td>
  					<td>加权总分</td>
  					<td>同组加权平均分</td>
  				</tr>
@@ -280,7 +280,7 @@
 	 					<tr ng-repeat="item in reportMore.list">
 							<td>{{item.indicator.name}}</td>
 		 					<td>{{item.score}}</td>
-		 					<td>同组平均分</td>
+		 					<td>{{item.averageScore}}</td>
 	 					</tr>
  					</table>
  				</div>
