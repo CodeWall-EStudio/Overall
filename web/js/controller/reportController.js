@@ -14,6 +14,7 @@ angular.module('ov.controllers.report',[
             /*
             summary 概要，
             group  指定了指标组或者老师分组
+            user :指定
             search 搜索结果
             */
             $root.reportMode = 'summary';
@@ -53,7 +54,6 @@ angular.module('ov.controllers.report',[
                 if($root.reportMode !== 'summary'){
                     return;
                 }
-                console.log(222222);
                 if(quotaLoad && termLoad){
                     //Report.getReportList();
                     Report.getSummary({
@@ -91,6 +91,7 @@ angular.module('ov.controllers.report',[
             $root.showMore = function(id,name){
                 var tmp  = {};
                 tmp.name = name;
+                console.log(id,$root.reportDetail);
                 $root.reportMore = $.extend(tmp,$root.reportDetail.results[id]);
             }
 
@@ -111,9 +112,26 @@ angular.module('ov.controllers.report',[
                         teacherName : $root.searchKeyWord
                     });
             }
+            //
+            $root.isShow = function(type){
+                if(type === 'report'){
+                    var nt = $root.getMode();
+                    //console.log(nt,$root.reportMode);
+                    $root.reportMode = 'summary';
+                    if(nt === 'report'  ){
+                        if ($root.reportMode == 'summary' || $root.reportMode =='group'){
+                            return true;
+                        }
+                    }
+                    //return false;
+                }
+                return false;
+            }
+
 
             //显示一种类型的报表
             $root.showReport = function(type){
+                $root.reportMode = 'user';
                 switch(type){
                     case 0: //互评
                         $root.$emit(GET_RELAT);

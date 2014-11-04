@@ -25,14 +25,14 @@ angular.module('ov.controllers.index',[
 			2 : '行政员工'
 		};
 
-	        $scope.switchMode = function(mode){
+	        $root.switchMode = function(mode){
 	            //console.log(mode,$scope.getMode());
 	            if(mode !== $scope.getMode()){
 	               $location.search('mode', mode);
 	            }
 	        }
 
-	        $scope.getMode = function(mode){
+	        $root.getMode = function(mode){
 	            return $location.search()['mode'] || false;
 	        }		
 }]);

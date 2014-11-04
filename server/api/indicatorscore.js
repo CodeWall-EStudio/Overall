@@ -464,12 +464,13 @@ function createIndicatorReport(parameter, callback) {
                     groupIndicatorTotalScore[j] += item.scores[j].totalScore || 0;
                     for (var k = 0; k < item.scores[j].list.length; k++) {
                         var it = item.scores[j].list[k];
-
+                        if(it){
                         var key = j + '.' + it.indicator._id;
                         if (!groupIndicatorTotalScore[key]) {
                             groupIndicatorTotalScore[key] = 0;
                         }
                         groupIndicatorTotalScore[key] += it.score || 0;
+                        }
                     }
                 }
             });
@@ -479,10 +480,12 @@ function createIndicatorReport(parameter, callback) {
                 result.results[j].averageScore = (groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1);
                 for (var k = 0; k < result.results[j].list.length; k++) {
                     var it = result.results[j].list[k];
+                    if(it){
                     result.results[j].list[k] = it = it.toObject ? it.toObject() : it;
                     var key = j + '.' + it.indicator._id;
 
                     it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
+                    }
 
                 }
             }

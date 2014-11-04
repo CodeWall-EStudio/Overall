@@ -31,7 +31,7 @@
  	</div>
  	<div class="toolbar"  ng-controller="toolbarController">
  		<!-- 报表工具条-->
- 		<div class="toolbar toolbar-report" ng-show="reportMode === 'list' && getMode() === 'report' ">
+ 		<div class="toolbar toolbar-report" ng-show="getMode() === 'report' && (reportMode=='summary' || reportMode =='group')">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-controller="termController">
@@ -60,7 +60,6 @@
 					<ul class="dropdown-menu" role="menu">
 						<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
-						<li><a ng-click="selectQuotaGroup(-2)">行政指标组</a></li>
 					</ul>
 				</div> 	 
 				<a>导出当前报表</a>			
