@@ -326,6 +326,10 @@ function createReport(teacher, indGroups, callback) {
 
                 result.scores[indGroup._id] = {
                     totalScore: totalScore,
+                    // 加权得分: 例如，指标组总分满分100，指标组权重30。
+                    // 某人指标组总分得分80，他的加权得分：（80/100）×30=24。
+                    // 同组加权平均分: 是指同一个用户组的所有用户的加权得分的平均分。
+                    weightedScore: (totalScore / indGroup.score) * indGroup.weight,
                     list: list
                 };
                 ep.group('indGroups.forEach')();
@@ -418,10 +422,10 @@ function createIndicatorReport(parameter, callback) {
                 results: {}, // 
                 totalScore: 0, // 当前所有指标组的总得分
                 totalTeacher: teacherGroup.teachers.length, // 同组教师人数
-                averageScore: 0, // 同组平均分
-                ranking: 0 // 同组排名
+                averageScore: 0, // 同教师组的平均分
+                ranking: 0 // 同组教师组的排名
             };
-            // result.__for__test = list;
+            result.__for__test = list;
 
             var totalScore = 0;
 
@@ -458,10 +462,17 @@ function createIndicatorReport(parameter, callback) {
                 // 计算每个指标的总分
                 for (var j in item.scores) { // 每个 score 是一个指标组的得分
 
+                    // 同一个指标组的所有老师(同教师分组)的得分
                     if (!groupIndicatorTotalScore[j]) {
                         groupIndicatorTotalScore[j] = 0;
                     }
                     groupIndicatorTotalScore[j] += item.scores[j].totalScore || 0;
+                    // 同一个指标组的所有老师(同教师分组)的加权得分
+                    if (!groupIndicatorTotalScore[j + 'weight']) {
+                        groupIndicatorTotalScore[j+ 'weight'] = 0;
+                    }
+                    groupIndicatorTotalScore[j+ 'weight'] += item.scores[j].weightedScore || 0;
+
                     for (var k = 0; k < item.scores[j].list.length; k++) {
                         var it = item.scores[j].list[k];
                         if(it){
@@ -477,7 +488,14 @@ function createIndicatorReport(parameter, callback) {
 
             // 计算指标的平均分
             for (var j in result.results) {
+                // results 的每个元素是一个指标组的得分
+
+                // 这个组的平均得分
                 result.results[j].averageScore = (groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1);
+
+                // 这个组的加权平均得分
+                result.results[j].averageWeightedScore = (groupIndicatorTotalScore[j + 'weight'] || 0) / (result.totalTeacher || 1);
+
                 for (var k = 0; k < result.results[j].list.length; k++) {
                     var it = result.results[j].list[k];
                     if(it){
@@ -490,7 +508,7 @@ function createIndicatorReport(parameter, callback) {
                 }
             }
 
-            // 指标组的平均分
+            // 教师组的平均分
             result.averageScore = totalScore / (result.totalTeacher || 0);
 
             callback(null, result);
