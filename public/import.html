@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 导入指标</title>
-	<link rel="stylesheet" href="css/main.css?t=1415111454210">
+	<link rel="stylesheet" href="css/main.css?t=1415114046950">
 </head>
 <body ng-controller="quotaController">
  	<div class="header-blue">
@@ -46,6 +46,20 @@
  		<div class="content-report">
  			<table class="table table-striped table-hover">
  				<tr>
+ 					<th>指标名称</th>
+ 					<th>指标说明</th>
+ 					<th>最高分</th>
+ 					<th>order</th>
+ 				</tr>
+ 				<tr ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">
+ 					<td>{{item.name}}</td>
+ 					<td>{{item.desc}}</td>
+ 					<td>{{item.score}}</td>
+ 					<td>{{item.order}}</td>
+ 				</tr>
+ 			</table> 		
+ 			<table class="table table-striped table-hover" ng-hide="true">
+ 				<tr>
  					<th>姓名</th>
  					<th ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">{{item.name}}</th>
  					<th>指标组总分</th>
@@ -61,6 +75,6 @@
  	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/import.js?t=1415111454211"></script>
+	<script src="js/import.js?t=1415114046950"></script>
  </body>
  </html>

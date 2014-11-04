@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1415111454210">
+	<link rel="stylesheet" href="css/main.css?t=1415114046950">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -48,7 +48,7 @@
 				<div class="select-dom dropdown" ng-controller="quotaController">
 					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>
+						<!--<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>-->
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
 					</ul>
 				</div> 	 
@@ -298,6 +298,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1415111454211"></script>
+	<script src="js/index.js?t=1415114046950"></script>
 </body>
 </html>
