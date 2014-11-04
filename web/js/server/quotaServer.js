@@ -141,7 +141,7 @@ angular.module('ov.services.quota',[
 			xhr.addEventListener('load',function(e){
 				try{
 					var json = JSON.parse(xhr.responseText);
-					console.log(json);
+					console.log('導入成功　',json);
 				}catch(e){
 
 				}
