@@ -62,7 +62,7 @@
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
 					</ul>
 				</div> 	 
-				<a ng-click="exportReport()">导出当前报表</a>			
+				<a ng-click="exportReport(1)">导出当前报表</a>			
 				<a ng-click="exportReport(1)">导出完整报表</a>
  			</div>
  		</div>
@@ -77,7 +77,7 @@
 		
  			</div>		
  			<div class="toolbar-right">	
-				<a>导出评价报表</a>
+				<a ng-click="exportReport()">导出评价报表</a>
  			</div>
  		</div> 		
  		<!-- 搜索工具条-->

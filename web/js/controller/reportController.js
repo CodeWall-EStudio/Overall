@@ -122,7 +122,7 @@ angular.module('ov.controllers.report',[
                    //  indicatorGroup : $root.nowQuotaGroup._id         
                    var url = '/api/indicatorscore/summary?_='+ts+'&term='+$root.nowTerm._id;
                    url += '&indicatorGroup='+$root.nowQuotaGroup._id;
-                   if($root.searchKeyWord != '') {
+                   if($root.searchKeyWord != '' && !flag) {
                         url += '&teacherName='+$root.searchKeyWord+'&export='+$root.searchKeyWord+'报表';
                    }else{
                         url += '&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
