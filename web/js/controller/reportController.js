@@ -27,6 +27,7 @@ angular.module('ov.controllers.report',[
 
             $root.oneReport = {};
             $root.reportSummary = {}; //评分概要
+            $root.reportSearch = {};//搜索结果
             $root.reportDetail = {};//评分详情
             $root.reportMore = {};//
 
@@ -108,9 +109,27 @@ angular.module('ov.controllers.report',[
             //开始搜索
             $root.startSearch = function(){
                 $root.searchKeyWord = $('#searchKey').val();
+                $root.reportMode = 'search';
                     Report.getSummary({
                         teacherName : $root.searchKeyWord
                     });
+            }
+
+            //导出报表
+            $root.exportReport = function(flag){
+                var ts = new Date().getTime();
+                   // teacherGroup : $root.nowTeacherGroup._id,
+                   //  indicatorGroup : $root.nowQuotaGroup._id         
+                   var url = '/api/indicatorscore/summary?_='+ts+'&term='+$root.nowTerm._id;
+                   url += '&indicatorGroup='+$root.nowQuotaGroup._id;
+                   if($root.searchKeyWord != '') {
+                        url += '&teacherName='+$root.searchKeyWord+'&export='+$root.searchKeyWord+'报表';
+                   }else{
+                        url += '&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
+                   }
+                   
+
+                window.location.href=url;
             }
             //
             $root.isShow = function(type){

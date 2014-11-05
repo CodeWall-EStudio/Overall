@@ -133,10 +133,16 @@ angular.module('ov.services.report',[
                         url += '&indicatorGroup='+param.indicatorGroup;
                     }
                     //url += '&type='+parseInt(param.type);
+                    console.log(url);
                     $http.get(url,null,{responseType:'json'})
                         .success(function(data,status){
                             if(data.err === 0){
-                                $root.reportSummary = data.result;
+                                if(param.teacherName){
+                                    $root.reportSearch = data.result;
+                                }else{
+                                    $root.reportSummary = data.result;    
+                                }
+                                
                                 checkSummary();
                                 console.log('概要或报表拉取成功',data);
                             }else{

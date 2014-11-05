@@ -28,6 +28,9 @@ angular.module('ov.controllers.index',[
 	        $root.switchMode = function(mode){
 	            //console.log(mode,$scope.getMode());
 	            if(mode !== $scope.getMode()){
+	            	 if(mode === 'report'){
+	            	 	$root.reportMode = 'summary';
+	            	 }
 	               $location.search('mode', mode);
 	            }
 	        }
