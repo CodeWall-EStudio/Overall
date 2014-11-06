@@ -153,12 +153,14 @@ function createIndicatorSummary(parameter, callback) {
 
     // 1.
     // teacherName 和 teacherGroup 是互斥的
-    if (teacherGroup) {
-        ep.emitLater('Users.find', teacherGroup.teachers);
-    } else if (teacherName) {
+    if (teacherName) {
         db.Users.find({
             name: teacherName
         }, ep.doneLater('Users.find'));
+    } else if (teacherGroup) {
+        ep.emitLater('Users.find', teacherGroup.teachers);
+    } else {
+        return callback('参数错误, 没有指定教师或教师组');
     }
 
     // 1.1
@@ -203,7 +205,9 @@ function fetchIndicatorScores(parameter, callback) {
     param.indicatorGroup = indicatorGroup;
 
     // teacherName 和 teacherGroup 是互斥的
-    if (teacherGroup) {
+    if (teacherName) {
+        param.teacherName = teacherName;
+    } else if (teacherGroup) {
         var teacherIds = [];
         teacherGroup.teachers.forEach(function(teacher) {
             teacherIds.push(teacher.id);
@@ -211,8 +215,8 @@ function fetchIndicatorScores(parameter, callback) {
         param.teacherId = {
             $in: teacherIds
         };
-    } else if (teacherName) {
-        param.teacherName = teacherName;
+    } else {
+        return callback('参数错误, 没有指定教师或教师组');
     }
 
     Logger.debug('[IndicatorScore.report#fetchIndicatorScores] query: ', param);
@@ -425,7 +429,7 @@ function createIndicatorReport(parameter, callback) {
                 averageScore: 0, // 同教师组的平均分
                 ranking: 0 // 同组教师组的排名
             };
-            result.__for__test = list;
+            // result.__for__test = list;
 
             var totalScore = 0;
 
@@ -469,18 +473,18 @@ function createIndicatorReport(parameter, callback) {
                     groupIndicatorTotalScore[j] += item.scores[j].totalScore || 0;
                     // 同一个指标组的所有老师(同教师分组)的加权得分
                     if (!groupIndicatorTotalScore[j + 'weight']) {
-                        groupIndicatorTotalScore[j+ 'weight'] = 0;
+                        groupIndicatorTotalScore[j + 'weight'] = 0;
                     }
-                    groupIndicatorTotalScore[j+ 'weight'] += item.scores[j].weightedScore || 0;
+                    groupIndicatorTotalScore[j + 'weight'] += item.scores[j].weightedScore || 0;
 
                     for (var k = 0; k < item.scores[j].list.length; k++) {
                         var it = item.scores[j].list[k];
-                        if(it){
-                        var key = j + '.' + it.indicator._id;
-                        if (!groupIndicatorTotalScore[key]) {
-                            groupIndicatorTotalScore[key] = 0;
-                        }
-                        groupIndicatorTotalScore[key] += it.score || 0;
+                        if (it) {
+                            var key = j + '.' + it.indicator._id;
+                            if (!groupIndicatorTotalScore[key]) {
+                                groupIndicatorTotalScore[key] = 0;
+                            }
+                            groupIndicatorTotalScore[key] += it.score || 0;
                         }
                     }
                 }
@@ -498,11 +502,11 @@ function createIndicatorReport(parameter, callback) {
 
                 for (var k = 0; k < result.results[j].list.length; k++) {
                     var it = result.results[j].list[k];
-                    if(it){
-                    result.results[j].list[k] = it = it.toObject ? it.toObject() : it;
-                    var key = j + '.' + it.indicator._id;
+                    if (it) {
+                        result.results[j].list[k] = it = it.toObject ? it.toObject() : it;
+                        var key = j + '.' + it.indicator._id;
 
-                    it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
+                        it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
                     }
 
                 }
