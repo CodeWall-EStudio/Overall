@@ -15,6 +15,9 @@ angular.module('ov.services.question',[
                 try{
                     var json = JSON.parse(xhr.responseText);
                     console.log(json);
+                    if(json.err === 0){
+                        
+                    }
                 }catch(e){
 
                 }

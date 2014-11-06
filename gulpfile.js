@@ -185,6 +185,8 @@ gulp.task('build',function(){
 })
 
 gulp.task('copy',function(){
+            gulp.src('./web/data/**')
+            .pipe(gulp.dest('./public/data'));
 	gulp.src('./web/css/imgs/**')
 	.pipe(gulp.dest('./public/css/imgs'));
 });

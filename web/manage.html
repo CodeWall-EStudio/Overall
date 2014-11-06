@@ -115,7 +115,7 @@
 			 	</div> 	 			 	
  			</div>
  			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
+ 				<a href="data/question.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" >导入问卷数据</button>
  				<input type="file" id="importQuestion" class="import-btn" />
  			</div>
@@ -132,15 +132,15 @@
  				</ul> 
  			</div>
  			<div class="toolbar-right">
- 				<button class="btn btn-default" ng-click="import71">导入71用户数据</button>
+ 				<button class="btn btn-default" ng-click="import71()">导入71用户数据</button>
  			</div>
  			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
+ 				<a href="data/teachergroup.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" >导入老师分组数据</button>
  				<input type="file" id="importTeacherGroup" class="import-btn" />
  			</div> 			
  			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
+ 				<a href="data/teacher.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" >导入老师数据</button>
  				<input type="file" id="importTeacher" class="import-btn" />
  			</div>
@@ -151,7 +151,7 @@
  			 <div class="toolbar-left">
  			</div>
  			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
+ 				<a href="data/student.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" >导入学生数据</button>
  				<input type="file" id="importStudent" class="import-btn" />
  			</div>
@@ -174,7 +174,7 @@
 				<button class="btn btn-default" data-toggle="modal" data-target="#newQuotaGroup">新建指标组</button>
  			</div>
  			<div class="toolbar-right">
- 				<a>下载数据配置模板</a>
+ 				<a href="data/quota.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" ng-click="importData()">导入指标</button>
  				<input type="file" id="importFile" class="import-btn" />
  			</div>
@@ -182,6 +182,7 @@
 
  		<div class="toolbar toolbar-import"  ng-class="{hide:getMode()!=='relat'}">
  			 <div class="toolbar-right">
+ 			 	<a href="data/relat.xls" target="_blank">下载数据配置模板</a>
  				<button class="btn btn-default" >导入数据</button>
  				<input type="file" id="importRelat" class="import-btn" />
 		</div>
