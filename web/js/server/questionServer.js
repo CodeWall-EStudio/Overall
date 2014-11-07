@@ -14,9 +14,8 @@ angular.module('ov.services.question',[
             xhr.addEventListener('load',function(e){
                 try{
                     var json = JSON.parse(xhr.responseText);
-                    console.log(json);
                     if(json.err === 0){
-                        
+                        getQuestionList();
                     }
                 }catch(e){
 
@@ -40,8 +39,7 @@ angular.module('ov.services.question',[
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })
                 .success(function(data,status){
-                    console.log(data);
-                    //conventStudent(data.student);
+                   //conventStudent(data.student);
                     if(data.err === 0){
                         $root.questionList.push(data.result);
                         console.log('新建问卷成功!', data);
@@ -67,8 +65,12 @@ angular.module('ov.services.question',[
                     console.log('拉取问卷分组成功！',data.result);
                     if(data.err === 0){
                         $root.questionList = data.result;
-                        if($root.questionList.length>0){
+                        if($root.questionList.length>0 && !$root.nowQuestion._id){
                             $root.nowQuestion = $root.questionList[0];
+                        }else if($root.nowQuestion._id){
+                            $root.nowQuestion = _.find($root.questionList,function(item){
+                                return item._id === $root.nowQuestion._id;
+                            })
                         }
                         $root.$emit(QUEST_LOAD);
                     }else{

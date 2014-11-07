@@ -15,6 +15,9 @@ angular.module('ov.services.teacher',[
                 console.log(e);
                 try{
                     var json = JSON.parse(xhr.responseText);
+                    if(json.err === 0){
+                        getTeacherGroupList();
+                    }
                     console.log(json);
                 }catch(e){
 
@@ -37,6 +40,9 @@ angular.module('ov.services.teacher',[
                 try{
                     var json = JSON.parse(xhr.responseText);
                     console.log(json);
+                    if(json.err === 0){
+                        getTeacherGroupList();
+                    }
                 }catch(e){
 
                 }
