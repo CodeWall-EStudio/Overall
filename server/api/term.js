@@ -52,6 +52,17 @@ exports.modify = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
 
+    var callback = function(err, doc) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            msg: 'ok',
+            result: doc
+        });
+    };
+
     if (parameter.name) {
         term.name = parameter.name;
     }
@@ -62,16 +73,26 @@ exports.modify = function(req, res) {
         term.status = parameter.status;
     }
 
-    term.save(function(err, doc) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            msg: 'ok',
-            result: doc
+    // status === 1 的只能有一个
+    if (term.status === 1) {
+        db.Terms.findOne({
+            status: 1
+        }, function(err, doc) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            if (doc) {
+                return res.json({
+                    err: ERR.DUPLICATE,
+                    msg: '已经有激活的学期'
+                });
+            }
+            term.save(callback);
         });
-    });
+    } else {
+        term.save(callback);
+    }
+
 
 };
 
