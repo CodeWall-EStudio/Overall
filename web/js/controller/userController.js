@@ -69,8 +69,8 @@ angular.module('ov.controllers.user',[
                 }
             }    
             if(role & 0x16){
-                if(url.indexOf('mange.html') < 0){
-                    window.location.href='/mange.html';
+                if(url.indexOf('manage.html') < 0){
+                    window.location.href='/manage.html';
                 }
             }                
 
