@@ -4,7 +4,7 @@ angular.module('ov.controllers.relat',[
         'ov.services.relat',
         'ov.services.question'
     ]).
-    controller('relatController',['$rootScope','$scope','relatService','questionService','STATUS.TERM.LOAD','STATUS.LOGIN.STUDENT','STATUS.LOGIN.TEACHER','STATUS.QUEST.LOAD','STATUS.RELAT.GET',function($root,$scope,Relat,Question,TERM_LOAD,STUDENT_LOGIN,TEACHER_LOGIN,QUEST_LOAD,GET_RELAT){
+    controller('relatController',['$rootScope','$scope','relatService','questionService','STATUS.TERM.LOAD','STATUS.LOGIN.STUDENT','STATUS.LOGIN.TEACHER','STATUS.QUEST.LOAD','STATUS.RELAT.GET','STATUS.TERM.LOAD','STATUS.TERM.CHANGE',function($root,$scope,Relat,Question,TERM_LOAD,STUDENT_LOGIN,TEACHER_LOGIN,QUEST_LOAD,GET_RELAT,TERM_LOAD,TERM_CHANGE){
         console.log('load relatController');
         $root.relatList = [];
         $root.relatTdList = [];
@@ -142,6 +142,13 @@ angular.module('ov.controllers.relat',[
             }
             // console.log($root.relatList,$root.nowTeacher);
         });
+
+        $root.$on(TERM_CHANGE,function(e,d){
+             Relat.getRelatList();
+        });
+        $root.$on(TERM_LOAD,function(e,d){
+             Relat.getRelatList();
+        });        
 
         //拉到问题分组了
         $root.$on(QUEST_LOAD,function(){

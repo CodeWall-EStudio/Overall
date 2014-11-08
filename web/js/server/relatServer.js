@@ -14,8 +14,11 @@ angular.module('ov.services.relat',[
             xhr.addEventListener('load',function(e){
                 try{
                     var json = JSON.parse(xhr.responseText);
-                    $root.relatList = json.result;
+                    //$root.relatList = json.result;
                     console.log('导入成功',json);
+                    if(json.err === 0){
+                        getRelatList();
+                    }
                 }catch(e){
 
                 }

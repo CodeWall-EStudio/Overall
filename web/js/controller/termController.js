@@ -9,6 +9,7 @@ angular.module('ov.controllers.term',[
         $root.modifyTerm = {};
         $root.termList = [];
         $root.nowTerm = {};
+        //0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
         //新建学期
         $root.createTerm = function(){
             $root.termModalTit = '新建学期';

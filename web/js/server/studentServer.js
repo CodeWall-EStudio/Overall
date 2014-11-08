@@ -14,6 +14,9 @@ angular.module('ov.services.student',[
             xhr.addEventListener('load',function(e){
                 try{
                     var json = JSON.parse(xhr.responseText);
+                    if(json.err===0){
+                            getStudentList();
+                    }
                     console.log(json);
                 }catch(e){
 

@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1415375297333">
+	<link rel="stylesheet" href="css/main.css?t=1415415565253">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -15,10 +15,11 @@
  				<ul class="dropdown-menu" role="menu">
  					<li ng-repeat="item in termList" ng-model="termList">
  						<a ng-click="changeTerm(item._id)">{{item.name}}</a>
- 						<a class="act" ng-click="changeTermStatus(item._id,1)" ng-show="item.status != 1">激活</a> 
- 						<a class="act" ng-click="changeTermStatus(item._id,0)" ng-show="item.status === 0">非激活</a>
- 						<a class="act"  ng-class="{hide:!item.status}" ng-click="changeTermStatus(item._id,2)">关闭</a>
- 						<a class="act" ng-click="modifyOneTerm(item._id)">编辑</a>
+ 						<a class="act" ng-click="changeTermStatus(item._id,1)" ng-show="item.status === 0">激活</a> 
+ 						<a class="act"  ng-show="item.status === 1" ng-click="changeTermStatus(item._id,2)">关闭</a>
+ 						<a class="act" ng-show="item.status === 0" ng-click="modifyOneTerm(item._id)">编辑</a>
+ 						<a class="act"  ng-show="item.status === 0 || item.status === 4" ng-click="alert('not ready')">删除</a>
+ 						<a class="act" ng-show="item.status === 1" ng-click="changeTermStatus(item._id,4)">评价完成</a>
  					</li>
  					<li><a data-type="create" ng-click="createTerm($event)">新建学期</a></li>
  				</ul> 	
@@ -367,6 +368,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1415375297333"></script>
+	<script src="js/manage.js?t=1415415565253"></script>
 </body>
 </html>
