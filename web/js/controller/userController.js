@@ -49,9 +49,11 @@ angular.module('ov.controllers.user',[
         */
 
         $root.$on(USERLOAD,function(){
-            //User.searchUser();
+            User.searchUser();
+
             var role = $root.my.role;
             var url = $location.absUrl();
+            console.log(role);
             if(role & 0x1 || role & 0x2){
                 if(url.indexOf('overall.html') < 0){
                     window.location.href='/overall.html';
