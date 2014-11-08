@@ -29,7 +29,7 @@
  							{{item.name}}
  							<span ng-show="item.status === 2">已关闭</span>
  						</a>
- 						<a class="act" ng-click="changeTermStatus(item._id,1)" ng-show="item.status === 0">激活</a> 
+ 						<a class="act" ng-click="changeTermStatus(item._id,1)" ng-show="item.status === 0 || item.status === 2">激活</a> 
  						<a class="act"  ng-show="item.status === 1" ng-click="changeTermStatus(item._id,2)">关闭</a>
  						<a class="act" ng-show="item.status === 0" ng-click="modifyOneTerm(item._id)">编辑</a>
  						<a class="act"  ng-show="item.status === 0 || item.status === 4" ng-click="deleteTerm(item._id)">删除</a>
