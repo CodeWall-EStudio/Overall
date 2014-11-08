@@ -60,7 +60,7 @@ angular.module('ov.services.term',[
     var delTerm = function(param,success,error){
         var ts = new Date().getTime();
         var body = Util.object.toUrlencodedString(param);
-        $http.post('/api/term/create?_='+ts,
+        $http.post('/api/term/delete?_='+ts,
             body,
             {
                 responseType: 'json',
@@ -70,10 +70,11 @@ angular.module('ov.services.term',[
                 console.log(data);
                 //conventStudent(data.student);
                 if(data.err === 0){
-                console.log('新建学期成功!', data);
-                }else{
-                $root.$emit(MSG,data.err);
+                    console.log('删除学期成功!', data);
+                    deleteUpdateTerm(param.term);
                 }
+                $root.$emit(MSG,data.err);
+                
                 if(success) success(data, status);
             })
             .error(function(data,status){
@@ -149,6 +150,16 @@ angular.module('ov.services.term',[
                 $root.termList[idx] = param;
             }
         });
+    }
+    //删除之后更新学期列表
+    function deleteUpdateTerm(id){
+        var list = [];
+        _.each($root.termList,function(item){
+            if(item._id !== id){
+                list.push(item);
+            }
+        });
+        $root.termList = list;
     }
 
 

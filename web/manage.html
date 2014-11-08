@@ -21,14 +21,18 @@
  	<div class="header-blue">
  		<ul class="nav nav-tabs top-nav">
  			<li  ng-controller="termController">
+ 				<!--//0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成-->
  				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowTerm.name}}<span class="caret"></span></a>
  				<ul class="dropdown-menu" role="menu">
  					<li ng-repeat="item in termList" ng-model="termList">
- 						<a ng-click="changeTerm(item._id)">{{item.name}}</a>
+ 						<a ng-click="changeTerm(item._id)">
+ 							{{item.name}}
+ 							<span ng-show="item.status === 2">已关闭</span>
+ 						</a>
  						<a class="act" ng-click="changeTermStatus(item._id,1)" ng-show="item.status === 0">激活</a> 
  						<a class="act"  ng-show="item.status === 1" ng-click="changeTermStatus(item._id,2)">关闭</a>
  						<a class="act" ng-show="item.status === 0" ng-click="modifyOneTerm(item._id)">编辑</a>
- 						<a class="act"  ng-show="item.status === 0 || item.status === 4" ng-click="alert('not ready')">删除</a>
+ 						<a class="act"  ng-show="item.status === 0 || item.status === 4" ng-click="deleteTerm(item._id)">删除</a>
  						<a class="act" ng-show="item.status === 1" ng-click="changeTermStatus(item._id,4)">评价完成</a>
  					</li>
  					<li><a data-type="create" ng-click="createTerm($event)">新建学期</a></li>

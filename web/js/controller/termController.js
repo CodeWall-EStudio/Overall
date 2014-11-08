@@ -51,6 +51,15 @@ angular.module('ov.controllers.term',[
             //console.log(param);
         }
 
+        //删除学期
+        $root.deleteTerm = function(id){
+            if(id){
+                Term.delTerm({
+                    term : id
+                })
+            }
+        }
+
         //修改学期状态
         $root.changeTermStatus = function(id,status){
             $root.modifyTerm = {};
