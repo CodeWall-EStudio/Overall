@@ -58,6 +58,9 @@ angular.module('ov.services.quota',[
 					if(data.err === 0){
 						$root.quotaGroupList.push(data.result);
 						$root.quotaGroupMap[data.result._id] = data.result;
+						if(!$root.nowQuotaGroup._id){
+							$root.nowQuotaGroup = data.result;
+						}
 						console.log('新建指标组成功!', data);
 					}else{
 					}
