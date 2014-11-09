@@ -471,7 +471,6 @@ function createIndicatorReport(parameter, callback) {
             };
             // result.__for__test = list;
 
-            var totalScore = 0;
 
             /*list[{
                 teacherId: teacher.id,
@@ -553,7 +552,7 @@ function createIndicatorReport(parameter, callback) {
             }
 
             // 教师组的平均分
-            result.averageScore = totalScore / (result.totalTeacher || 0);
+            result.averageScore = groupTotalScore / (result.totalTeacher || 0);
 
             result.createTime = Date.now();
 
