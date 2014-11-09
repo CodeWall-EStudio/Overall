@@ -467,3 +467,6 @@ button.close{
 	padding: 3px;
 	text-decoration: underline;
 }
+.glyphicon {
+	cursor:pointer;
+}

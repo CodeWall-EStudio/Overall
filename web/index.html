@@ -58,7 +58,7 @@
 				<div class="select-dom dropdown" ng-controller="quotaController">
 					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<!--<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>-->
+						<li><a ng-click="selectQuotaGroup(-1)">概要</a></li>
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
 					</ul>
 				</div> 	 

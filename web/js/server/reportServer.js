@@ -154,6 +154,43 @@ angular.module('ov.services.report',[
                         }); 
                 };
 
+                //详细报表
+                function getSummaryList(param,success,error){
+                    param = param || {};
+                    var ts = new Date().getTime();
+                    var url = '/api/indicatorscore/summaryList?_='+ts+'&term='+$root.nowTerm._id;
+                    // 指定了老师分组　这个时候是概要和报表
+                    if(param.teacherGroup){
+                        url += '&teacherGroup='+param.teacherGroup;
+                    //没有指定老师分组，则需要传ｔｅａｃｈｅｒＮame　这个时候是搜索老师
+                    }else if(param.teacherName){
+                        url += '&teacherName='+param.teacherName;
+                    }
+                    if(param.indicatorGroup){
+                        url += '&indicatorGroup='+param.indicatorGroup;
+                    }
+                    //url += '&type='+parseInt(param.type);
+                    console.log(url);
+                    $http.get(url,null,{responseType:'json'})
+                        .success(function(data,status){
+                            if(data.err === 0){
+                                if(param.teacherName){
+                                    $root.reportSearch = data.result;
+                                }else{
+                                    $root.reportSummary = data.result;    
+                                }
+                                
+                                checkSummary();
+                                console.log('概要或报表拉取成功',data);
+                            }else{
+                                    $root.$emit(MSG,data.err);
+                            }
+                        })
+                        .error(function(data,status){
+                            if(error) error(data, status);
+                        }); 
+                };                
+
                 //概要转化
                 function checkSummary(){
                     $root.reportSummary.quotaMap = {};
@@ -186,6 +223,7 @@ angular.module('ov.services.report',[
 
                 return {
                     getReportList : getReportList,
+                    getSummaryList : getSummaryList,
                     getReport : getReport,
                     getSummary : getSummary,
                     getReportDetail : getReportDetail

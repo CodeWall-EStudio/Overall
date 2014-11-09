@@ -67,7 +67,7 @@ angular.module('ov.controllers.user',[
 
             var role = $root.my.role;
             var url = $location.absUrl();
-            console.log(role);
+
             if(role & 0x1 || role & 0x2){
                 if(url.indexOf('overall.html') < 0){
                     window.location.href='/overall.html';
@@ -78,16 +78,19 @@ angular.module('ov.controllers.user',[
                 if(url.indexOf('import.html') < 0){
                     window.location.href='/import.html';
                 }
+                return;
             }            
             if(role & 0x8){
                 if(url.indexOf('index.html') < 0){
                     window.location.href='/index.html';
                 }
+                return;
             }    
             if(role & 0x16){
                 if(url.indexOf('manage.html') < 0){
                     window.location.href='/manage.html';
                 }
+                return;
             }                
 
         });        

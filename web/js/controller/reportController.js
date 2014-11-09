@@ -80,12 +80,20 @@ angular.module('ov.controllers.report',[
             });
             //事件通知 指标组变更
             /*切换到指标组的时候需要显示详细的得分，只切换老师分组不用该显示模式*/
-            $root.$on(QUOTAGROUP_CHANGE,function(){
+            $root.$on(QUOTAGROUP_CHANGE,function(e,d){
                 $root.reportMode  = 'group';
-                Report.getSummary({
-                    teacherGroup : $root.nowTeacherGroup._id,
-                    indicatorGroup : $root.nowQuotaGroup._id
-                });                                
+                if(d){
+                    Report.getSummary({
+                        teacherGroup : $root.nowTeacherGroup._id,
+                        indicatorGroup : $root.nowQuotaGroup._id
+                    }); 
+                }else{
+                    Report.getSummaryList({
+                        teacherGroup : $root.nowTeacherGroup._id,
+                        indicatorGroup : $root.nowQuotaGroup._id
+                    });                     
+                }
+                               
             });    
 
             //显示详情

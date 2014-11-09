@@ -65,9 +65,10 @@ angular.module('ov.controllers.import',[
 		/*事件绑定*/
 		//选择指标组
 		$root.selectQuotaGroup = function(idx){
+			console.log(idx);
 			if(idx<0){
 				$root.nowQuotaGroup = false;
-				$root.$emit(QUOTA_CHANGE);
+				$root.$emit(QUOTA_CHANGE,true);
 				return;
 			}
 			Quota.setDefQuotaGroup(idx);
