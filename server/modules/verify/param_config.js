@@ -160,6 +160,8 @@ module.exports = {
         }, {
             name: 'teacherName', // 不支持模糊搜索
             type: 'string'
+        }, {
+            name: 'export'
         }]
     },
     // 指标组的结果列表
@@ -178,6 +180,8 @@ module.exports = {
         }, {
             name: 'indicatorGroup', // 传了 indicatorGroup 就显示指标组详情, 否则显示概要
             type: 'IndicatorGroups'
+        }, {
+            name: 'export'
         }]
     },
     // 输出评价报表
@@ -191,6 +195,8 @@ module.exports = {
             name: 'teacherId', // 教师 id
             type: 'string',
             required: true
+        }, {
+            name: 'export'
         }]
     },
     // 互评和生评详情
@@ -208,6 +214,8 @@ module.exports = {
             name: 'type', // 报表类型, 1: 互评明细, 2: 生评明细
             type: 'number',
             required: true
+        }, {
+            name: 'export'
         }]
     },
 

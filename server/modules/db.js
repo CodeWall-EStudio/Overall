@@ -30,7 +30,7 @@ var models = {
         id: String,
         name: String,
         status: Number,
-        role: Number  // 1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
+        role: Number  // 1: 学生, 2: 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
     },
 
     // 学期

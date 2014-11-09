@@ -35,8 +35,10 @@ module.exports = exports = {
 
     TIME_DUPLICATE: 1050, // 创建学年时, 时间交叉了
 
+    STATUS_DUPLICATE: 1051, // 已经有激活的学期了
 
-    IMPORT_FAILURE: 1060, // 创建学年时, 时间交叉了
+
+    IMPORT_FAILURE: 1060, // 导入失败
 
     SUCCESS: 0
 };

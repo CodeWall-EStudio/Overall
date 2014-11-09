@@ -25,6 +25,9 @@ if (!config.DEBUG) {
 
 app.set('port', process.env.PORT || config.PORT || 3000);
 
+app.engine('.html', require('ejs').__express);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 
 app.use(express.favicon());
 app.use(express.logger('dev'));
@@ -68,6 +71,8 @@ if ('development' === app.get('env')) {
 app.use(express.static(staticDir, {
     maxAge: config.STATIC_FILE_EXPIRES
 }));
+
+
 
 
 /////////// API 相关 ///////////////
