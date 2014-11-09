@@ -36,7 +36,7 @@ function pickupUsers(root, callback) {
         callback(null, {
             id: root.loginName,
             name: root.name,
-            role: 0,
+            role: 2,
             status: 0
         });
     } else {

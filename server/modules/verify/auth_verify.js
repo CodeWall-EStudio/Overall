@@ -84,6 +84,7 @@ exports.checkAPI = function(req, res, next) {
 
 
 function getAuthRule(path) {
+    // TODO 支持多条规则依次验证
     var rule = AuthConfig.RULES[path];
     if (!rule) {
         for (var i in AuthConfig.RULES) {
