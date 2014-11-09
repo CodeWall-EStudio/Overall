@@ -179,7 +179,8 @@ module.exports = {
             type: 'string'
         }, {
             name: 'indicatorGroup', // 传了 indicatorGroup 就显示指标组详情, 否则显示概要
-            type: 'IndicatorGroups'
+            type: 'IndicatorGroups',
+            required: true
         }, {
             name: 'export'
         }]

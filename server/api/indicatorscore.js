@@ -167,7 +167,11 @@ function createIndicatorSummary(parameter, callback) {
     // 1.1
     db.IndicatorGroups.find({
         term: term
-    }, null, { sort: { order: 1 } }, ep.doneLater('IndicatorGroups.find'));
+    }, null, {
+        sort: {
+            order: 1
+        }
+    }, ep.doneLater('IndicatorGroups.find'));
 
 
     ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
@@ -416,12 +420,11 @@ function createIndicatorReport(parameter, callback) {
     // 4. 列表中找到目标老师
     // 5. 计算同组平均分和排名
 
-    db.Users.find({
+    db.Users.findOne({
         id: teacherId
-    }, function(err, teacher) {
-        if (err) {
-            return callback(err);
-        }
+    }, ep.doneLater('Users.findOne'));
+
+    ep.on('Users.findOne', function(teacher) {
         if (!teacher) {
             return callback('没找到这个人');
         }
@@ -436,9 +439,14 @@ function createIndicatorReport(parameter, callback) {
     // 1. 获取当前学期的指标组们
     db.IndicatorGroups.find({
         term: term
+    }, null, {
+        sort: {
+            order: 1
+        }
     }, ep.done('IndicatorGroups.find'));
 
-    ep.all('TeacherGroups.findOne', 'IndicatorGroups.find', function(teacherGroup, indGroups) {
+    ep.all('Users.findOne', 'TeacherGroups.findOne', 'IndicatorGroups.find', function(teacher, teacherGroup, indGroups) {
+
         if (!teacherGroup) {
             return callback('该教师没有配置教师组');
         }
@@ -451,6 +459,8 @@ function createIndicatorReport(parameter, callback) {
 
             var result = {
                 teacherId: teacherId,
+                teacherName: teacher.name,
+                term: parameter.term,
                 teacherGroup: teacherGroupObj, // 教师所在分组
                 indicatorGroups: indGroups, // 当前学期的所有指标组
                 results: {}, // 
@@ -461,7 +471,6 @@ function createIndicatorReport(parameter, callback) {
             };
             // result.__for__test = list;
 
-            var totalScore = 0;
 
             /*list[{
                 teacherId: teacher.id,
@@ -543,7 +552,9 @@ function createIndicatorReport(parameter, callback) {
             }
 
             // 教师组的平均分
-            result.averageScore = totalScore / (result.totalTeacher || 0);
+            result.averageScore = groupTotalScore / (result.totalTeacher || 0);
+
+            result.createTime = Date.now();
 
             callback(null, result);
         });
@@ -575,11 +586,24 @@ exports.report = function(req, res) {
             return dbHelper.handleError(err, res);
         }
 
-        res.json({
-            err: ERR.SUCCESS,
-            result: result
-        });
-        Logger.info('[IndicatorScore.report] end, cost: ', Date.now() - startTime, 'ms');
+        var endTime = Date.now();
+
+        Logger.info('[IndicatorScore.report] end, cost: ', endTime - startTime, 'ms');
+
+        if (parameter.export) {
+
+            res.render('report', {
+                result: result,
+                util: Util
+            });
+        } else {
+            res.json({
+                err: ERR.SUCCESS,
+                result: result
+            });
+        }
+
+
 
     });
 
