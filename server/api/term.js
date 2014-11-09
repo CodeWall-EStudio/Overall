@@ -1,3 +1,6 @@
+var EventProxy = require('eventproxy');
+
+
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
 var fileHelper = require('../modules/file_helper');
@@ -11,21 +14,36 @@ var XLS = require('xlsjs');
 exports.create = function(req, res) {
 
     var parameter = req.parameter;
-    
-    db.Terms.create({
-        name: parameter.name,
-        order: parameter.order || 0,
 
-        status: 0 // 0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
+    db.Terms.findOne({
+        name: parameter.name
     }, function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
-        res.json({
-            err: ERR.SUCCESS,
-            result: doc.toJSON()
+        if (doc) {
+            return res.json({
+                err: ERR.DUPLICATE,
+                msg: '已经有这个名字了'
+            });
+        }
+        db.Terms.create({
+            name: parameter.name,
+            order: parameter.order || 0,
+
+            status: 0 // 0: 未激活, 1: 激活, 2: 关闭, 4: 评价完成
+        }, function(err, doc) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                result: doc.toJSON()
+            });
         });
     });
+
+
 };
 
 exports.list = function(req, res) {
@@ -52,25 +70,43 @@ exports.modify = function(req, res) {
     var parameter = req.parameter;
     var term = parameter.term;
 
-    var callback = function(err, doc) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            msg: 'ok',
-            result: doc
-        });
-    };
+    var ep = new EventProxy();
 
-    if (parameter.name) {
-        term.name = parameter.name;
-    }
+    ep.fail(function(err) {
+        res.json({
+            err: ERR.SERVER_ERROR,
+            msg: err
+        });
+    });
+
+
     if (parameter.order) {
         term.order = parameter.order;
     }
     if (parameter.status) { // status 一旦经过设定值, 就不能再设置回 0
         term.status = parameter.status;
+    }
+    if (parameter.name === term.name) {
+        delete parameter.name;
+    }
+    if (parameter.name) {
+        term.name = parameter.name;
+        db.Terms.findOne({
+            name: parameter.name
+        }, function(err, doc) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            if (doc) {
+                return res.json({
+                    err: ERR.DUPLICATE,
+                    msg: '已经有同名的学期'
+                });
+            }
+            ep.emit('nameOK');
+        });
+    } else {
+        ep.emitLater('nameOK');
     }
 
     // status === 1 的只能有一个
@@ -87,12 +123,25 @@ exports.modify = function(req, res) {
                     msg: '已经有激活的学期'
                 });
             }
-            term.save(callback);
+            ep.emit('statusOK');
+
         });
     } else {
-        term.save(callback);
+        ep.emitLater('statusOK');
+
     }
 
+    ep.all('statusOK', 'nameOK', function() {
+        term.save(function(err, doc) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                result: doc
+            });
+        });
+    });
 
 };
 
