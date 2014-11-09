@@ -81,13 +81,15 @@ angular.module('ov.controllers.report',[
             //事件通知 指标组变更
             /*切换到指标组的时候需要显示详细的得分，只切换老师分组不用该显示模式*/
             $root.$on(QUOTAGROUP_CHANGE,function(e,d){
-                $root.reportMode  = 'group';
+                
+
                 if(d){
+                    $root.reportMode  = 'summary';
                     Report.getSummary({
-                        teacherGroup : $root.nowTeacherGroup._id,
-                        indicatorGroup : $root.nowQuotaGroup._id
+                        teacherGroup : $root.nowTeacherGroup._id
                     }); 
                 }else{
+                    $root.reportMode  = 'group';
                     Report.getSummaryList({
                         teacherGroup : $root.nowTeacherGroup._id,
                         indicatorGroup : $root.nowQuotaGroup._id

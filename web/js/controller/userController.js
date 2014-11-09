@@ -82,7 +82,7 @@ angular.module('ov.controllers.user',[
             }            
             if(role & 0x8){
                 if(url.indexOf('index.html') < 0){
-                    window.location.href='/index.html';
+                    window.location.href='/index.html#?mode=report';
                 }
                 return;
             }    

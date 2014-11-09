@@ -13,6 +13,10 @@ angular.module('ov.controllers.import',[
 		$root.newQuotaGroup = {};
 
 		$root.quotaScoreList = {};
+		$root.defQuota = {
+			name : '概要',
+			_id : -1
+		}		
 
 		//指标排序
 		$scope.quotaOrder = {
@@ -65,9 +69,8 @@ angular.module('ov.controllers.import',[
 		/*事件绑定*/
 		//选择指标组
 		$root.selectQuotaGroup = function(idx){
-			console.log(idx);
 			if(idx<0){
-				$root.nowQuotaGroup = false;
+				$root.nowQuotaGroup = $root.defQuota;
 				$root.$emit(QUOTA_CHANGE,true);
 				return;
 			}

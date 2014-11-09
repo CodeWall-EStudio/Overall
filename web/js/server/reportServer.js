@@ -133,7 +133,7 @@ angular.module('ov.services.report',[
                         url += '&indicatorGroup='+param.indicatorGroup;
                     }
                     //url += '&type='+parseInt(param.type);
-                    console.log(url);
+                    //console.log(url);
                     $http.get(url,null,{responseType:'json'})
                         .success(function(data,status){
                             if(data.err === 0){
@@ -200,6 +200,7 @@ angular.module('ov.services.report',[
                         _.each(item.indicators,function(obj){
                             tmp[obj._id] = obj;
                         });
+                        console.log($root.reportSummary);
                         $root.reportSummary.quotaMap[item._id].quotas = tmp;
                     });
                 }

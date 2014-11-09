@@ -5,14 +5,18 @@ angular.module('ov.services.quota',[
 	])
 	.service('quotaService',[
 	'$rootScope','$location','$http','Util','MSG.ERROR.CODE','STATUS.QUOTA.LOAD',function($root,$location,$http,Util,MSG,QUOTA_LOAD){
+
 		/*工具函数＆方法*/
-		var setDefQuotaGroup = function(num){
+		var setDefQuotaGroup = function(num,flag){
 			num = num || 0;
 			if($root.quotaGroupList.length){
 				$root.nowQuotaGroup = $root.quotaGroupList[num];
 				if(!num){
 					$root.$emit(QUOTA_LOAD);
-
+					if(flag && $root.my.role === 8){
+						$root.nowQuotaGroup = $root.defQuota;
+						console.log(2134);
+					}
 					console.log('quota_load');
 				}
 			}
@@ -31,7 +35,7 @@ angular.module('ov.services.quota',[
 						_.each(data.result,function(item,idx){
 							$root.quotaGroupMap[item._id]  = item;
 						});
-						setDefQuotaGroup();
+						setDefQuotaGroup(false,true);
 						//$root.$emit(GROUP_LOAD);
 					}else{
 						$root.$emit(MSG,data.err);
