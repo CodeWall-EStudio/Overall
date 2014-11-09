@@ -19,6 +19,7 @@ angular.module('ov.services.relat',[
                     if(json.err === 0){
                         getRelatList();
                     }
+                    $root.$emit(MSG,json.err);
                 }catch(e){
 
                 }

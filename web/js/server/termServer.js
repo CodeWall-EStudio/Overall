@@ -22,8 +22,9 @@ angular.module('ov.services.term',[
                     $root.termList.push(data.result);
                     console.log('新建学期成功!', data);
                 }else{
-                $root.$emit(MSG,data.err);
+                
                 }
+                $root.$emit(MSG,data.err);
                 if(success) success(data, status);
             })
             .error(function(data,status){
@@ -47,8 +48,8 @@ angular.module('ov.services.term',[
                     updateTerm(data.result);
                     console.log('新建学期成功!', data);
                 }else{
-                $root.$emit(MSG,data.err);
                 }
+                $root.$emit(MSG,data.err);
                 if(success) success(data, status);
             })
             .error(function(data,status){

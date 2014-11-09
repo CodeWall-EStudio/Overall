@@ -17,6 +17,7 @@ angular.module('ov.services.student',[
                     if(json.err===0){
                             getStudentList();
                     }
+                    $root.$emit(MSG,json.err);
                     console.log(json);
                 }catch(e){
 

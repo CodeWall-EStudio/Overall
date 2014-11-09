@@ -18,6 +18,7 @@ angular.module('ov.services.teacher',[
                     if(json.err === 0){
                         getTeacherGroupList();
                     }
+                    $root.$emit(MSG,json.err);
                     console.log(json);
                 }catch(e){
 
@@ -43,6 +44,7 @@ angular.module('ov.services.teacher',[
                     if(json.err === 0){
                         getTeacherGroupList();
                     }
+                    $root.$emit(MSG,json.err);
                 }catch(e){
 
                 }

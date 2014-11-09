@@ -127,6 +127,7 @@ angular.module('ov.services.quota',[
 					if(json.err === 0){
 						getQuotaGroup();	
 					}
+					$root.$emit(MSG,json.err);
 					console.log(json);
 				}catch(e){
 
@@ -148,6 +149,7 @@ angular.module('ov.services.quota',[
 				try{
 					var json = JSON.parse(xhr.responseText);
 					console.log('導入成功　',json);
+					$root.$emit(MSG,json.err);
 				}catch(e){
 
 				}

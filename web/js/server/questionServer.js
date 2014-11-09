@@ -16,6 +16,7 @@ angular.module('ov.services.question',[
                     var json = JSON.parse(xhr.responseText);
                     if(json.err === 0){
                         getQuestionList();
+                        $root.$emit(MSG,json.err);
                     }
                 }catch(e){
 
@@ -44,8 +45,9 @@ angular.module('ov.services.question',[
                         $root.questionList.push(data.result);
                         console.log('新建问卷成功!', data);
                     }else{
-                    $root.$emit(MSG,data.err);
+                    
                     }
+                    $root.$emit(MSG,data.err);
                     if(success) success(data, status);
                 })
                 .error(function(data,status){
@@ -97,7 +99,6 @@ angular.module('ov.services.question',[
                     if(data.err === 0){
                         $root.nowQuestScore = data.result;
                         setScores();
-                        console.log($root.nowQuestScore);
                         $root.$emit(QUEST_LOAD);
                     }else{
                         $root.$emit(MSG,data.err);
@@ -135,9 +136,14 @@ angular.module('ov.services.question',[
             $root.nowQuestScore.scoremap = {};
             //r如果已经有评分了。
             if($root.nowQuestScore.detail){
+                    console.log($root.nowQuestScore.detail.scores);
                     _.each($root.nowQuestScore.questionnaire.questions,function(item,idx){
+                        if($root.nowQuestScore.scoremap[item._id]){
+                            $root.nowQuestScore.scoremap[item._id] = {};
+                        }
+                        
                         $root.nowQuestScore.scoremap[item._id] = {
-                            score: $root.nowQuestScore.detail.scores[idx].score,
+                            score: $root.nowQuestScore.detail.scores[item._id].score,
                             name : item.name,
                             desc : item.desc,
                             max : item.score,
@@ -147,6 +153,9 @@ angular.module('ov.services.question',[
             //如果没有评分
             }else{
                 _.each($root.nowQuestScore.questionnaire.questions,function(item){
+                    if($root.nowQuestScore.scoremap[item._id]){
+                        $root.nowQuestScore.scoremap[item._id] = {};
+                    }                    
                     $root.nowQuestScore.scoremap[item._id] = {
                         score: 0,
                         name : item.name,
