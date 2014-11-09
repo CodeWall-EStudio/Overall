@@ -68,7 +68,6 @@ angular.module('ov.services.term',[
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             })
             .success(function(data,status){
-                console.log(data);
                 //conventStudent(data.student);
                 if(data.err === 0){
                     console.log('删除学期成功!', data);
@@ -123,10 +122,10 @@ angular.module('ov.services.term',[
             })
         }else{
             var tepTerm = $root.termList[0];
+            var def;
             _.each($root.termList,function(item){
                 if(item.status === 1){
-                    $root.nowTerm = item;
-                    return;
+                    tepTerm = item;
                 }
             });
              $root.nowTerm = tepTerm;
