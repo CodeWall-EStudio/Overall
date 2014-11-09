@@ -11,7 +11,7 @@ var XLS = require('xlsjs');
 exports.create = function(req, res) {
 
     var parameter = req.parameter;
-
+    
     db.Terms.create({
         name: parameter.name,
         order: parameter.order || 0,
