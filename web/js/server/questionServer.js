@@ -42,6 +42,9 @@ angular.module('ov.services.question',[
                 .success(function(data,status){
                    //conventStudent(data.student);
                     if(data.err === 0){
+                        if(!$root.questionList.length){
+                            $root.nowQuestion = data.result;
+                        }
                         $root.questionList.push(data.result);
                         console.log('新建问卷成功!', data);
                     }else{
