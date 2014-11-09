@@ -13,8 +13,22 @@ angular.module('ov.controllers.user',[
         //拉个人信息
         User.getUserInfo();
 
+        $('.auth-set').on('change',function(e){
+            console.log(e);
+            console.log($(this).val());
+        });
+
         $root.showManage = function(){
             $("#authManage").modal('show');
+        }
+
+        window.authChange = function(e){
+            var id = $(e).data('id');
+            var tid = $(e).data('tid');
+            var role = e.value;
+            if(role){
+                $root.setAuth(id,role,tid);
+            }
         }
 
         $root.setAuth = function(id,role,_id){

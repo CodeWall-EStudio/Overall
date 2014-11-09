@@ -110,7 +110,7 @@
 								</div>									
 			 				</div>
 							<div class="model-footer">
-								<button type="button" class="btn btn-primary" ng-click="createNewQuestion()">创建</button>
+								<button type="button" class="btn btn-primary" ng-click="createNewQuestion()" data-dismiss="modal">创建</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 							</div>	
 						</form>		 				
@@ -362,13 +362,22 @@
 									<td>{{item.name}}</td>
 									<td>
 										<span ng-show="item.role===8">校长</span>
-										<span  ng-show="item.role===4">数据管理员</span>
+										<span  ng-show="item.role===4">干部</span>
 										<span ng-show="item.role===2">老师</span>
 									</td>
 									<td>
-										<span ng-show="item.role !==2 " ng-click="setAuth(item.id,8,item._id)">设置为校领导</span>
-										<span ng-show="item.role <1"  ng-click="setAuth(item.id,4,item._id)">设置为数据管理员</span>
-										<span ng-show="item.role > 0"  ng-click="setAuth(item.id,2,item._id)">设置为老师</span>
+										<select class="auth-set" onchange="authChange(this)" data-id="{{item.id}}"  data-tid="{{item._id}}">
+											<option ng-selected="item.role < 2" value="0">暂时未设置</option>
+											<option ng-selected="item.role === 8" value="8">校领导</option>
+											<option ng-selected="item.role === 4" value="4">干部</option>
+											<option ng-selected="item.role === 2" value="2">老师</option>
+										</select>
+										<a class="dropdown-toggle" data-toggle="dropdown"> 修改用户角色<span class="caret"></span></a>
+										<ul class="dropdown-menu" role="menu">
+											<li ng-show="item.role !==2 "><a ng-click="setAuth(item.id,8,item._id)">设置为校领导</a></li>
+											<li ng-show="item.role <1 "><a ng-click="setAuth(item.id,4,item._id)">设置为干部</a></li>
+											<li ng-show="item.role > 0  "><a ng-click="setAuth(item.id,2,item._id)">设置为老师</a></li>
+										</ul>
 									</td>
 								</tr>
 							</table> 		 					
