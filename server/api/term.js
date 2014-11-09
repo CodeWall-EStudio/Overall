@@ -24,7 +24,8 @@ exports.create = function(req, res) {
         if (doc) {
             return res.json({
                 err: ERR.DUPLICATE,
-                msg: '已经有这个名字了'
+                msg: '已经有这个名字了',
+                duplicateKey: 'name'
             });
         }
         db.Terms.create({
@@ -75,7 +76,8 @@ exports.modify = function(req, res) {
     ep.fail(function(err) {
         res.json({
             err: ERR.SERVER_ERROR,
-            msg: err
+            msg: '后台出错了',
+            detail: err
         });
     });
 
@@ -100,7 +102,8 @@ exports.modify = function(req, res) {
             if (doc) {
                 return res.json({
                     err: ERR.DUPLICATE,
-                    msg: '已经有同名的学期'
+                    msg: '已经有同名的学期',
+                    duplicateKey: 'name'
                 });
             }
             ep.emit('nameOK');
@@ -119,8 +122,9 @@ exports.modify = function(req, res) {
             }
             if (doc) {
                 return res.json({
-                    err: ERR.DUPLICATE,
-                    msg: '已经有激活的学期'
+                    err: ERR.STATUS_DUPLICATE,
+                    msg: '已经有激活的学期',
+                    duplicateKey: 'status'
                 });
             }
             ep.emit('statusOK');

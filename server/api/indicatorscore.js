@@ -1,5 +1,6 @@
 var EventProxy = require('eventproxy');
 var _ = require('underscore');
+var ejs = require('ejs');
 
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
@@ -166,7 +167,7 @@ function createIndicatorSummary(parameter, callback) {
     // 1.1
     db.IndicatorGroups.find({
         term: term
-    }, ep.doneLater('IndicatorGroups.find'));
+    }, null, { sort: { order: 1 } }, ep.doneLater('IndicatorGroups.find'));
 
 
     ep.all('Users.find', 'IndicatorGroups.find', function(teachers, indGroups) {
@@ -175,6 +176,8 @@ function createIndicatorSummary(parameter, callback) {
 
             callback(null, {
                 indicatorGroups: indGroups,
+                createTime: Date.now(),
+                term: term,
                 results: list
             });
         });
@@ -187,6 +190,46 @@ function createIndicatorSummary(parameter, callback) {
     });
 
 }
+
+
+
+/**
+ * 评分概要和详情
+ */
+exports.summary = function(req, res) {
+
+    var parameter = req.parameter;
+
+    var startTime = Date.now();
+
+    function callback(err, result) {
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        var endTime = Date.now();
+
+        Logger.info('[IndicatorScore.summary] end, indicatorGroup: ',
+            parameter.indicatorGroup, ', cost: ', endTime - startTime, 'ms');
+
+        if (parameter.export) {
+
+            res.render('summary', {
+                result: result,
+                util: Util
+            });
+        } else {
+            res.json({
+                err: ERR.SUCCESS,
+                result: result
+            });
+        }
+
+
+    }
+    createIndicatorSummary(parameter, callback);
+
+
+};
 
 /**
  * 获取评价列表
@@ -237,33 +280,6 @@ function fetchIndicatorScores(parameter, callback) {
 }
 
 
-/**
- * 评分概要和详情
- */
-exports.summary = function(req, res) {
-
-    var parameter = req.parameter;
-
-    var startTime = Date.now();
-
-    function callback(err, result) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-
-        res.json({
-            err: ERR.SUCCESS,
-            result: result
-        });
-        Logger.info('[IndicatorScore.summary] end, indicatorGroup: ',
-            parameter.indicatorGroup, ', cost: ', Date.now() - startTime, 'ms');
-
-    }
-    createIndicatorSummary(parameter, callback);
-
-
-};
-
 exports.summarylist = function(req, res) {
     var parameter = req.parameter;
 
@@ -274,13 +290,27 @@ exports.summarylist = function(req, res) {
             return dbHelper.handleError(err, res);
         }
 
-        res.json({
-            err: ERR.SUCCESS,
-            result: result
-        });
+        var endTime = Date.now();
         Logger.info('[IndicatorScore.summaryList] end, indicatorGroup: ',
-            parameter.indicatorGroup, ', cost: ', Date.now() - startTime, 'ms');
+            parameter.indicatorGroup, ', cost: ', endTime - startTime, 'ms');
 
+        if (parameter.export) {
+
+            res.render('summarylist', {
+                result: {
+                    createTime: endTime,
+                    term: parameter.term,
+                    indicatorGroup: parameter.indicatorGroup,
+                    list: result,
+                },
+                util: Util
+            });
+        } else {
+            res.json({
+                err: ERR.SUCCESS,
+                result: result
+            });
+        }
     }
 
     // 传了[指标组]就查询指定指标组, 否则就是吐概要

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>综合诊断系统 - 指标组报表</title>
+    <style type="text/css">
+table{
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+    border-spacing: 0;
+}
+td,th{
+    border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+}
+
+    </style>
+</head>
+<body>
+    <% var totalIndCount = result.indicatorGroup.indicators.length; %>
+    <table>
+        <thead>
+            <tr>
+                <th colspan="<%=totalIndCount + 2 %>" >综合诊断系统 - 指标组报表</th>
+            </tr>
+            <tr>
+                <th >诊断项目</th>
+                <th colspan="<%=totalIndCount + 1 %>" ><%=result.term.name %></th>
+            </tr>
+            <tr>
+                <th >报表时间</th>
+                <th colspan="<%=totalIndCount + 1 %>" ><%=util.formatDate( new Date(result.createTime) , 'yyyy年MM月dd日 hh:mm') %></th>
+            </tr>
+            <tr>
+                <th >指标组名称</th>
+                <th colspan="<%=totalIndCount + 1 %>" ><%=result.indicatorGroup.name %></th>
+            </tr>
+
+            <tr>
+                <th>姓名</th>
+                <% var ids = [];
+
+                    for(var i = 0; i < result.indicatorGroup.indicators.length; i++){ 
+                        var ing = result.indicatorGroup.indicators[i];
+                        ids.push(ing._id);
+                %>
+
+                <th><%=ing.name %></th>
+                <% }%>
+                <th>总分</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% result.list.forEach(function(item){
+                %>
+            <tr>
+                <td><%=item.teacherName %></td>
+                <% for(var i in ids){
+                %>
+                <td><%=item.scores[ids[i]].score %></td>
+                <%
+                    }
+                %>
+                <td><%=item.totalScore %></td>
+            </tr>
+            <%
+            }); %>
+        </tbody>
+    </table>
+</body>
+</html>
