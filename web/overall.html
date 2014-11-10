@@ -71,7 +71,7 @@
                 <dl class="content-score" ng-repeat='item in nowQuestScore.questionnaire.questions'> 
                     <dt>{{item.name}}</dt>
                     <dd class="score-info">
-                        <div>{{item.desc}}</div>
+                        <div class="score-desc">{{item.desc}}</div>
                         <div class="score-num">
                             打分 ：
                             <span class="glyphicon glyphicon-plus" ng-click="addScore(item._id)"></span>
