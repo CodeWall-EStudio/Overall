@@ -69,7 +69,9 @@ angular.module('ov.controllers.report',[
 
             //事件通知 学期变更
             $root.$on(TERM_CHANGE,function(){
-                Report.getReportList();
+                Report.getSummary({
+                        teacherGroup : $root.nowTeacherGroup._id
+                    });
             });
             //事件通知 老师分组变更
             $root.$on(TEACHREGROUP_CHANGE,function(){
