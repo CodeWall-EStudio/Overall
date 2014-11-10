@@ -8,11 +8,22 @@ angular.module('ov.controllers.msg',[
 		    extraClasses: 'messenger-fixed messenger-on-bottom',
 		    theme: 'flat'
 		}
+/*
+xianduoyong  ---校长
 
+longfukang  ---老师
+
+yuhao  --老师
+
+hongyuan  ---系统管理员
+
+cairongguang --数据管理员
+*/
 		var url = $location.absUrl();
 
 		var msg = {
 			0 : '操作成功!',
+			11 : '学期名称不能为空',
 			1001 : '您还没有登录!',
 			1004 : '没有找到资源!',
 			1010 : '您没有查看该资源的权限!',

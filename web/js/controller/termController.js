@@ -3,7 +3,7 @@ angular.module('ov.controllers.term',[
         'ov.constant',
         'ov.services.term'
     ]).
-    controller('termController',['$rootScope','$scope','termService','STATUS.TERM.LOAD','STATUS.USER.LOAD','STATUS.TERM.CHANGE',function($root,$scope,Term ,TERM_LOAD,USERLOAD,TERM_CHANGE){
+    controller('termController',['$rootScope','$scope','termService','STATUS.TERM.LOAD','STATUS.USER.LOAD','STATUS.TERM.CHANGE','MSG.ERROR.CODE',function($root,$scope,Term ,TERM_LOAD,USERLOAD,TERM_CHANGE,MSG){
         console.log('load termController');
         $root.termModalTit = '新建学期';
         $root.modifyTerm = {};
@@ -34,10 +34,14 @@ angular.module('ov.controllers.term',[
         //修改或者新建学期
         $root.createNewTerm = function(){
             if ($root.termModalTit === '新建学期'){
-                var param = {
-                    name : $root.modifyTerm.name
+                if($root.modifyTerm.name !== ''){
+                    var param = {
+                        name : $root.modifyTerm.name
+                    }
+                    Term.createTerm(param);
+                }else{
+                    $root.$emit(MSG,11);
                 }
-                Term.createTerm(param);
             }else{
                 var param = {
                     term : $root.modifyTerm._id,
