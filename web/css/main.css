@@ -474,3 +474,7 @@ button.close{
 .glyphicon {
 	cursor:pointer;
 }
+
+.table-width{
+	width:auto;
+}

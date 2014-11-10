@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1415635228940">
+	<link rel="stylesheet" href="css/main.css?t=1415635927889">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -117,11 +117,11 @@
  			</table>
  		</div>
  		<div class="content-report"  ng-show="reportMode === 'group'">
- 			<table class="table table-striped table-hover" style="width:auto;">
+ 			<table class="table table-striped table-hover table-width" style="min-width:{{nowQuotaGroup.indicators.length*60}}px">
  				<tr>
- 					<th>姓名</th>
+ 					<th width="60">姓名</th>
  					<th ng-repeat="item in nowQuotaGroup.indicators"  width="60">{{item.name}}</th>
- 					<th>指标组总分</th>
+ 					<th width="120">指标组总分</th>
  				</tr>
  				<tr ng-repeat="item in reportList" ng-click="showOneReport(item)">
  					<td>{{item.teacherName}}</td>
@@ -301,6 +301,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1415635228940"></script>
+	<script src="js/index.js?t=1415635927889"></script>
 </body>
 </html>
