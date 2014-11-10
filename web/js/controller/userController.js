@@ -41,7 +41,6 @@ angular.module('ov.controllers.user',[
         }
 
         $root.quitLogin = function(){
-            console.log(2222);
             User.logout();
         }
 

@@ -15,7 +15,6 @@ angular.module('ov.services.quota',[
 					$root.$emit(QUOTA_LOAD);
 					if(flag && $root.my.role === 8){
 						$root.nowQuotaGroup = $root.defQuota;
-						console.log(2134);
 					}
 					console.log('quota_load');
 				}

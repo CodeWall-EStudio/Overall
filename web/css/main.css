@@ -245,6 +245,9 @@ a{
 	top:-36px;
 	right:200px;
 }
+.score-desc{
+	max-width:500px;
+}
 
 .content-info .content-summary dt button{
 	position:absolute;
@@ -285,10 +288,11 @@ a{
 	overflow:hidden;
 }
 .content-score .score-info .score-num{
-	position:relative;
+	position:absolute;
 	float:right;
 	font-size:20px;
 	right:200px;
+	top:0;
 }
 .content-score .score-result{
 	position:absolute;

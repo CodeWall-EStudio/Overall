@@ -199,7 +199,7 @@
 				<dl class="content-score" ng-repeat="item in oneReport.appraisers[nowSelectedUserIdx].questionnare.questions">	
 					<dt>{{item.name}}</dt>
 					<dd class="score-info">
-						<div>{{item.desc}}</div>
+						<div class="score-desc">{{item.desc}}</div>
 						<div class="score-num">
 							打分 ：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.scores[$index].score || 0}}
 						</div>
