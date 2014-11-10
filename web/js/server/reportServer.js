@@ -129,7 +129,7 @@ angular.module('ov.services.report',[
                     }else if(param.teacherName){
                         url += '&teacherName='+param.teacherName;
                     }
-                    if(param.indicatorGroup){
+                    if(param.indicatorGroup && param.indicatorGroup !== -1){
                         url += '&indicatorGroup='+param.indicatorGroup;
                     }
                     //url += '&type='+parseInt(param.type);
@@ -166,7 +166,8 @@ angular.module('ov.services.report',[
                     }else if(param.teacherName){
                         url += '&teacherName='+param.teacherName;
                     }
-                    if(param.indicatorGroup){
+                    console.log(param);
+                    if(param.indicatorGroup && param.indicatorGroup !== -1){
                         url += '&indicatorGroup='+param.indicatorGroup;
                     }
                     //url += '&type='+parseInt(param.type);

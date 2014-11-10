@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1415631269513">
+	<link rel="stylesheet" href="css/main.css?t=1415635228940">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -71,7 +71,7 @@
  			</div>
  		</div> 		
  		<!-- 搜索工具条-->
- 		<div class="toolbar toolbar-search" ng-show="getMode() == 'search' ">
+ 		<div class="toolbar toolbar-search" ng-show="reportMode == 'search' ">
  			<div class="toolbar-left">
 				选择学期：
 				<div class="select-dom dropdown"  ng-class="{hide:getActiveType('noselect')}">
@@ -116,11 +116,11 @@
  				</tr>
  			</table>
  		</div>
- 		<div class="content-report" ng-controller="reportController"  ng-show="reportMode === 'group'">
- 			<table class="table table-striped table-hover">
+ 		<div class="content-report"  ng-show="reportMode === 'group'">
+ 			<table class="table table-striped table-hover" style="width:auto;">
  				<tr>
  					<th>姓名</th>
- 					<th ng-repeat="item in nowQuotaGroup.indicators">{{item.name}}</th>
+ 					<th ng-repeat="item in nowQuotaGroup.indicators"  width="60">{{item.name}}</th>
  					<th>指标组总分</th>
  				</tr>
  				<tr ng-repeat="item in reportList" ng-click="showOneReport(item)">
@@ -161,7 +161,7 @@
  			</table>
  		</div> 
  		<!--互评明细-->
- 		<div class="content-main" ng-show="reportMode !== 'summary' && reportSMode === 'teacher'">
+ 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'search') && reportSMode === 'teacher'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -197,7 +197,7 @@
 	 		</div>
  		</div>
  		<!--生评明细-->
- 		<div class="content-main" ng-show="reportMode !== 'summary' && reportSMode === 'student'">
+ 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'search') && reportSMode === 'student'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -301,6 +301,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1415631269513"></script>
+	<script src="js/index.js?t=1415635228940"></script>
 </body>
 </html>
