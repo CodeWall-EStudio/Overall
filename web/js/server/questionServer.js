@@ -122,8 +122,10 @@ angular.module('ov.services.question',[
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 })    
                 .success(function(data,status){
-                    if(data.err === 0){
 
+                    if(data.err === 0){
+                        updateScores(param,data.result);
+                        console.log('评分成功',data.result);
                     }else{
                         
                     }
@@ -135,6 +137,15 @@ angular.module('ov.services.question',[
         }
 
         //工具方法
+        function updateScores(p,d){
+            _.each($root.overList,function(item){
+                if(item.id == d.appraiseeId){
+                    
+                    item.totalScore = d.totalScore;
+                }
+            });
+        }
+
         function setScores(){
             $root.nowQuestScore.scoremap = {};
             //r如果已经有评分了。
