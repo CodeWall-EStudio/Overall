@@ -30,6 +30,8 @@ angular.module('ov.controllers.index',[
 	            if(mode !== $scope.getMode()){
 	            	 if(mode === 'report'){
 	            	 	$root.reportMode = 'summary';
+	            	 }else if(mode ==='search'){
+	            	 	$root.reportMode = 'search';
 	            	 }
 	               $location.search('mode', mode);
 	            }

@@ -200,7 +200,6 @@ angular.module('ov.services.report',[
                         _.each(item.indicators,function(obj){
                             tmp[obj._id] = obj;
                         });
-                        console.log($root.reportSummary);
                         $root.reportSummary.quotaMap[item._id].quotas = tmp;
                     });
                 }
