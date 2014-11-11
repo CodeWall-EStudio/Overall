@@ -1,6 +1,7 @@
 var EventProxy = require('eventproxy');
 var _ = require('underscore');
 var ejs = require('ejs');
+var path = require('path');
 
 var db = require('../modules/db');
 var dbHelper = require('../modules/db_helper');
@@ -217,6 +218,19 @@ exports.summary = function(req, res) {
 
         if (parameter.export) {
 
+            // ejs.renderFile(path.join(__dirname, '../views/summary.html'), {
+            //     result: result,
+            //     util: Util
+            // }, function(err, str) {
+            //     if(err){
+            //         res.send(err);
+            //     }else{
+            //         res.set('Content-Type', 'application/vnd.ms-excel');
+            //         // res.set('Content-Type', 'application/vnd.openxmlformats');
+            //         res.attachment(parameter.export + '.xls');
+            //         res.send(new Buffer(str));
+            //     }
+            // });
             res.render('summary', {
                 result: result,
                 util: Util
