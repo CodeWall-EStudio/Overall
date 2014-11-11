@@ -204,7 +204,14 @@ exports.student = function(req, res) {
                     msg: err
                 });
             }
-            if (term.status !== 1) {
+            if (!term){
+                return res.json({
+                    err: ERR.SERVER_ERROR,
+                    msg: '该学生所在学期已经不存在, 被删除了吗?'
+                });
+            }
+
+            if(term.status !== 1) {
                 return res.json({
                     err: ERR.ACCOUNT_CLOSE,
                     msg: '没有激活的学期'
