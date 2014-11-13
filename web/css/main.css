@@ -452,6 +452,7 @@ button.close{
 	right:0;
 	width:86px;
 	height:34px;
+	filter:alpha(opacity=50);
 }
 .model-footer{
 	text-align:right;

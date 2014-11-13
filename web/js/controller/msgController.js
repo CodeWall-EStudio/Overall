@@ -10,13 +10,9 @@ angular.module('ov.controllers.msg',[
 		}
 /*
 xianduoyong  ---校长
-
 longfukang  ---老师
-
 yuhao  --老师
-
 hongyuan  ---系统管理员
-
 cairongguang --数据管理员
 */
 		var url = $location.absUrl();
@@ -40,8 +36,8 @@ cairongguang --数据管理员
 
 		$root.$on(MSG,function(e,code){
 			if(code === 1001){
-			            var url = '/api/login';
-			            location.href=url;				
+	            var url = '/api/login';
+	            location.href=url;				
 				return;
 			}
 			var obj = {

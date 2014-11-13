@@ -11,7 +11,9 @@ angular.module('ov.controllers.user',[
         $root.userList = [];
 
         //拉个人信息
-        User.getUserInfo();
+        if(Util.cookie.get('skey')){
+            User.getUserInfo();
+        }
 
         $('.auth-set').on('change',function(e){
             console.log(e);
