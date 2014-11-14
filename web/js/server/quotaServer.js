@@ -78,7 +78,7 @@ angular.module('ov.services.quota',[
 		//c新建指标组
 		var modifyQuotaGroup = function(param,success,error){
 			var ts = new Date().getTime();
-			var body = Util.object.toUrlencodedString($root.newQuotaGroup);
+			var body = Util.object.toUrlencodedString(param);
 			$http.post('/api/indicatorgroup/modify?_='+ts,
 				body,
 				{

@@ -107,8 +107,9 @@ angular.module('ov.controllers.import',[
 		
 		$root.modifyQuotaSub = function(){
 			$root.modifyQuotaName = $("#quotaModifyName").val();
-			Quota.modifyQuota({
-				
+			Quota.modifyQuotaGroup({
+				indicatorgroup : $root.modifyQuotaId,
+				name : $root.modifyQuotaName
 			});
 		}
 

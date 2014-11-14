@@ -126,6 +126,7 @@ module.exports = {
             required: true
         }, {
             name: 'name',
+            type : 'string',
             required: true
         }]
     },
