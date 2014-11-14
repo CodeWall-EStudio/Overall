@@ -339,7 +339,7 @@ module.exports = {
             type: 'string',
             required: true
         }]
-    }
+    },
 
     // 互评关系导入
     '/api/relationship/import': {
