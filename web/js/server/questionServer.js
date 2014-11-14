@@ -182,11 +182,44 @@ angular.module('ov.services.question',[
 
         }
 
+        function modifyQuestion(param,success,error){
+            var ts = new Date().getTime();
+            var body = Util.object.toUrlencodedString(param);
+            $http.post('/api/questionnaire/modify?_='+ts,
+                body,
+                {
+                    responseType: 'json',
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                })
+                .success(function(data,status){
+                   //conventStudent(data.student);
+                    if(data.err === 0){
+                        updateQuestion(param);
+                        console.log('修改卷成功!', data);
+                    }else{
+                    
+                    }
+                    $root.$emit(MSG,data.err);
+                    if(success) success(data, status);
+                })
+                .error(function(data,status){
+                    if(error) error(data, status);
+            });  
+        }
+
+        function updateQuestion(param){
+            var item = _.find($root.questionList,function(item){
+                return item._id == param.questionnaire;
+            });
+            item.name = param.name;
+        }
+
     return {
         getQuestionList  : getQuestionList,
         importQuestion : importQuestion,
         getOneUserScore : getOneUserScore,
         saveScores : saveScores,
+        modifyQuestion : modifyQuestion,
         createQuestion : createQuestion
     }
 }]);

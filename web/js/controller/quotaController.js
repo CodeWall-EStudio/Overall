@@ -11,6 +11,8 @@ angular.module('ov.controllers.import',[
 		$root.nowQuotaGroup = {};
 		$root.quotaList = [];
 		
+		$root.modifyQuotaName = '';
+		$root.modifyQuotaId = '';
 
 		$root.quotaScoreList = {};
 		$root.defQuota = {
@@ -97,8 +99,18 @@ angular.module('ov.controllers.import',[
 			Quota.createQuotaGroup();
 		}	
 
-
+		$root.modifyQuota = function(idx,name){
+			$root.modifyQuotaId = idx;
+			$root.modifyQuotaName = name;
+			$('#modifyQuota').modal('show');
+		}
 		
+		$root.modifyQuotaSub = function(){
+			$root.modifyQuotaName = $("#quotaModifyName").val();
+			Quota.modifyQuota({
+				
+			});
+		}
 
 		/*观察者*/
 		//学期已经加载成功，或者已经改变，拉具体的指标

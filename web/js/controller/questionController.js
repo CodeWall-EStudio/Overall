@@ -10,6 +10,8 @@ angular.module('ov.controllers.question',[
         $root.questionList = [];
         $root.questionName = '';
         $root.questionOrder = 1;
+        $root.modifyQuestionName = '';
+        $root.modifyQuestionId = '';
 
         $scope.questionOrder = {
             name : 0,
@@ -50,6 +52,21 @@ angular.module('ov.controllers.question',[
             console.log(id);
             $root.nowQuestion = _.find($root.questionList,function(item){
                 return item._id == id;
+            });
+        }
+
+        $root.modifyQuestion = function(id,name){
+            console.log(id,name);
+            $root.modifyQuestionName = name;
+            $root.modifyQuestionId = id;
+            $("#modifyQuestion").modal('show');
+        }
+
+        $root.modifyQuestionSub = function(){
+            $root.modifyQuestionName = $("#questionModifyName").val();
+            Question.modifyQuestion({
+                questionnaire : $root.modifyQuestionId,
+                name : $root.modifyQuestionName
             });
         }
 

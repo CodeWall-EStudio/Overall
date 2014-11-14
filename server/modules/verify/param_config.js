@@ -121,14 +121,11 @@ module.exports = {
     '/api/indicatorgroup/modify': {
         method : 'POST',
         params : [{
-            name: 'term',
-            type: 'Terms',
+            name: 'indicatorgroup',
+            type: 'IndicatorGroups',
             required: true
         }, {
             name: 'name',
-            required: true
-        },{
-            name : 'indicatorgroup',
             required: true
         }]
     },

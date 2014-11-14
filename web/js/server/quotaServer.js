@@ -73,7 +73,32 @@ angular.module('ov.services.quota',[
 				.error(function(data,status){
 					if(error) error(data, status);
 				});			
-		}		
+		}	
+
+		//c新建指标组
+		var modifyQuotaGroup = function(param,success,error){
+			var ts = new Date().getTime();
+			var body = Util.object.toUrlencodedString($root.newQuotaGroup);
+			$http.post('/api/indicatorgroup/modify?_='+ts,
+				body,
+				{
+					responseType: 'json',
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				})
+				.success(function(data,status){
+					//conventStudent(data.student);
+					if(data.err === 0){
+						updateQuota(pram);
+						console.log('修改指标组成功!', data);
+					}else{
+					}
+					$root.$emit(MSG,data.err);
+					if(success) success(data, status);
+				})
+				.error(function(data,status){
+					if(error) error(data, status);
+				});			
+		}	
 
 		//拉指标组评分
 		var  getQuotaScore = function(param,success,error){
@@ -179,9 +204,17 @@ angular.module('ov.services.quota',[
 			$root.quotaGroupMap[id].indicators = sort;
 		}
 
+        function updateQuota(param){
+            var item = _.find($root.quotaGroupList,function(item){
+                return item._id == param.indicatorgroup;
+            });
+            item.name = param.name;
+        }		
+
 	return {
 		setDefQuotaGroup : setDefQuotaGroup,
 		getQuotaGroup : getQuotaGroup,
+		modifyQuotaGroup : modifyQuotaGroup,
 		createQuotaGroup : createQuotaGroup,
 		getQuotaList : getQuotaList,
 		importQuota : importQuota,
