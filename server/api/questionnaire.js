@@ -59,6 +59,25 @@ exports.create = function(req, res) {
     });
 };
 
+exports.modify = function(req,res){
+    var parameter = req.parameter;
+    var questionnaire = parameter.questionnaire;   
+     
+    if(parameter.name){
+        questionnaire.name = parameter.name;
+    }
+
+    questionnaire.save(function(err,doc){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: doc
+        });        
+    });    
+}
+
 
 exports.list = function(req, res) {
 

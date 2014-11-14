@@ -30,6 +30,26 @@ exports.create = function(req, res) {
     });
 };
 
+exports.modify = function(req,res){
+    var parameter = req.parameter;
+    var indicatorgroup = parameter.indicatorgroup;
+
+
+    if (parameter.name) {
+        indicatorgroup.name = parameter.name;
+    }   
+
+    IndicatorGroups.save(function(err,doc){
+        if (err) {
+            return dbHelper.handleError(err, res);
+        }
+        res.json({
+            err: ERR.SUCCESS,
+            result: doc
+        });        
+    });
+}
+
 
 exports.list = function(req, res) {
 

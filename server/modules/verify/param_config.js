@@ -118,6 +118,20 @@ module.exports = {
             required: true
         }]
     },
+    '/api/indicatorgroup/modify': {
+        method : 'POST',
+        params : [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        }, {
+            name: 'name',
+            required: true
+        },{
+            name : 'indicatorgroup',
+            required: true
+        }]
+    },
 
     // 指标接口
     '/api/indicator/import': {
@@ -314,6 +328,18 @@ module.exports = {
             type: 'number'
         }]
     },
+    '/api/questionnaire/modify': {
+        method: 'POST',
+        params: [{
+            name: 'questionnaire',
+            type: 'Questionnaires',
+            required: true
+        }, {
+            name: 'name',
+            type: 'string',
+            required: true
+        }]
+    }
 
     // 互评关系导入
     '/api/relationship/import': {
