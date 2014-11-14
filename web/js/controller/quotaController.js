@@ -3,14 +3,14 @@ angular.module('ov.controllers.import',[
 		'ov.constant',
 		'ov.services.quota'
 	]).
-	controller('quotaController',['$rootScope','$scope','quotaService','STATUS.TERM.LOAD','STATUS.QUOTA.LOAD','STATUS.QUOTAGROUP.CHANGE',function($root,$scope,Quota,TERM_LOAD,QUOTA_LOAD,QUOTA_CHANGE){
+	controller('quotaController',['$rootScope','$scope','quotaService','STATUS.TERM.LOAD','STATUS.QUOTA.LOAD','STATUS.QUOTAGROUP.CHANGE','STATUS.TERM.CHANGE',function($root,$scope,Quota,TERM_LOAD,QUOTA_LOAD,QUOTA_CHANGE,TERM_CHANGE){
 		console.log('load quotaController');
 		/*初始化数据，先拉指标组*/
 		$root.quotaGroupList = [];
 		$root.quotaGroupMap = {};
 		$root.nowQuotaGroup = {};
 		$root.quotaList = [];
-		$root.newQuotaGroup = {};
+		
 
 		$root.quotaScoreList = {};
 		$root.defQuota = {
@@ -109,6 +109,15 @@ angular.module('ov.controllers.import',[
 			// }
 			// Quota.getQuotaList(param);
 		});
+
+		$root.$on(TERM_CHANGE,function(e,d){
+			$root.newQuotaGroup = {};
+			Quota.getQuotaGroup();
+			// var param = {
+			// 	indicatorGroup : $root.nowQuotaGroup._id
+			// }
+			// Quota.getQuotaList(param);
+		});		
 
 		$root.$on(QUOTA_LOAD,function(e,d){
 			//Quota.getQuotaScore();

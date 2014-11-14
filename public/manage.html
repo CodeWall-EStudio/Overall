@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1415891702782">
+	<link rel="stylesheet" href="css/main.css?t=1415979332563">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -144,6 +144,28 @@
  		<!--导入学生-->
  		<div class="toolbar toolbar-import"  ng-class="{hide:getMode()!=='student'}">
  			 <div class="toolbar-left">
+ 			 	<span>
+	 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{gradeList[nowGrade]}}<span class="caret"></span></a>
+	 				<ul class="dropdown-menu" role="menu">
+	 					<li ng-repeat="item in gradeList" ng-model="gradeList">
+	 						<a ng-click="changeGrade($index)">{{item}}</a>
+	 					</li>
+	 				</ul> 
+ 				</span>
+
+ 				<span>
+	 				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{classList[nowClass]}}<span class="caret"></span></a>
+	 				<ul class="dropdown-menu" role="menu">
+	 					<li ng-repeat="item in classList" ng-model="classList">
+	 						<a ng-click="changeClass($index)">{{item}}</a>
+	 					</li>
+	 				</ul> 
+ 				</span> 	
+
+				<div class="search-zone">
+					<input type="text" id="studentKey" value="{{studentKeyWord}}" ng-enter="studentSearch()" ng-model="studentKeyWord" placeholder="查询学生" />
+					<button type="submit" ng-click="studentSearch()"  />
+	 			</div>
  			</div>
  			<div class="toolbar-right">
  				<a href="data/student.xls" target="_blank">下载数据配置模板</a>
@@ -265,9 +287,9 @@
  						<th ng-click="orderQuotaGroup('gatherType')" width="60">采集方式<span class="caret" ng-class="{uaret:quotaOrder['gatherType']}"></span></th>
  					</tr>
  					<tr ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">
- 						<td>{{item.order}}</td>
+ 						<td>{{nowQuotaGroup.order}}-{{item.order}}</td>
  						<td>{{item.name}}</td>
- 						<td>{{item.score}}班</td>
+ 						<td>{{item.score}}</td>
  						<td>{{item.gatherType}}</td>
  					</tr>
  				</table>
@@ -383,6 +405,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1415891702782"></script>
+	<script src="js/manage.js?t=1415979332563"></script>
 </body>
 </html>

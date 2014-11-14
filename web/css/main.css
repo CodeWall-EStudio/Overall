@@ -11,6 +11,9 @@ a{
 .nav-tabs>li{
 	margin-bottom:0;
 }
+.nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
+	background-color:#146170;
+}
 .nav .disabled{
 	color:#ddd;
 }

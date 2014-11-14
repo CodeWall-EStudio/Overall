@@ -3,7 +3,7 @@ angular.module('ov.controllers.question',[
         'ov.constant',
         'ov.services.question'
     ]).
-    controller('questionController',['$rootScope','$scope','questionService','STATUS.TERM.LOAD',function($root,$scope,Question,TERM_LOAD){
+    controller('questionController',['$rootScope','$scope','questionService','STATUS.TERM.LOAD','STATUS.TERM.CHANGE',function($root,$scope,Question,TERM_LOAD,TERM_CHANGE){
         console.log('load questionController');
         /*初始化数据，先拉指标组*/
         $root.nowQuestion = {};
@@ -56,5 +56,10 @@ angular.module('ov.controllers.question',[
         $root.$on(TERM_LOAD,function(){
             Question.getQuestionList();
         });
+        
+        $root.$on(TERM_CHANGE,function(){
+            $root.nowQuestion = {};
+            Question.getQuestionList();
+        });        
 
 }]);

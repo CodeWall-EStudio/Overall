@@ -28,7 +28,6 @@ angular.module('ov.controllers.term',[
         //变更当前学期
         $root.changeTerm = function(id){
             Term.changeDefTerm(id);
-            console.log(id);
             $root.$emit(TERM_CHANGE);
         }
         
