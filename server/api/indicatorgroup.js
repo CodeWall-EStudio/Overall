@@ -39,7 +39,7 @@ exports.modify = function(req,res){
         indicatorgroup.name = parameter.name;
     }   
 
-    IndicatorGroups.save(function(err,doc){
+    indicatorgroup.save(function(err,doc){
         if (err) {
             return dbHelper.handleError(err, res);
         }

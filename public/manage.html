@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1415979332563">
+	<link rel="stylesheet" href="css/main.css?t=1415982474464">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -69,11 +69,11 @@
  	<div class="toolbar"  ng-controller="toolbarController">
  		<!--导入问卷-->
  		<div class="toolbar toolbar-import " ng-class="{hide:getMode()!=='question'}">
- 			 <div class="toolbar-left">
+ 			 <div class="toolbar-left edit-menu">
  				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowQuestion.name}}<span class="caret"></span></a>
- 				<ul class="dropdown-menu" role="menu">
+ 				<ul class="dropdown-menu " role="menu">
  					<li ng-repeat="item in questionList" ng-model="questionList">
- 						<a ng-click="changeQuestion(item._id)">{{item.name}}</a>
+ 						<a ng-click="changeQuestion(item._id)">{{item.name}}</a> <a class="act" ng-click="modifyQuestion(item._id,item.name)">修改问卷名称</a>
  					</li>
  				</ul>  			 
  			 	<button type="button" class="btn btn-primary" ng-click="createQuestion()">创建问卷</button>
@@ -107,7 +107,33 @@
 			 			</div>
 		 			
 			 		</div>
-			 	</div> 	 			 	
+			 	</div> 
+
+			 	<div class="modal fade" id="modifyQuestion" tabindex="-1" role="dialog" aria-hidden="true">
+			 		<div class="modal-dialog">	 		
+			 			<div class="modal-content row">
+			 				<div class="modal-header">
+			 					<h4 class="modal-title">修改问卷</h4>
+			 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			 				</div>
+			 				<div class="modal-body">
+			 				<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="quotaGroupName" class="col-sm-3 control-label">问卷名称</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="questionModifyName" placeholder="请输入问卷名称" value="{{modifyQuestionName}}" model="modifyQuestionName"/>
+									</div>
+								</div>									
+			 				</div>
+							<div class="model-footer">
+								<button type="button" class="btn btn-primary" ng-click="modifyQuestionSub()" data-dismiss="modal">修改</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							</div>	
+						</form>		 				
+			 			</div>
+		 			
+			 		</div>
+			 	</div> 			 		 			 	
  			</div>
  			<div class="toolbar-right">
  				<a href="data/question.xls" target="_blank">下载数据配置模板</a>
@@ -122,7 +148,7 @@
  				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowTeacherGroup.name}}<span class="caret"></span></a>
  				<ul class="dropdown-menu" role="menu">
  					<li ng-repeat="item in teacherGroup" ng-model="teacherGroup">
- 						<a ng-click="changeTeacherGroup(item._id)">{{item.name}}</a>
+ 						<a ng-click="changeTeacherGroup(item._id)">{{item.name}}</a> 
  					</li>
  				</ul> 
  			</div>
@@ -177,16 +203,40 @@
  		<div class="toolbar toolbar-import"  ng-class="{hide:getMode()!=='quota'}">
  			 <div class="toolbar-left">
 				选择指标组：
-				<div class="select-dom dropdown" >
+				<div class="select-dom dropdown edit-menu" >
 					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
+						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a> <a class="act" ng-click="modifyQuota(item._id,item.name)">修改指标组名称</a></li>
 					</ul>
 				</div> 	
 				指标组序号：{{nowQuotaGroup.order}}
 				指标组权重：{{nowQuotaGroup.weight}}
 				指标组总分：{{nowQuotaGroup.score}}
-
+			 	<div class="modal fade" id="modifyQuota" tabindex="-1" role="dialog" aria-hidden="true">
+			 		<div class="modal-dialog">	 		
+			 			<div class="modal-content row">
+			 				<div class="modal-header">
+			 					<h4 class="modal-title">修改指标组</h4>
+			 					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			 				</div>
+			 				<div class="modal-body">
+			 				<form class="form-horizontal" role="form">
+								<div class="form-group">
+									<label for="quotaGroupName" class="col-sm-3 control-label">指标组名称</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="quotaModifyName" placeholder="请输入指标组名称" value="{{modifyQuotaName}}" model="modifyQuotaName"/>
+									</div>
+								</div>									
+			 				</div>
+							<div class="model-footer">
+								<button type="button" class="btn btn-primary" ng-click="modifyQuotaSub()" data-dismiss="modal">修改</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+							</div>	
+						</form>		 				
+			 			</div>
+		 			
+			 		</div>
+			 	</div> 	
 				<!--<button class="btn btn-default" ng-click="editQuotaGroup()">编辑指标组</button>-->
 				<button class="btn btn-default" data-toggle="modal" data-target="#newQuotaGroup">新建指标组</button>
  			</div>
@@ -405,6 +455,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1415979332563"></script>
+	<script src="js/manage.js?t=1415982474464"></script>
 </body>
 </html>
