@@ -109,8 +109,9 @@ angular.module('ov.controllers.report',[
             //选中了一个老师
             $root.showoneuse =  function(idx){
                 $root.reportMode = 'show';
-                $root.reportSMode = 'oneuse';
-                $root.nowSelectedUserIdx = idx
+                //$root.reportSMode = 'student';
+                $root.nowSelectedUserIdx = idx;
+                getReport();
             }
             //返回报表概要
             $root.returnReport = function(){
@@ -181,7 +182,7 @@ angular.module('ov.controllers.report',[
                 getReport();
             }
 
-            //拉互评和生评
+            //拉评价详情
             $root.showOneReport = function(obj){
                 $root.nowTeacher = {
                     teacherId : obj.teacherId,
@@ -193,6 +194,7 @@ angular.module('ov.controllers.report',[
             }
 
             function getReport(){
+                console.log($root.reportSMode);
                 if($root.reportSMode === 'oneuse'){
                     Report.getReport({
                         teacherId : $root.nowTeacher.teacherId
