@@ -206,19 +206,19 @@ angular.module('ov.services.report',[
 
                 //检查生评互评结果
                 function checkDetail(){
-                    var list = [];
-                    _.each($root.oneReport.appraisers,function(item){
-                        if(item.questionnare){
-                            list.push(item);
-                        }
-                    });
-                    $root.oneReport.appraisers = list;
-                    if($root.oneReport.students){
-                        $root.oneReport.questionMap = {};
-                        _.each($root.oneReport.questionnare.questions,function(item){
-                            $root.oneReport.questionMap[item._id] = item;
-                        });
-                    }
+                    // var list = [];
+                    // _.each($root.oneReport.appraisers,function(item){
+                    //     if(item.questionnare){
+                    //         list.push(item);
+                    //     }
+                    // });
+                    // $root.oneReport.appraisers = list;
+                    // if($root.oneReport.students){
+                    //     $root.oneReport.questionMap = {};
+                    //     _.each($root.oneReport.questionnare.questions,function(item){
+                    //         $root.oneReport.questionMap[item._id] = item;
+                    //     });
+                    // }
                 }
 
                 return {
