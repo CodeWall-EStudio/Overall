@@ -249,7 +249,7 @@ a{
 	right:200px;
 }
 .score-desc{
-	max-width:500px;
+	max-width:50%;
 }
 
 .content-info .content-summary dt button{
@@ -294,8 +294,9 @@ a{
 	position:absolute;
 	float:right;
 	font-size:20px;
-	right:200px;
+	right:0;
 	top:0;
+	width:40%;
 }
 .content-score .score-result{
 	position:absolute;

@@ -124,7 +124,7 @@ angular.module('ov.controllers.report',[
                 $root.reportMode = 'show';
                 //$root.reportSMode = 'student';
                 $root.nowSelectedUserIdx = idx;
-                getReport();
+                //getReport();
             }
             //返回报表概要
             $root.returnReport = function(){
