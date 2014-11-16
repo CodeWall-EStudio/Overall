@@ -58,7 +58,7 @@ exports.writeExcel = function(res, options) {
                     Logger.error('>>>file convert error: to xls: ', err);
                     return;
                 }
-                res.download(target);
+                res.download(target, options.name);
             });
         }
     });
