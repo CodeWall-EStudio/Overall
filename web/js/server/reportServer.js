@@ -158,7 +158,7 @@ angular.module('ov.services.report',[
                 function getSummaryList(param,success,error){
                     param = param || {};
                     var ts = new Date().getTime();
-                    var url = '/api/indicatorscore/summaryList?_='+ts+'&term='+$root.nowTerm._id;
+                    var url = '/api/indicatorscore/summarylist?_='+ts+'&term='+$root.nowTerm._id;
                     // 指定了老师分组　这个时候是概要和报表
                     if(param.teacherGroup){
                         url += '&teacherGroup='+param.teacherGroup;
