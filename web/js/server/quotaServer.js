@@ -88,7 +88,7 @@ angular.module('ov.services.quota',[
 				.success(function(data,status){
 					//conventStudent(data.student);
 					if(data.err === 0){
-						updateQuota(pram);
+						updateQuota(param);
 						console.log('修改指标组成功!', data);
 					}else{
 					}
