@@ -152,15 +152,40 @@ exports.modify = function(req, res) {
 exports.delete = function(req, res) {
 
     var term = req.parameter.term;
+    var ep = new EventProxy();
 
-    term.remove(function(err) {
-        if (err) {
-            return dbHelper.handleError(err, res);
-        }
-        res.json({
-            err: ERR.SUCCESS,
-            msg: 'ok'
+    ep.fail(function(err) {
+        return dbHelper.handleError(err, res);
+    });
+
+    var dbs = ['EOIndicateAverageScores',
+        'EOIndicateScores',
+        'IndicatorGroups',
+        'IndicatorScores',
+        'Questionnaires',
+        'RelationShips',
+        'Students',
+        'TeacherGroups',
+        'Teachers'
+    ];
+
+    ep.after('removeRelateRecords', dbs.length, function() {
+        term.remove(function(err) {
+            if (err) {
+                return dbHelper.handleError(err, res);
+            }
+            res.json({
+                err: ERR.SUCCESS,
+                msg: 'ok'
+            });
         });
     });
+
+    dbs.forEach(function(dbName) {
+        db[dbName].remove({
+            term: term
+        }, ep.group('removeRelateRecords'));
+    });
+
 
 };
