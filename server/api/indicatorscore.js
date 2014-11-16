@@ -783,8 +783,8 @@ function calculateTeacherEOIScores(parameter, callback) {
                 };
                 if (doc) {
                     result.eoIndicateScore = doc;
-                    if (questionnaire) {
-                        param._id = questionnaire;
+                    if (doc.questionnaire) {
+                        param._id = doc.questionnaire;
                     }
                     totalScore += doc.totalScore;
                     console.log(ship.id, count++);
