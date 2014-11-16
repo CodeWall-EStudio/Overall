@@ -258,22 +258,26 @@ function fetchIndicatorScores(parameter, callback) {
     var teacherGroup = parameter.teacherGroup;
     var teacherName = parameter.teacherName;
     var indicatorGroup = parameter.indicatorGroup;
+    var ep = new EventProxy();
+
+    ep.fail(callback);
 
     var param = {
-        term: term
+        // term: term
     };
 
-    param.indicatorGroup = indicatorGroup;
+    // param.indicatorGroup = indicatorGroup;
 
     // teacherName 和 teacherGroup 是互斥的
     if (teacherName) {
-        param.teacherName = teacherName;
+        // param.teacherName = teacherName;
+        param.name = teacherName;
     } else if (teacherGroup) {
         var teacherIds = [];
         teacherGroup.teachers.forEach(function(teacher) {
             teacherIds.push(teacher.id);
         });
-        param.teacherId = {
+        param.id = {
             $in: teacherIds
         };
     } else {
@@ -281,20 +285,72 @@ function fetchIndicatorScores(parameter, callback) {
     }
 
     Logger.debug('[IndicatorScore.report#fetchIndicatorScores] query: ', param);
-    db.IndicatorScores.find(param, null, {
-        sort: {
-            teacherId: 1
-        }
-    }, function(err, indScores) {
+
+    db.Users.find(param, null, {sort: {id: 1}}, function(err, teachers){
         if (err) {
             return callback(err);
         }
+        if(!teachers.length){
+            return callback(null, []);
+        }
+        ep.after('createReport', teachers.length, function(list){
+            
+            callback(null, list);
+        });
 
-        // 报表详情, 根据条件搜索 IndicatorScores 就可以了
-        // TODO 如果是行政指标组, 这里是否也要计算互评和生评 ?
-        callback(null, indScores);
-
+        teachers.forEach(function(teacher){
+            createReport(teacher, [indicatorGroup], ep.group('createReport', function(result){
+                // var result = {
+                //     teacherId: teacher.id,
+                //     teacherName: teacher.name,
+                //     totalScore: 0,
+                //     scores: {}
+                // };
+                // "scores": {
+                //     "544538049b8385492aa1d6bf": {
+                //     "totalScore": 0,
+                //     "weightedScore": 0,
+                //     "list": [
+                //     {
+                //     "score": 0,
+                //     "indicator": {
+                //     "name": "指标1",
+                //     "order": 1,
+                //     "score": 8,
+                //     "gatherType": 1,
+                //     "desc": "×××××",
+                //     "_id": "544d17a4fa678b5114c9137e"
+                //     }
+                //     },
+                var oldScores = result.scores;
+                result.scores = {};
+                for(var i in oldScores){
+                    result.indicatorGroup = i;
+                    oldScores[i].list.forEach(function(ss){
+                        result.scores[ss.indicator._id] = ss;
+                    });
+                    break;
+                }
+                return result;
+            }));
+        });
     });
+
+
+    // db.IndicatorScores.find(param, null, {
+    //     sort: {
+    //         teacherId: 1
+    //     }
+    // }, function(err, indScores) {
+    //     if (err) {
+    //         return callback(err);
+    //     }
+
+    //     // 报表详情, 根据条件搜索 IndicatorScores 就可以了
+    //     // TODO 如果是行政指标组, 这里是否也要计算互评和生评 ?
+    //     callback(null, indScores);
+
+    // });
 }
 
 
@@ -331,7 +387,7 @@ exports.summarylist = function(req, res) {
         }
     }
 
-    // 传了[指标组]就查询指定指标组, 否则就是吐概要
+
     fetchIndicatorScores(parameter, callback);
 };
 
@@ -906,9 +962,3 @@ exports.detail = function(req, res) {
     }
 };
 
-/**
- * 导出报表
- */
-exports.export = function(req, res) {
-    // TODO
-};
