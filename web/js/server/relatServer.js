@@ -69,7 +69,8 @@ angular.module('ov.services.relat',[
                         // if($root.relatTdList.length === 0){
                         //     getTdList();
                         // }
-                        console.log('拉互评关系列表成功!', data);
+                        checkOverList();
+                        console.log('拉互评关系列表成功@@!', data);
                     }else{
                         $root.$emit(MSG,data.err);
                     }
@@ -81,6 +82,10 @@ angular.module('ov.services.relat',[
         }        
 
         /*工具*/
+        function checkOverList(){
+
+        }
+
         function getTdList(){
             var item = $root.relatList[0] || false;
             if(item){

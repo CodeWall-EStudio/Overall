@@ -122,7 +122,7 @@ angular.module('ov.controllers.relat',[
         //学生登陆了。
         $root.$on(STUDENT_LOGIN,function(){
             $root.nowOverType = 1;
-            Relat.getRelatList();
+            //Relat.getRelatList();
             Relat.getOverList({
                 evaluationType : 1
             });
@@ -130,7 +130,7 @@ angular.module('ov.controllers.relat',[
         //老师登陆了。
         $root.$on(TEACHER_LOGIN,function(){
             $root.nowOverType = 0;
-            Relat.getRelatList();
+            //Relat.getRelatList();
             Relat.getOverList({
                 evaluationType : 0
             });            

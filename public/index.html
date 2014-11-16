@@ -5,9 +5,10 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1416139214875">
+	<link rel="stylesheet" href="css/main.css?t=1416144063569">
 </head>
 <body ng-controller="indexController">
+	{{reportMode}}
  	<div class="header-blue">
  		<ul class="nav nav-tabs top-nav">
  			<li ng-class="{active:getMode()==='report'}" ng-click="switchMode('report')"><a>报表</a></li>
@@ -161,7 +162,7 @@
  			</table>
  		</div> 
  		<!--互评明细-->
- 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'search') && reportSMode === 'teacher'">
+ 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'group' && reportMode !== 'search') && reportSMode === 'teacher'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -197,7 +198,7 @@
 	 		</div>
  		</div>
  		<!--生评明细-->
- 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'search') && reportSMode === 'student'">
+ 		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'group' && reportMode !== 'search') && reportSMode === 'student'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
 	 				<tr>
@@ -301,6 +302,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1416139214875"></script>
+	<script src="js/index.js?t=1416144063569"></script>
 </body>
 </html>
