@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1416098101172">
+	<link rel="stylesheet" href="css/main.css?t=1416139214875">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -73,7 +73,7 @@
  				<a class="dropdown-toggle" data-toggle="dropdown" ng-model="Term.name"> {{nowQuestion.name}}<span class="caret"></span></a>
  				<ul class="dropdown-menu " role="menu">
  					<li ng-repeat="item in questionList" ng-model="questionList">
- 						<a ng-click="changeQuestion(item._id)">{{item.name}}</a> <a class="act" ng-click="modifyQuestion(item._id,item.name)">修改问卷名称</a>
+ 						<a ng-click="changeQuestion(item._id)">{{item.name}}</a> <a class="act" ng-click="modifyQuestion(item._id,item.name)">编辑</a>
  					</li>
  				</ul>  			 
  			 	<button type="button" class="btn btn-primary" ng-click="createQuestion()">创建问卷</button>
@@ -201,12 +201,13 @@
  		</div>  	
  		<!-- 导入工具条-->
  		<div class="toolbar toolbar-import"  ng-class="{hide:getMode()!=='quota'}">
- 			 <div class="toolbar-left">
+
+ 			 <div class="toolbar-left edit-menu">
 				选择指标组：
-				<div class="select-dom dropdown edit-menu" >
+				<div class="select-dom dropdown " >
 					<a class="dropdown-toggle" data-toggle="dropdown" ng-model="nowTerm">{{nowQuotaGroup.name}} <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a> <a class="act" ng-click="modifyQuota(item._id,item.name)">修改指标组名称</a></li>
+						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a> <a class="act" ng-click="modifyQuota(item._id,item.name)">编辑</a></li>
 					</ul>
 				</div> 	
 				指标组序号：{{nowQuotaGroup.order}}
@@ -455,6 +456,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1416098101173"></script>
+	<script src="js/manage.js?t=1416139214875"></script>
 </body>
 </html>
