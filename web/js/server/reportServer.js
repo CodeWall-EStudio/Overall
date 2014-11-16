@@ -213,12 +213,12 @@ angular.module('ov.services.report',[
                     //     }
                     // });
                     // $root.oneReport.appraisers = list;
-                    // if($root.oneReport.students){
-                    //     $root.oneReport.questionMap = {};
-                    //     _.each($root.oneReport.questionnare.questions,function(item){
-                    //         $root.oneReport.questionMap[item._id] = item;
-                    //     });
-                    // }
+                    if($root.oneReport.students){
+                        $root.oneReport.questionMap = {};
+                        _.each($root.oneReport.questionnare.questions,function(item){
+                            $root.oneReport.questionMap[item._id] = item;
+                        });
+                    }
                 }
 
                 return {
