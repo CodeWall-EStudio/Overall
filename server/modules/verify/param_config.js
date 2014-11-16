@@ -119,14 +119,14 @@ module.exports = {
         }]
     },
     '/api/indicatorgroup/modify': {
-        method : 'POST',
-        params : [{
+        method: 'POST',
+        params: [{
             name: 'indicatorgroup',
             type: 'IndicatorGroups',
             required: true
         }, {
             name: 'name',
-            type : 'string',
+            type: 'string',
             required: true
         }]
     },
@@ -174,6 +174,9 @@ module.exports = {
             type: 'string'
         }, {
             name: 'export'
+        }, {
+            name: 'preview',
+            type: 'boolean'
         }]
     },
     // 指标组的结果列表
@@ -195,6 +198,9 @@ module.exports = {
             required: true
         }, {
             name: 'export'
+        }, {
+            name: 'preview',
+            type: 'boolean'
         }]
     },
     // 输出评价报表
@@ -210,6 +216,9 @@ module.exports = {
             required: true
         }, {
             name: 'export'
+        }, {
+            name: 'preview',
+            type: 'boolean'
         }]
     },
     // 互评和生评详情
@@ -229,6 +238,9 @@ module.exports = {
             required: true
         }, {
             name: 'export'
+        }, {
+            name: 'preview',
+            type: 'boolean'
         }]
     },
 
@@ -322,8 +334,7 @@ module.exports = {
             name: 'term',
             type: 'Terms',
             required: true
-        },
-        {
+        }, {
             name: 'questionnaireId',
             type: 'Questionnaires'
         }, {

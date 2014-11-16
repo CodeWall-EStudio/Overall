@@ -1,6 +1,5 @@
 var EventProxy = require('eventproxy');
 var _ = require('underscore');
-var ejs = require('ejs');
 var path = require('path');
 
 var db = require('../modules/db');
@@ -218,19 +217,16 @@ exports.summary = function(req, res) {
 
         if (parameter.export) {
 
-            // ejs.renderFile(path.join(__dirname, '../views/summary.html'), {
-            //     result: result,
-            //     util: Util
-            // }, function(err, str) {
-            //     if(err){
-            //         res.send(err);
-            //     }else{
-            //         res.set('Content-Type', 'application/vnd.ms-excel');
-            //         // res.set('Content-Type', 'application/vnd.openxmlformats');
-            //         res.attachment(parameter.export + '.xls');
-            //         res.send(new Buffer(str));
-            //     }
-            // });
+            fileHelper.writeExcel(res, {
+                tmpl: 'summary',
+                data: {
+                    result: result,
+                    util: Util
+                },
+                name: parameter.export
+            });
+
+        } else if (parameter.preview) {
             res.render('summary', {
                 result: result,
                 util: Util
@@ -372,8 +368,24 @@ exports.summarylist = function(req, res) {
         Logger.info('[IndicatorScore.summaryList] end, indicatorGroup: ',
             parameter.indicatorGroup, ', cost: ', endTime - startTime, 'ms');
 
+
         if (parameter.export) {
 
+            fileHelper.writeExcel(res, {
+                tmpl: 'summarylist',
+                data: {
+                    result: {
+                        createTime: endTime,
+                        term: parameter.term,
+                        indicatorGroup: parameter.indicatorGroup,
+                        list: result,
+                    },
+                    util: Util
+                },
+                name: parameter.export
+            });
+
+        } else if (parameter.preview) {
             res.render('summarylist', {
                 result: {
                     createTime: endTime,
@@ -664,8 +676,19 @@ exports.report = function(req, res) {
 
         Logger.info('[IndicatorScore.report] end, cost: ', endTime - startTime, 'ms');
 
+
         if (parameter.export) {
 
+            fileHelper.writeExcel(res, {
+                tmpl: 'report',
+                data: {
+                    result: result,
+                    util: Util
+                },
+                name: parameter.export
+            });
+
+        } else if (parameter.preview) {
             res.render('report', {
                 result: result,
                 util: Util
