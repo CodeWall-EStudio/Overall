@@ -319,6 +319,11 @@ module.exports = {
     '/api/questionnaire/detail': {
         method: 'GET',
         params: [{
+            name: 'term',
+            type: 'Terms',
+            required: true
+        },
+        {
             name: 'questionnaireId',
             type: 'Questionnaires'
         }, {

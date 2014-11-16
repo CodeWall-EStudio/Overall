@@ -286,20 +286,24 @@ function fetchIndicatorScores(parameter, callback) {
 
     Logger.debug('[IndicatorScore.report#fetchIndicatorScores] query: ', param);
 
-    db.Users.find(param, null, {sort: {id: 1}}, function(err, teachers){
+    db.Users.find(param, null, {
+        sort: {
+            id: 1
+        }
+    }, function(err, teachers) {
         if (err) {
             return callback(err);
         }
-        if(!teachers.length){
+        if (!teachers.length) {
             return callback(null, []);
         }
-        ep.after('createReport', teachers.length, function(list){
-            
+        ep.after('createReport', teachers.length, function(list) {
+
             callback(null, list);
         });
 
-        teachers.forEach(function(teacher){
-            createReport(teacher, [indicatorGroup], ep.group('createReport', function(result){
+        teachers.forEach(function(teacher) {
+            createReport(teacher, [indicatorGroup], ep.group('createReport', function(result) {
                 // var result = {
                 //     teacherId: teacher.id,
                 //     teacherName: teacher.name,
@@ -324,9 +328,9 @@ function fetchIndicatorScores(parameter, callback) {
                 //     },
                 var oldScores = result.scores;
                 result.scores = {};
-                for(var i in oldScores){
+                for (var i in oldScores) {
                     result.indicatorGroup = i;
-                    oldScores[i].list.forEach(function(ss){
+                    oldScores[i].list.forEach(function(ss) {
                         result.scores[ss.indicator._id] = ss;
                     });
                     break;
@@ -773,22 +777,27 @@ function calculateTeacherEOIScores(parameter, callback) {
             };
             Logger.debug('[calculateTeacherEOIScores#EOIndicateScores.findOne] query', param);
             db.EOIndicateScores.findOne(param, ep.group('handleShips', function(doc) {
+                var param = {
+                    term: term,
+                    order: evaluationType
+                };
                 if (doc) {
                     result.eoIndicateScore = doc;
+                    if (questionnaire) {
+                        param._id = questionnaire;
+                    }
                     totalScore += doc.totalScore;
                     console.log(ship.id, count++);
                 }
 
+                // 3.
+                db.Questionnaires.findOne(param, ep.group('handleShips', function(doc) {
+                    result.questionnare = doc;
+                    console.log(ship.id, count++);
+                }));
             }));
 
-            // 3.
-            db.Questionnaires.findOne({
-                term: term,
-                order: evaluationType
-            }, ep.group('handleShips', function(doc) {
-                result.questionnare = doc;
-                console.log(ship.id, count++);
-            }));
+
         });
 
     });
@@ -961,4 +970,3 @@ exports.detail = function(req, res) {
         });
     }
 };
-

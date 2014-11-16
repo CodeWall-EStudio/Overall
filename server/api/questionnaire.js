@@ -12,7 +12,7 @@ exports.import = function(req, res) {
     var parameter = req.parameter;
     var questionnaire = parameter.questionnaire;
     var data = fileHelper.readExcel(req, res);
-    if(data === null){
+    if (data === null) {
         return;
     }
 
@@ -59,24 +59,24 @@ exports.create = function(req, res) {
     });
 };
 
-exports.modify = function(req,res){
+exports.modify = function(req, res) {
     var parameter = req.parameter;
-    var questionnaire = parameter.questionnaire;   
-     
-    if(parameter.name){
+    var questionnaire = parameter.questionnaire;
+
+    if (parameter.name) {
         questionnaire.name = parameter.name;
     }
 
-    questionnaire.save(function(err,doc){
+    questionnaire.save(function(err, doc) {
         if (err) {
             return dbHelper.handleError(err, res);
         }
         res.json({
             err: ERR.SUCCESS,
             result: doc
-        });        
-    });    
-}
+        });
+    });
+};
 
 
 exports.list = function(req, res) {
@@ -88,7 +88,7 @@ exports.list = function(req, res) {
         term: term
     };
     if (parameter.order) {
-        param.order = parameter.order
+        param.order = parameter.order;
     }
 
     db.Questionnaires.find(param, null, {
@@ -124,6 +124,7 @@ exports.detail = function(req, res) {
         });
     }
     db.Questionnaires.findOne({
+        term: parameter.term,
         order: order
     }, function(err, doc) {
         if (err) {
