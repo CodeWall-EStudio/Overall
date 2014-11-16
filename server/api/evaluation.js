@@ -38,13 +38,15 @@ exports.appraisees = function(req, res) {
     if (evaluationType === 1) { // 学生评价老师
         // 先拉学生所在的班级
         db.Students.findOne({
-            id: loginUser.id
+            id: loginUser.id,
+            term: term
         }, function(err, doc) {
             if (err) {
                 return dbHelper.handleError(err, res);
             }
             // 通过班级找到对应的老师们
             param = {
+                term: term,
                 classes: {
                     $elemMatch: {
                         grade: doc.grade,
@@ -92,7 +94,9 @@ exports.appraisees = function(req, res) {
 
     ep.on('success', function(teachers) {
         // 获取分组信息
-        db.TeacherGroups.find({}, function(err, teacherGroups) {
+        db.TeacherGroups.find({
+            term: term
+        }, function(err, teacherGroups) {
             if (err) {
                 return dbHelper.handleError(err, res);
             }
