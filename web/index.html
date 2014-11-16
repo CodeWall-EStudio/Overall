@@ -133,7 +133,7 @@
  					<th ng-repeat="item in nowQuotaGroup.indicators"  width="60">{{item.name}}</th>
  					<th width="120">指标组总分</th>
  				</tr>
- 				<tr ng-repeat="item in reportList" ng-click="showOneReport(item)">
+ 				<tr ng-repeat="item in reportSummary" ng-click="showOneReport(item)">
  					<td>{{item.teacherName}}</td>
  					<td ng-repeat="obj in item.scores track by $index">{{obj.score}}</td>
  					<td>{{item.totalScore}}</td>
