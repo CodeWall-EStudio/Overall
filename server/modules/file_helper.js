@@ -58,7 +58,11 @@ exports.writeExcel = function(res, options) {
                     Logger.error('>>>file convert error: to xls: ', err);
                     return;
                 }
-                res.download(target, options.name);
+                res.set({
+                    'Content-Type': 'application/vnd.ms-excel',
+                    'Content-Disposition': 'attachment; filename=' + encodeURI(options.name)
+                });
+                res.sendfile(target);
             });
         }
     });
