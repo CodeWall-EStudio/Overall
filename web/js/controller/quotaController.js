@@ -10,6 +10,7 @@ angular.module('ov.controllers.import',[
 		$root.quotaGroupMap = {};
 		$root.nowQuotaGroup = {};
 		$root.quotaList = [];
+		$root.newQuotaGroup = {};
 		
 		$root.modifyQuotaName = '';
 		$root.modifyQuotaId = '';
@@ -34,7 +35,7 @@ angular.module('ov.controllers.import',[
 		$scope.orderQuotaGroup = function(name){
 			$scope.quotaOrder[name]  = !$scope.quotaOrder[name] ;
 			Quota.orderQuotaGroup($root.nowQuotaGroup._id,name,$scope.quotaOrder[name]);
-			$('#newQuotaGroup').modal('hide');
+			$('#newQuotaGroupView').modal('hide');
 		}
 
 		//指标分数排序
@@ -93,8 +94,11 @@ angular.module('ov.controllers.import',[
 		$root.createQuotaGroup = function(){
 			
 		}
+
 		//保持新建的指标组
 		$root.createNewQuotaGroup = function(){
+			console.log($root.newQuotaGroup);
+
 			$root.newQuotaGroup.term = $root.nowTerm._id;
 			Quota.createQuotaGroup();
 		}	

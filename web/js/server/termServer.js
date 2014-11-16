@@ -20,6 +20,9 @@ angular.module('ov.services.term',[
                 //conventStudent(data.student);
                 if(data.err === 0){
                     $root.termList.push(data.result);
+                    if($root.termList.length === 0){
+                        $root.nowTerm = data.result;
+                    }
                     console.log('新建学期成功!', data);
                 }else{
                 

@@ -112,6 +112,10 @@ angular.module('ov.services.question',[
         }        
 
         var saveScores = function(param,success,error){
+            if($root.nowTerm.status !== 1){
+                $root.$emit(MSG,12);                
+                return;
+            }
             var url = '/api/evaluation/appraise?term='+$root.nowTerm._id;
             var ts = new Date().getTime();
             var body = Util.object.toUrlencodedString(param);
