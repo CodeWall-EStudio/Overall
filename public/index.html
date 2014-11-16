@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1416146460740">
+	<link rel="stylesheet" href="css/main.css?t=1416146540795">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -226,7 +226,7 @@
 				<dl class="content-score" ng-repeat="item in oneReport.students[nowSelectedUserIdx].eoIndicateScore.scores">	
 					<dt>{{oneReport.questionMap[item.question].name}}</dt>
 					<dd class="score-info">
-						<div>{{oneReport.questionMap[item.question].desc}}</div>
+						<div class="score-desc">{{oneReport.questionMap[item.question].desc}}</div>
 						<div class="score-num">
 							打分 ：{{item.score}}
 						</div>
@@ -301,6 +301,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1416146460740"></script>
+	<script src="js/index.js?t=1416146540795"></script>
 </body>
 </html>
