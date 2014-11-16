@@ -142,21 +142,28 @@ angular.module('ov.controllers.report',[
             //导出报表
             $root.exportReport = function(flag){
                 var ts = new Date().getTime();
-                if($root.nowQuotaGroup._id == -1){
+                if($root.nowQuotaGroup._id == -1 && ($root.reportMode !== 'show' && $root.reportMode !=='user')){
                    var url = '/api/indicatorscore/summary?_='+ts+'&term='+$root.nowTerm._id;
                 }else if($root.reportMode === 'group'){
                     var url = '/api/indicatorscore/summarylist?_='+ts+'&term='+$root.nowTerm._id;
                 }else{
                     var url = '/api/indicatorscore/report?_='+ts+'&term='+$root.nowTerm._id;
-                }
-                   url += '&indicatorGroup='+$root.nowQuotaGroup._id;
-                   if($root.searchKeyWord != '' && !flag) {
-                        url += '&teacherName='+$root.searchKeyWord+'&export='+$root.searchKeyWord+'报表';
-                   }else{
-                        url += '&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
-                   }
-                   
+                    if($root.reportSMode === 'oneuse'){
+                        url += '&teacherId='+$root.nowTeacher.teacherId;
+                    }else if($root.reportSMode === 'teacher'){
+                        url += '&teacherId='+$root.nowTeacher.teacherId+'&type=1';
+                    }else if($root.reportSMode === 'student'){
+                        url += '&teacherId='+$root.nowTeacher.teacherId+'&type=2';
+                    }
 
+                }
+               url += '&indicatorGroup='+$root.nowQuotaGroup._id;
+               if($root.searchKeyWord != '' && !flag) {
+                    url += '&teacherName='+$root.searchKeyWord+'&export='+$root.searchKeyWord+'报表';
+               }else{
+                    url += '&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
+               }
+                
                 window.location.href=url;
             }
             //
