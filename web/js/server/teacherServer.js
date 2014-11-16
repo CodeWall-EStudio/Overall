@@ -4,7 +4,7 @@ angular.module('ov.services.teacher',[
         'ov.services.utils'
     ])
     .service('teacherService',[
-    '$rootScope','$location','$http',function($root,$location,$http){
+    '$rootScope','$location','$http','STATUS.TEACHERGROUP.LOAD',function($root,$location,$http,TEACHERGROUP_LOAD){
 
        //导入老师分组
         var importTeacherGroup = function(param,success,error){
@@ -68,6 +68,7 @@ angular.module('ov.services.teacher',[
                         if($root.teacherGroup.length > 0){
                             $root.nowTeacherGroup = $root.teacherGroup[0];
                         }
+                        $root.$emit(TEACHERGROUP_LOAD);
                         _.each(data.result,function(item,idx){
                             $root.teacherGroupMap[item._id]  = item;
                         });

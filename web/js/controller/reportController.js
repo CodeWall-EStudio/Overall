@@ -2,7 +2,7 @@ angular.module('ov.controllers.report',[
 		'ov.constant',
 		'ov.services.report'
 	]).
-	controller('reportController',['$rootScope','$scope','reportService','STATUS.USER.LOAD','STATUS.TERM.LOAD','STATUS.QUOTA.LOAD','STATUS.TERM.CHANGE','STATUS.TEACHERGROUP.CHANGE','STATUS.QUOTAGROUP.CHANGE','STATUS.RELAT.GET','STATUS.STUDENT.GET',function($root,$scope,Report,USERLOAD,TERMLOAD,QUOTALOAD,TERM_CHANGE,TEACHREGROUP_CHANGE,QUOTAGROUP_CHANGE,GET_RELAT,GET_STUDENT){
+	controller('reportController',['$rootScope','$scope','reportService','STATUS.USER.LOAD','STATUS.TERM.LOAD','STATUS.QUOTA.LOAD','STATUS.TERM.CHANGE','STATUS.TEACHERGROUP.LOAD','STATUS.TEACHERGROUP.CHANGE','STATUS.QUOTAGROUP.CHANGE','STATUS.RELAT.GET','STATUS.STUDENT.GET',function($root,$scope,Report,USERLOAD,TERMLOAD,QUOTALOAD,TERM_CHANGE,TEACHERGROUP_LOAD,TEACHREGROUP_CHANGE,QUOTAGROUP_CHANGE,GET_RELAT,GET_STUDENT){
 /*
     .constant('STATUS.TERM.CHANGE','status.term.change')
     .constant('STATUS.TEACHERGROUP.CHANGE','status.teachergroup.change')
@@ -40,6 +40,7 @@ angular.module('ov.controllers.report',[
             $root.nowSelectedUserIdx = 0;
 
             var termLoad = false,
+                teachergroupLoad=false, 
                    quotaLoad = false;
 
             /*登陆之后再拉报表*/
@@ -49,13 +50,25 @@ angular.module('ov.controllers.report',[
                     //Report.getReportList();
                 }                
             });
+            $root.$on(TEACHERGROUP_LOAD,function(){
+                teachergroupLoad = true;
+                if($root.reportMode !== 'summary'){
+                    return;
+                }
+                if(quotaLoad && termLoad && teachergroupLoad){
+                    //Report.getReportList();
+                    Report.getSummary({
+                        teacherGroup : $root.nowTeacherGroup._id
+                    });
+                }                
+            });
             //这里指标组在学期之后。。。。囧
             $root.$on(QUOTALOAD,function(){
                 quotaLoad = true;
                 if($root.reportMode !== 'summary'){
                     return;
                 }
-                if(quotaLoad && termLoad){
+                if(quotaLoad && termLoad && teachergroupLoad){
                     //Report.getReportList();
                     Report.getSummary({
                         teacherGroup : $root.nowTeacherGroup._id
