@@ -806,6 +806,7 @@ function calculateTeacherEOIScores(parameter, callback) {
                 };
                 if (doc) {
                     result.eoIndicateScore = doc;
+                    Logger.debug('[calculateTeacherEOIScores] >>> ', doc);
                     if (doc.questionnaire) {
                         param._id = doc.questionnaire;
                     }

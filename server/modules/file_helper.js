@@ -60,7 +60,7 @@ exports.writeExcel = function(res, options) {
                 }
                 res.set({
                     'Content-Type': 'application/vnd.ms-excel',
-                    'Content-Disposition': 'attachment; filename=' + encodeURI(options.name)
+                    'Content-Disposition': 'attachment; filename=' + encodeURI(options.name + '.xls')
                 });
                 res.sendfile(target);
             });
