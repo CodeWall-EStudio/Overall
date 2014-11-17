@@ -358,12 +358,13 @@ exports.summarylist = function(req, res) {
         } else {
             res.json({
                 err: ERR.SUCCESS,
-                result: {
-                    createTime: endTime,
-                    term: parameter.term,
-                    indicatorGroup: parameter.indicatorGroup,
-                    list: result,
-                }
+                result: result
+                // result: {
+                //     createTime: endTime,
+                //     term: parameter.term,
+                //     indicatorGroup: parameter.indicatorGroup,
+                //     list: result,
+                // }
             });
         }
     }
