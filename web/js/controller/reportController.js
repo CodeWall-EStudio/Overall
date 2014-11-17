@@ -124,8 +124,15 @@ angular.module('ov.controllers.report',[
             $root.showMore = function(id,name){
                 var tmp  = {};
                 tmp.name = name;
-                console.log(id,name);
+                console.log(id,name,$root.reportDetail.results[id]);
+                var list = [];
+                _.each($root.reportDetail.results[id].list,function(item){
+                    if(item){
+                        list.push(item);
+                    }
+                });
                 $root.reportMore = $.extend(tmp,$root.reportDetail.results[id]);
+                $root.reportMore.list = list;
             }
 
             //选中了一个老师
