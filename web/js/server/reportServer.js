@@ -141,10 +141,10 @@ angular.module('ov.services.report',[
                             if(data.err === 0){
                                 if(param.teacherName){
                                     $root.reportSearch = data.result;
+                                    $root.reportSearch.list = false;
                                 }else{
                                     $root.reportSummary = data.result;    
                                 }
-                                
                                 checkSummary();
                                 console.log('概要或报表拉取成功',data);
                             }else{
@@ -177,11 +177,13 @@ angular.module('ov.services.report',[
                         .success(function(data,status){
                             if(data.err === 0){
                                 if(param.teacherName){
-                                    $root.reportSearch = data.result;
+                                    $root.reportSearch.results = data.result;
+                                    $root.reportSearch.list = true;
                                 }else{
                                     $root.reportSummary = data.result;    
                                 }
-                                console.log($root.reportSummary);
+
+                                //console.log($root.reportSummary,$root.reportSearch);
                                 checkSummary();
                                 console.log('概要或报表拉取成功',data);
                             }else{
@@ -204,6 +206,16 @@ angular.module('ov.services.report',[
                         });
                         $root.reportSummary.quotaMap[item._id].quotas = tmp;
                     });
+                    $root.reportSearch.quotaMap = {};
+                    if($root.reportSearch.indicatorGroups){
+                        _.each($root.reportSearch.indicatorGroups,function(item){
+                            $root.reportSearch.quotaMap[item._id] = item;
+                        });
+                    }else if($root.reportSearch.results && $root.reportSearch.results[0]){
+                        _.each($root.reportSearch.results[0].scores,function(item){
+                            $root.reportSearch.quotaMap[item.indicator._id] = item.indicator;
+                        });                        
+                    }
                 }
 
                 //检查生评互评结果

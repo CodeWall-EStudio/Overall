@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1416237944240">
+	<link rel="stylesheet" href="css/main.css?t=1416244116498">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -238,7 +238,7 @@
 
  		<!--搜索结果-->
  		<div class="content-report" ng-show="reportMode === 'search'">
- 			<table class="table table-striped table-hover" ng-show="reportSummary.results.length">
+ 			<table class="table table-striped table-hover" ng-show="!reportSearch.list">
  				<tr>
  					<th>姓名</th>
  					<th ng-repeat="item in reportSearch.quotaMap">{{item.name}}</th>
@@ -248,10 +248,24 @@
  					<td>
  						{{item.teacherName}}
  					</td>
- 					<td ng-repeat="obj in item.scores">{{obj}}</td>
+ 					<td ng-repeat="obj in reportSearch.quotaMap">{{item.scores[obj._id]}}</td>
  					<td>{{item.totalScore}}</td>
  				</tr>
  			</table>
+ 			<table class="table table-striped table-hover" ng-show="reportSearch.list">
+ 				<tr>
+ 					<th>姓名</th>
+ 					<th ng-repeat="item in reportSearch.quotaMap">{{item.name}}</th>
+ 					<th>总分</th>
+ 				</tr>
+ 				<tr ng-repeat="item in reportSearch.results" ng-click="showOneReport(item)">
+ 					<td>
+ 						{{item.teacherName}}
+ 					</td>
+ 					<td ng-repeat="obj in reportSearch.quotaMap">{{item.scores[obj._id].score}}</td>
+ 					<td>{{item.totalScore}}</td>
+ 				</tr>
+ 			</table> 			
  			<div style="margin:100px auto;text-align:center;" ng-show="!reportSearch.results.length && getMode() != 'report' ">没有找到结果或者老师还没有评分</div>
  		</div>  		
  	</div>
@@ -302,6 +316,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1416237944240"></script>
+	<script src="js/index.js?t=1416244116498"></script>
 </body>
 </html>
