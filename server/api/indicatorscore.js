@@ -396,6 +396,28 @@ function createReport(teacher, indGroups, callback) {
 
     indGroups.forEach(function(indGroup) {
 
+        var epName = 'EOIndicateAverageScores.findOne' + teacher.id;
+
+        ep.after(epName, indGroup.indicators.length, function(list) {
+            Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
+            var totalScore = 0;
+
+            // list = _.compact(list);
+            list.forEach(function(item) {
+                totalScore += (item.score || 0);
+            });
+            Logger.debug('[>>>> indGroup._id >>>>]', teacher.id, indGroup._id, totalScore);
+            result.scores[indGroup._id] = {
+                totalScore: totalScore,
+                // 加权得分: 例如，指标组总分满分100，指标组权重30。
+                // 某人指标组总分得分80，他的加权得分：（80/100）×30=24。
+                // 同组加权平均分: 是指同一个用户组的所有用户的加权得分的平均分。
+                weightedScore: (totalScore / indGroup.score) * indGroup.weight,
+                list: list
+            };
+            ep.group('indGroups.forEach')();
+
+        });
 
         db.IndicatorScores.findOne({
             term: indGroup.term,
@@ -405,27 +427,6 @@ function createReport(teacher, indGroups, callback) {
             if (err) {
                 return callback(err);
             }
-
-            ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
-                Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
-                var totalScore = 0;
-
-                // list = _.compact(list);
-                list.forEach(function(item) {
-                    totalScore += (item.score || 0);
-                });
-                Logger.debug('[>>>> indGroup._id >>>>]', teacher.id, indGroup._id, totalScore);
-                result.scores[indGroup._id] = {
-                    totalScore: totalScore,
-                    // 加权得分: 例如，指标组总分满分100，指标组权重30。
-                    // 某人指标组总分得分80，他的加权得分：（80/100）×30=24。
-                    // 同组加权平均分: 是指同一个用户组的所有用户的加权得分的平均分。
-                    weightedScore: (totalScore / indGroup.score) * indGroup.weight,
-                    list: list
-                };
-                ep.group('indGroups.forEach')();
-
-            });
 
             indGroup.indicators.forEach(function(ind) {
                 // gatherType 1: 文件导入, 2: 互评平均分, 3: 生评平均分
@@ -442,7 +443,7 @@ function createReport(teacher, indGroups, callback) {
                         term: indGroup.term,
                         type: ind.gatherType === 2 ? 0 : 1,
                         appraiseeId: teacher.id
-                    }, ep.group('EOIndicateAverageScores.findOne', function(doc) {
+                    }, ep.group(epName, function(doc) {
                         if (doc && doc.averageScore) {
                             score.score = doc.averageScore;
                         } else {
@@ -451,7 +452,7 @@ function createReport(teacher, indGroups, callback) {
                         return score;
                     }));
                 } else {
-                    ep.group('EOIndicateAverageScores.findOne')(null, score);
+                    ep.group(epName)(null, score);
                 }
             });
 
