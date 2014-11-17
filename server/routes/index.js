@@ -74,3 +74,7 @@ exports.setXHR2Headers = function(req, res, next) {
     }
 };
 
+exports.docs = function(req, res){
+
+    res.render('docs', { result: require('../modules/verify/param_config') });
+};

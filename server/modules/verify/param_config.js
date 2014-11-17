@@ -1,12 +1,14 @@
 module.exports = {
 
     // 登录接口
-    '/api/login/': { //
+    '/api/login/': {
         method: 'GET',
+        desc: '登录接口',
         params: []
     },
-    '/api/login/student': { // 学生登录
+    '/api/login/student': {
         method: 'POST',
+        desc: '学生登录',
         params: [{
             name: 'name',
             required: true
@@ -17,28 +19,34 @@ module.exports = {
     },
 
     // 用户信息相关接口
-    '/api/user/import': { // 导入登陆中心的用户信息, 会覆盖现有用户信息
+    '/api/user/import': {
         method: 'GET',
+        desc: '导入登陆中心的用户信息, 会覆盖现有用户信息',
         params: []
     },
     '/api/user/info': { // 获取当前登陆用户的信息
         method: 'GET',
+        desc: '获取当前登陆用户的信息',
         params: []
     },
     '/api/user/search': { // 搜索用户
         method: 'GET',
+        desc: '搜索用户',
         params: [{
             name: 'keyword'
         }]
     },
     '/api/user/auth': { // 对用户进行授权
         method: 'POST',
+        desc: '对用户进行授权',
         params: [{
             name: 'id', // 用户登录用的账号
+            desc: '用户登录用的账号',
             required: true
         }, {
             name: 'role',
             type: 'number', // 1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员
+            desc: '1: 学生, 2(0): 教师, 4: 管理干部, 8: 学校领导, 16: 系统管理员',
             required: true
         }]
     },
@@ -168,14 +176,18 @@ module.exports = {
             required: true
         }, {
             name: 'teacherGroup', // teacherGroup 和 teacherName 二选一
+            desc: 'teacherGroup 和 teacherName 二选一',
             type: 'TeacherGroups'
         }, {
             name: 'teacherName', // 不支持模糊搜索
+            desc: '不支持模糊搜索',
             type: 'string'
         }, {
-            name: 'export'
+            name: 'export',
+            desc: '导出的报表的文件名'
         }, {
             name: 'preview',
+            desc: '是否为预览报表, true 则打开个 html 页面',
             type: 'boolean'
         }]
     },
@@ -188,18 +200,22 @@ module.exports = {
             required: true
         }, {
             name: 'teacherGroup', // teacherGroup 和 teacherName 二选一
+            desc: 'teacherGroup 和 teacherName 二选一',
             type: 'TeacherGroups'
         }, {
             name: 'teacherName', // 不支持模糊搜索
+            desc: '不支持模糊搜索',
             type: 'string'
         }, {
-            name: 'indicatorGroup', // 传了 indicatorGroup 就显示指标组详情, 否则显示概要
+            name: 'indicatorGroup',
             type: 'IndicatorGroups',
             required: true
         }, {
-            name: 'export'
+            name: 'export',
+            desc: '导出的报表的文件名'
         }, {
             name: 'preview',
+            desc: '是否为预览报表, true 则打开个 html 页面',
             type: 'boolean'
         }]
     },
@@ -212,12 +228,15 @@ module.exports = {
             required: true
         }, {
             name: 'teacherId', // 教师 id
+            desc: '教师 id',
             type: 'string',
             required: true
         }, {
-            name: 'export'
+            name: 'export',
+            desc: '导出的报表的文件名'
         }, {
             name: 'preview',
+            desc: '是否为预览报表, true 则打开个 html 页面',
             type: 'boolean'
         }]
     },
@@ -230,16 +249,20 @@ module.exports = {
             required: true
         }, {
             name: 'appraiseeId', // 被评价人的 id
+            desc: '被评价人的 id',
             type: 'string',
             required: true
         }, {
             name: 'type', // 报表类型, 1: 互评明细, 2: 生评明细
+            desc: '报表类型, 1: 互评明细, 2: 生评明细',
             type: 'number',
             required: true
         }, {
-            name: 'export'
+            name: 'export',
+            desc: '导出的报表的文件名'
         }, {
             name: 'preview',
+            desc: '是否为预览报表, true 则打开个 html 页面',
             type: 'boolean'
         }]
     },
@@ -377,27 +400,32 @@ module.exports = {
     // 列出所有当前登录用户能进行评价的被评价人
     '/api/evaluation/appraisees': {
         method: 'GET',
+        desc: '列出所有当前登录用户能进行评价的被评价人',
         params: [{
             name: 'term',
             type: 'Terms',
             required: true
         }, {
             name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            desc: '评估类型, 0: 教师互评, 1: 生评',
             type: 'number'
         }]
     },
     // 当前登录用户对被评价者进行打分
     '/api/evaluation/appraise': {
         method: 'POST',
+        desc: '当前登录用户对被评价者进行打分',
         params: [{
             name: 'term',
             type: 'Terms',
             required: true
         }, {
             name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            desc: '评估类型, 0: 教师互评, 1: 生评',
             type: 'number'
         }, {
             name: 'appraiseeId', // 被评价者的id
+            desc: '被评价者的id',
             required: true
         }, {
             name: 'scores',
@@ -405,6 +433,7 @@ module.exports = {
             required: true
         }, {
             name: 'questionnaire', // 问卷 id
+            desc: '问卷 id',
             type: 'Questionnaires',
             required: true
         }]
@@ -412,15 +441,18 @@ module.exports = {
     // 当前登录用户对被评价者的打分结果
     '/api/evaluation/detail': {
         method: 'GET',
+        detail: '当前登录用户对被评价者的打分结果',
         params: [{
             name: 'term',
             type: 'Terms',
             required: true
         }, {
             name: 'evaluationType', // 评估类型, 0: 教师互评, 1: 生评
+            desc: '评估类型, 0: 教师互评, 1: 生评',
             type: 'number'
         }, {
             name: 'appraiseeId', // 被评价者的id
+            desc: '被评价者的id',
             required: true
         }]
     }
