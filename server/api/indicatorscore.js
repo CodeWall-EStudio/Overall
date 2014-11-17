@@ -118,7 +118,7 @@ function createIndicatorSummary(parameter, callback) {
 
         // 2.
         teachers.forEach(function(teacher) {
-            createReport(teacher, indGroups, ep.group('createSummary', function(result){
+            createReport(teacher, indGroups, ep.group('createSummary', function(result) {
                 // var result = {
                 //     teacherId: teacher.id,
                 //     teacherName: teacher.name,
@@ -358,7 +358,12 @@ exports.summarylist = function(req, res) {
         } else {
             res.json({
                 err: ERR.SUCCESS,
-                result: result
+                result: {
+                    createTime: endTime,
+                    term: parameter.term,
+                    indicatorGroup: parameter.indicatorGroup,
+                    list: result,
+                }
             });
         }
     }
@@ -404,11 +409,12 @@ function createReport(teacher, indGroups, callback) {
             ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
                 Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
                 var totalScore = 0;
+
                 // list = _.compact(list);
                 list.forEach(function(item) {
                     totalScore += (item.score || 0);
                 });
-
+                Logger.debug('[>>>> indGroup._id >>>>]', teacher.id, indGroup._id, totalScore);
                 result.scores[indGroup._id] = {
                     totalScore: totalScore,
                     // 加权得分: 例如，指标组总分满分100，指标组权重30。
@@ -427,6 +433,9 @@ function createReport(teacher, indGroups, callback) {
                     score: 0,
                     indicator: ind
                 };
+                if (score.toObject) {
+                    score = score.toObject();
+                }
                 if (ind.gatherType === 2 || ind.gatherType === 3) {
 
                     db.EOIndicateAverageScores.findOne({
@@ -434,8 +443,10 @@ function createReport(teacher, indGroups, callback) {
                         type: ind.gatherType === 2 ? 0 : 1,
                         appraiseeId: teacher.id
                     }, ep.group('EOIndicateAverageScores.findOne', function(doc) {
-                        if(doc && doc.averageScore){
+                        if (doc && doc.averageScore) {
                             score.score = doc.averageScore;
+                        } else {
+                            score.score = 0;
                         }
                         return score;
                     }));
