@@ -62,7 +62,7 @@
 						<li ng-repeat="item in quotaGroupList"><a ng-click="selectQuotaGroup($index)">{{item.name}}</a></li>
 					</ul>
 				</div> 	 
-				<a ng-click="exportReport(1)">导出当前报表</a>			
+				<a ng-click="exportReport()">导出当前报表</a>			
 				<a ng-click="exportReport(1)">导出完整报表</a>
  			</div>
  		</div>
@@ -135,8 +135,8 @@
  				</tr>
  				<tr ng-repeat="item in reportSummary" ng-click="showOneReport(item)">
  					<td>{{item.teacherName}}</td>
- 					<td ng-repeat="obj in item.scores track by $index">{{obj.score}}</td>
- 					<td>{{item.totalScore}}</td>
+ 					<td ng-repeat="obj in item.scores track by $index">{{obj.score.toFixed(2)}}</td>
+ 					<td>{{item.totalScore.toFixed(2)}}</td>
  				</tr>
  			</table>
  		</div> 		

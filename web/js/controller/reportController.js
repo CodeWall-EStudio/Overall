@@ -163,7 +163,11 @@ angular.module('ov.controllers.report',[
                }else{
                     url += '&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
                }
-                
+
+                if(flag){
+                    url = '/api/indicatorscore/summary?_='+ts+'&term='+$root.nowTerm._id+'&teacherGroup='+$root.nowTeacherGroup._id+'&export='+$root.nowQuotaGroup.name+'报表';
+                }
+
                 window.location.href=url;
             }
             //
