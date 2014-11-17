@@ -86,6 +86,11 @@ angular.module('ov.controllers.import',[
 			}
 			$root.$emit(QUOTA_CHANGE);
 		}
+
+		$root.selectSearchQuotaGroup = function(idx){
+
+		}
+		
 		//编辑指标组
 		$root.editQuotaGroup = function(){
 

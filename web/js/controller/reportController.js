@@ -88,10 +88,17 @@ angular.module('ov.controllers.report',[
             });
             //事件通知 老师分组变更
             $root.$on(TEACHREGROUP_CHANGE,function(){
-                //Report.getReportList();
-                Report.getSummary({
-                    teacherGroup : $root.nowTeacherGroup._id
-                });                
+                if($root.reportMode == 'group'){
+                    Report.getSummaryList({
+                        teacherGroup : $root.nowTeacherGroup._id,
+                        indicatorGroup : $root.nowQuotaGroup._id
+                    }); 
+                }else{
+                    Report.getSummary({
+                        teacherGroup : $root.nowTeacherGroup._id
+                    });
+                }
+
             });
             //事件通知 指标组变更
             /*切换到指标组的时候需要显示详细的得分，只切换老师分组不用该显示模式*/
@@ -102,7 +109,9 @@ angular.module('ov.controllers.report',[
                         teacherGroup : $root.nowTeacherGroup._id
                     }); 
                 }else{
-                    $root.reportMode  = 'group';
+                    if($root.reportMode !== 'search'){
+                        $root.reportMode  = 'group';
+                    }
                     Report.getSummaryList({
                         teacherGroup : $root.nowTeacherGroup._id,
                         indicatorGroup : $root.nowQuotaGroup._id
@@ -115,7 +124,6 @@ angular.module('ov.controllers.report',[
             $root.showMore = function(id,name){
                 var tmp  = {};
                 tmp.name = name;
-                console.log(id,$root.reportDetail);
                 $root.reportMore = $.extend(tmp,$root.reportDetail.results[id]);
             }
 
@@ -134,9 +142,16 @@ angular.module('ov.controllers.report',[
             $root.startSearch = function(){
                 $root.searchKeyWord = $('#searchKey').val();
                 $root.reportMode = 'search';
+                if($root.nowQuotaGroup._id !== -1){
+                    Report.getSummaryList({
+                        teacherName : $root.searchKeyWord,
+                        indicatorGroup : $root.nowQuotaGroup._id
+                    }); 
+                }else{
                     Report.getSummary({
                         teacherName : $root.searchKeyWord
                     });
+                }                    
             }
 
             //导出报表

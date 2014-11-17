@@ -12,6 +12,7 @@ angular.module('ov.services.report',[
 	['$rootScope','$location','$http','MSG.ERROR.CODE',function($root,$location,$http,MSG){
 
                 //输出个人的详细资料
+                /*
                 function getReportList(param,success,error){
                     param = param || {};
                     var ts = new Date().getTime();
@@ -53,6 +54,7 @@ angular.module('ov.services.report',[
                             if(error) error(data, status);
                     }); 
                 }
+                */
 
                 //输出个人的详细资料
                 function getReport(param,success,error){
@@ -222,7 +224,7 @@ angular.module('ov.services.report',[
                 }
 
                 return {
-                    getReportList : getReportList,
+                    //getReportList : getReportList,
                     getSummaryList : getSummaryList,
                     getReport : getReport,
                     getSummary : getSummary,
