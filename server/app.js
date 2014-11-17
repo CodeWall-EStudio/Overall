@@ -77,6 +77,8 @@ app.use(express.static(staticDir, {
 
 /////////// API 相关 ///////////////
 
+app.get('/docs', routes.docs);
+
 // 设置跨域请求头
 // app.all('/api/*', routes.setXHR2Headers);
 
