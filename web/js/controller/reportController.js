@@ -124,6 +124,7 @@ angular.module('ov.controllers.report',[
             $root.showMore = function(id,name){
                 var tmp  = {};
                 tmp.name = name;
+                console.log(id,name);
                 $root.reportMore = $.extend(tmp,$root.reportDetail.results[id]);
             }
 

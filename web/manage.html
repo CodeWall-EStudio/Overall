@@ -414,9 +414,9 @@
 				<tr ng-repeat="item in relatList">
 					<td>{{item.id}}</td>
 					<td>{{item.name}}</td>
-					<td>{{item.student}}-{{questionOrderMap[item.student].name}}</td>
-					<td ng-repeat="obj in item.teachers">
-						{{obj.value}}-{{questionOrderMap[item.student].name}}
+					<td title="{{questionOrderMap[item.student].name}}">{{item.student}}</td>
+					<td ng-repeat="obj in item.teachers" title="{{questionOrderMap[item.student].name}}">
+						{{obj.value}}
 					</td>
 				</tr>
 			</table> 			
