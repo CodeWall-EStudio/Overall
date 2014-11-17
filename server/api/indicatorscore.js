@@ -808,7 +808,9 @@ function calculateTeacherEOIScores(parameter, callback) {
                     result.eoIndicateScore = doc;
                     Logger.debug('[calculateTeacherEOIScores] >>> ', doc);
                     if (doc.questionnaire) {
-                        param._id = doc.questionnaire;
+                        param = {
+                            _id: doc.questionnaire
+                        };
                     }
                     totalScore += doc.totalScore;
                     console.log(ship.id, count++);
