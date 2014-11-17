@@ -162,10 +162,10 @@
  					<td>{{item.indicators[0].name}}</td>
  					<td>{{reportDetail.results[item._id].list[0].score}}</td>
  					<td>{{reportDetail.results[item._id].totalScore}}</td>
- 					<td>{{parseFloat(reportDetail.results[item._id].averageScore).toFixed(2)}}</td>
- 					<td>{{reportDetail.results[item._id].weightedScore}}</td>
+ 					<td>{{reportDetail.results[item._id].averageScore.toFixed(2)}}</td>
+ 					<td>{{reportDetail.results[item._id].weightedScore.toFixed(2)}}</td>
  					<td>
- 						{{parseFloat(reportDetail.results[item._id].averageWeightedScore).toFixed(2)}}
+ 						{{reportDetail.results[item._id].averageWeightedScore.toFixed(2)}}
  					</td>
  				</tr>
  			</table>
