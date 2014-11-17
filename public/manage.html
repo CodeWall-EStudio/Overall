@@ -5,7 +5,7 @@
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>综合评价- 后台管理</title>
-	<link rel="stylesheet" href="css/main.css?t=1416232566832">
+	<link rel="stylesheet" href="css/main.css?t=1416234690847">
 </head>
 <body  ng-controller="manageController">
  	<div class="header-blue">
@@ -404,9 +404,9 @@
 				<tr ng-repeat="item in relatList">
 					<td>{{item.id}}</td>
 					<td>{{item.name}}</td>
-					<td>{{item.student}}</td>
+					<td>{{item.student}}-{{questionOrderMap[item.student].name}}</td>
 					<td ng-repeat="obj in item.teachers">
-						{{obj.value}}
+						{{obj.value}}-{{questionOrderMap[item.student].name}}
 					</td>
 				</tr>
 			</table> 			
@@ -456,6 +456,6 @@
 
 	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/manage.js?t=1416232566832"></script>
+	<script src="js/manage.js?t=1416234690847"></script>
 </body>
 </html>

@@ -12,6 +12,7 @@ angular.module('ov.controllers.question',[
         $root.questionOrder = 1;
         $root.modifyQuestionName = '';
         $root.modifyQuestionId = '';
+        $root.questionOrderMap = {};
 
         $scope.questionOrder = {
             name : 0,

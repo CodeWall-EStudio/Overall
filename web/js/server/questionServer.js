@@ -77,6 +77,9 @@ angular.module('ov.services.question',[
                                 return item._id === $root.nowQuestion._id;
                             })
                         }
+                        _.each(data.result,function(item){
+                            $root.questionOrderMap[item.order] = item;
+                        });
                         $root.$emit(QUEST_LOAD);
                     }else{
                         $root.$emit(MSG,data.err);
