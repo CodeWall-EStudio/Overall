@@ -162,10 +162,10 @@
  					<td>{{item.indicators[0].name}}</td>
  					<td>{{reportDetail.results[item._id].list[0].score}}</td>
  					<td>{{reportDetail.results[item._id].totalScore}}</td>
- 					<td>{{reportDetail.results[item._id].averageScore}}</td>
+ 					<td>{{parseFloat(reportDetail.results[item._id].averageScore).toFixed(2)}}</td>
  					<td>{{reportDetail.results[item._id].weightedScore}}</td>
  					<td>
- 						{{reportDetail.results[item._id].averageWeightedScore}}
+ 						{{parseFloat(reportDetail.results[item._id].averageWeightedScore).toFixed(2)}}
  					</td>
  				</tr>
  			</table>
@@ -189,7 +189,7 @@
 	 		<div class="content-info" >
 				<dl class="content-summary" >
 					<dt>
-						总分：{{oneReport.summary.totalScore}} 平均分： {{oneReport.summary.averageScore}}
+						总分：{{oneReport.summary.totalScore}} 平均分： {{parseFloat(oneReport.summary.averageScore).toFixed(2)}}
 					</dt>
 					<dt>
 						<span class="tit">{{oneReport.appraisers[nowSelectedUserIdx].name}} 打分：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.appraisers[nowSelectedUserIdx].questionnare.name}}
@@ -228,7 +228,7 @@
 
 				<dl class="content-summary" >
 					<dt>
-						总分：{{oneReport.summary.totalScore}} 平均分： {{oneReport.summary.averageScore}}
+						总分：{{oneReport.summary.totalScore}} 平均分： {{parseFloat(oneReport.summary.averageScore).toFixed(2)}}
 					</dt>
 					<dt>
 						<span class="tit">{{oneReport.students[nowSelectedUserIdx].name}} 打分：{{oneReport.students[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.questionnare.name}}
