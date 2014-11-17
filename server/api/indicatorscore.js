@@ -404,7 +404,7 @@ function createReport(teacher, indGroups, callback) {
             ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
                 Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
                 var totalScore = 0;
-                list = _.compact(list);
+                // list = _.compact(list);
                 list.forEach(function(item) {
                     totalScore += (item.score || 0);
                 });
@@ -434,7 +434,9 @@ function createReport(teacher, indGroups, callback) {
                         type: ind.gatherType === 2 ? 0 : 1,
                         appraiseeId: teacher.id
                     }, ep.group('EOIndicateAverageScores.findOne', function(doc) {
-                        score.score = doc && doc.averageScore || 0;
+                        if(doc && doc.averageScore){
+                            score.score = doc.averageScore;
+                        }
                         return score;
                     }));
                 } else {
