@@ -65,76 +65,6 @@ exports.import = function(req, res) {
 };
 
 
-function createSummary(teacher, indGroups, callback) {
-
-    var ep = new EventProxy();
-    ep.fail(callback);
-
-    // 把计算出来的结果都放在 result 里方便使用
-    var result = {
-        teacherId: teacher.id,
-        teacherName: teacher.name,
-        totalScore: 0,
-        scores: {}
-    };
-
-    ep.after('indGroups.forEach', indGroups.length, function() {
-
-        for (var i in result.scores) {
-            result.totalScore += result.scores[i];
-        }
-
-        callback(null, result);
-
-    });
-
-    indGroups.forEach(function(indGroup) {
-
-
-        db.IndicatorScores.findOne({
-            term: indGroup.term,
-            teacherId: teacher.id,
-            indicatorGroup: indGroup
-        }, function(err, indScore) {
-            if (err) {
-                return callback(err);
-            }
-
-            ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
-                Logger.debug('[createSummary#EOIndicateAverageScores.findOne] result: ', list);
-                var totalScore = 0;
-                list.forEach(function(item) {
-                    totalScore += item && item.averageScore || 0;
-                });
-
-                result.scores[indGroup._id] = totalScore;
-                ep.group('indGroups.forEach')();
-
-            });
-
-            indGroup.indicators.forEach(function(ind) {
-                // gatherType 1: 文件导入, 2: 互评平均分, 3: 生评平均分
-                if (ind.gatherType === 2 || ind.gatherType === 3) {
-
-                    db.EOIndicateAverageScores.findOne({
-                        term: indGroup.term,
-                        type: ind.gatherType === 2 ? 0 : 1,
-                        appraiseeId: teacher.id
-                    }, ep.group('EOIndicateAverageScores.findOne'));
-                } else {
-                    var score = indScore ? indScore.scores[ind._id] : {};
-                    ep.group('EOIndicateAverageScores.findOne')(null, {
-                        averageScore: Number(score && score.score || 0)
-                    });
-                }
-            });
-
-        }); // end IndicatorScores.findOne
-
-    }); // end indGroups.forEach
-
-}
-
 /**
  * 创建评价概览, 与 createIndicatorDetail 相比, 少了各个指标的平均分
  */
@@ -474,8 +404,9 @@ function createReport(teacher, indGroups, callback) {
             ep.after('EOIndicateAverageScores.findOne', indGroup.indicators.length, function(list) {
                 Logger.debug('[createReport#EOIndicateAverageScores.findOne] result: ', list);
                 var totalScore = 0;
+                list = _.compact(list);
                 list.forEach(function(item) {
-                    totalScore += item && item.score || 0;
+                    totalScore += (item.score || 0);
                 });
 
                 result.scores[indGroup._id] = {
