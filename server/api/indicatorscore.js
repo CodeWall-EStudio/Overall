@@ -188,7 +188,37 @@ function createIndicatorSummary(parameter, callback) {
 
         // 2.
         teachers.forEach(function(teacher) {
-            createSummary(teacher, indGroups, ep.group('createSummary'));
+            createReport(teacher, indGroups, ep.group('createSummary', function(result){
+                // var result = {
+                //     teacherId: teacher.id,
+                //     teacherName: teacher.name,
+                //     totalScore: 0,
+                //     scores: {}
+                // };
+                // "scores": {
+                //     "544538049b8385492aa1d6bf": {
+                //     "totalScore": 0,
+                //     "weightedScore": 0,
+                //     "list": [
+                //     {
+                //     "score": 0,
+                //     "indicator": {
+                //     "name": "指标1",
+                //     "order": 1,
+                //     "score": 8,
+                //     "gatherType": 1,
+                //     "desc": "×××××",
+                //     "_id": "544d17a4fa678b5114c9137e"
+                //     }
+                //     },
+
+                var oldScores = result.scores;
+                result.scores = {};
+                for (var i in oldScores) {
+                    result.scores[i] = oldScores[i].totalScore;
+                }
+                return result;
+            }));
         });
 
     });
