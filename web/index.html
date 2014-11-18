@@ -220,7 +220,7 @@
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.grade}}</td>
 	 					<td>{{item.class}}</td>
-	 					<td>{{item.eoIndicateScore.totalScore || 0}}</td>
+	 					<td>{{item.eoIndicateScore.totalScore.toFixed(2) || 0}}</td>
 	 				</tr>
 	 			</table>
 	 		</div>	
@@ -228,7 +228,7 @@
 
 				<dl class="content-summary" >
 					<dt>
-						总分：{{oneReport.summary.totalScore}} 平均分： {{parseFloat(oneReport.summary.averageScore).toFixed(2)}}
+						总分：{{oneReport.summary.totalScore.toFixed(2)}} 平均分： {{oneReport.summary.averageScore.toFixed(2)}}
 					</dt>
 					<dt>
 						<span class="tit">{{oneReport.students[nowSelectedUserIdx].name}} 打分：{{oneReport.students[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.questionnare.name}}
@@ -297,7 +297,7 @@
 	 					<tr ng-repeat="item in reportMore.list">
 							<td>{{item.indicator.name}}</td>
 		 					<td>{{item.score}}</td>
-		 					<td>{{item.averageScore}}</td>
+		 					<td>{{item.averageScore.toFixed(2)}}</td>
 	 					</tr>
  					</table>
  				</div>
