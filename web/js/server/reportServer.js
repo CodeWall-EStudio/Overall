@@ -75,10 +75,13 @@ angular.module('ov.services.report',[
                             if(data.err === 0){
                                     $root.reportDetail = data.result;
                                     var num = 0;
+                                    var pnum = 0;
                                     _.each(data.result.results,function(item){
                                         num += item.weightedScore;
+                                        pnum += item.averageWeightedScore;
                                     }); 
                                     $root.reportDetail.allNum = num.toFixed(2);
+                                    $root.reportDetail.allPNum = pnum.toFixed(2);
                                     console.log('拉报表成功',data.result);
                             }else{
                                 $root.$emit(MSG,data.err);
