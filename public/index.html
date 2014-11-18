@@ -4,8 +4,8 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>综合评价</title>
-	<link rel="stylesheet" href="css/main.css?t=1416246506502">
+	<title>综合诊断</title>
+	<link rel="stylesheet" href="css/main.css?t=1416312366756">
 </head>
 <body ng-controller="indexController">
  	<div class="header-blue">
@@ -116,11 +116,11 @@
  				</tr>
  			</table>
  		</div>
- 		<div class="content-report"  ng-show="reportMode === 'group'">
- 			<table class="table table-striped table-hover table-width" style="min-width:{{nowQuotaGroup.indicators.length*60}}px">
+ 		<div class="content-report"  ng-show="reportMode === 'group'" style="overflow:auto;">
+ 			<table class="table table-striped table-hover table-width">
  				<tr>
  					<th width="60">姓名</th>
- 					<th ng-repeat="item in nowQuotaGroup.indicators"  width="60">{{item.name}}</th>
+ 					<th ng-repeat="item in nowQuotaGroup.indicators" >{{item.name}}</th>
  					<th width="120">指标组总分</th>
  				</tr>
  				<tr ng-repeat="item in reportSummary" ng-click="showOneReport(item)">
@@ -133,7 +133,7 @@
  		<!--评价报告详情-->
  		<div class="content-report" ng-show="(reportMode === 'show' || reportMode === 'user') && reportSMode === 'oneuse'">
  			<div>
- 				总分:{{reportDetail.totalScore}}　同组平均分　同组排名:{{reportDetail.ranking}}　同组人数:{{reportDetail.totalTeacher}}
+ 				总分:{{reportDetail.totalScore}}　同组平均分{{reportDetail.averageScore.toFixed(2)}}　同组排名:{{reportDetail.ranking}}　同组人数:{{reportDetail.totalTeacher}}
  			</div>
  			<table class="table table-striped table-hover">
  				<tr>
@@ -210,7 +210,7 @@
 	 					<td>{{item.name}}</td>
 	 					<td>{{item.grade}}</td>
 	 					<td>{{item.class}}</td>
-	 					<td>{{item.eoIndicateScore.totalScore || 0}}</td>
+	 					<td>{{item.eoIndicateScore.totalScore.toFixed(2) || 0}}</td>
 	 				</tr>
 	 			</table>
 	 		</div>	
@@ -218,7 +218,7 @@
 
 				<dl class="content-summary" >
 					<dt>
-						总分：{{oneReport.summary.totalScore}} 平均分： {{parseFloat(oneReport.summary.averageScore).toFixed(2)}}
+						总分：{{oneReport.summary.totalScore.toFixed(2)}} 平均分： {{oneReport.summary.averageScore.toFixed(2)}}
 					</dt>
 					<dt>
 						<span class="tit">{{oneReport.students[nowSelectedUserIdx].name}} 打分：{{oneReport.students[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.questionnare.name}}
@@ -287,7 +287,7 @@
 	 					<tr ng-repeat="item in reportMore.list">
 							<td>{{item.indicator.name}}</td>
 		 					<td>{{item.score}}</td>
-		 					<td>{{item.averageScore}}</td>
+		 					<td>{{item.averageScore.toFixed(2)}}</td>
 	 					</tr>
  					</table>
  				</div>
@@ -316,6 +316,6 @@
 	<div ng-controller="msgController"></div>
  	<script src="js/lib/jslib.js"></script>
 
-	<script src="js/index.js?t=1416246506502"></script>
+	<script src="js/index.js?t=1416312366756"></script>
 </body>
 </html>

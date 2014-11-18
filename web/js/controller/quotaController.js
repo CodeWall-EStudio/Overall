@@ -19,7 +19,8 @@ angular.module('ov.controllers.import',[
 		$root.defQuota = {
 			name : '概要',
 			_id : -1
-		}		
+		}	
+		$root.nowDesc = '';	
 
 		//指标排序
 		$scope.quotaOrder = {
@@ -89,6 +90,10 @@ angular.module('ov.controllers.import',[
 
 		$root.selectSearchQuotaGroup = function(idx){
 
+		}
+
+		$root.showQuotaDesc = function(idx,id,desc){
+			$root.nowDesc = desc;
 		}
 		
 		//编辑指标组

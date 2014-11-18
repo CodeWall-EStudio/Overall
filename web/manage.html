@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="author" content="hongyuan" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>综合评价- 后台管理</title>
+	<title>综合诊断- 后台管理</title>
 	<!-- build:maincss -->
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/main.css" />  
@@ -347,7 +347,7 @@
  						<th ng-click="orderQuotaGroup('score')" width="60">分值<span class="caret" ng-class="{uaret:quotaOrder['score']}"></span></th>
  						<th ng-click="orderQuotaGroup('gatherType')" width="60">采集方式<span class="caret" ng-class="{uaret:quotaOrder['gatherType']}"></span></th>
  					</tr>
- 					<tr ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators">
+ 					<tr ng-repeat="item in quotaGroupMap[nowQuotaGroup._id].indicators"  ng-click="showQuotaDesc($index,item._id,item.desc)">
  						<td>{{nowQuotaGroup.order}}-{{item.order}}</td>
  						<td>{{item.name}}</td>
  						<td>{{item.score}}</td>
@@ -355,6 +355,9 @@
  					</tr>
  				</table>
  			</div> 	
+ 			<div class="content-info" >
+ 				<div>{{nowDesc}}</div>
+ 			</div>
 
 		 	<div class="modal fade" id="newQuotaGroup" tabindex="-1" role="dialog" aria-hidden="true">
 		 		<div class="modal-dialog">	 		
@@ -415,11 +418,11 @@
 					<td>{{item.id}}</td>
 					<td>{{item.name}}</td>
 					<td title="{{questionOrderMap[item.student].name}}">{{item.student}}</td>
-					<td ng-repeat="obj in item.teachers" title="{{questionOrderMap[item.student].name}}">
+					<td ng-repeat="obj in item.teachers" title="{{questionOrderMap[obj.value].name}}">
 						{{obj.value}}
 					</td>
 				</tr>
-			</table> 			
+			</table> 
  		</div>
 
  		 	<div class="modal fade" id="authManage" tabindex="-1" role="dialog" aria-hidden="true">

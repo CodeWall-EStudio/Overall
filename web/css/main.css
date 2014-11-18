@@ -17,6 +17,9 @@ a{
 .nav .disabled{
 	color:#ddd;
 }
+th{
+	white-space: nowrap;
+}
 
 .dropdown-menu{
 	max-height:320px;
@@ -28,7 +31,9 @@ a{
 	min-height:500px;
 	height:100%;
 }
-
+.content-report{
+	overflow:auto;
+}
 .content-tit{
 	background:url(imgs/tit.png) no-repeat;
 	height:56px;
