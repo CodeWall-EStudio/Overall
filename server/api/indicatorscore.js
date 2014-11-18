@@ -752,7 +752,7 @@ function calculateTeacherEOIScores(parameter, callback) {
                 name: ship.name,
                 teacherGroup: null,
                 eoIndicateScore: null,
-                questionnare: null
+                questionnaire: null
             };
             results.push(result);
             var count = 0;
@@ -796,7 +796,7 @@ function calculateTeacherEOIScores(parameter, callback) {
 
                 // 3.
                 db.Questionnaires.findOne(param, ep.group('handleShips', function(doc) {
-                    result.questionnare = doc;
+                    result.questionnaire = doc;
                     console.log(ship.id, count++);
                 }));
             }));
@@ -823,23 +823,12 @@ function calculateStudentEOIScores(parameter, callback) {
 
     var results = [];
     var totalScore = 0;
-    var questionnare = null;
 
     // 1. 拉教师所在班级, 
     // 2. 拉属于这些班级的所有学生, 
     // 3. 拉学生的打分结果
     // 4. 拉打分用的问卷
-    ep.after('handleShips', 2, function() {
-
-        callback(null, {
-            summary: {
-                totalScore: totalScore,
-                averageScore: totalScore / (results.length || 0)
-            },
-            questionnare: questionnare,
-            students: results
-        });
-    });
+    
 
     // 先确认被评分人是否需要生评
     var param = {
@@ -869,9 +858,7 @@ function calculateStudentEOIScores(parameter, callback) {
         db.Questionnaires.findOne({
             term: term,
             order: ship.student
-        }, ep.group('handleShips', function(doc) {
-            questionnare = doc;
-        }));
+        }, ep.doneLater('Questionnaires.findOne'));
 
     }); // end RelationShips.findOne
 
@@ -901,9 +888,10 @@ function calculateStudentEOIScores(parameter, callback) {
 
     ep.on('Students.find', function(students) {
 
-        if (!students.length) {
-            return ep.group('handleShips')();
-        }
+        ep.after('EOIndicateScores.find', students.length, function(){
+            ep.emit('EOIndicateScores.findAll', results);
+        });
+
         students.forEach(function(student) {
 
             var result = {
@@ -923,7 +911,7 @@ function calculateStudentEOIScores(parameter, callback) {
                 type: 1
             };
             Logger.debug('[calculateStudentEOIScores#EOIndicateScores.findOne] query', param);
-            db.EOIndicateScores.findOne(param, ep.group('handleShips', function(doc) {
+            db.EOIndicateScores.findOne(param, ep.group('EOIndicateScores.find', function(doc) {
                 if (doc) {
                     result.eoIndicateScore = doc;
                     totalScore += doc.totalScore;
@@ -935,7 +923,17 @@ function calculateStudentEOIScores(parameter, callback) {
 
     }); // end Students.find
 
+    ep.all('Questionnaires.findOne', 'EOIndicateScores.findAll', function(quest, results){
 
+        callback(null, {
+            summary: {
+                totalScore: totalScore,
+                averageScore: totalScore / (results.length || 0)
+            },
+            questionnaire: quest,
+            students: results
+        });
+    });
 }
 
 /**
