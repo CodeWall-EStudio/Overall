@@ -73,7 +73,12 @@ angular.module('ov.services.report',[
                         .success(function(data,status){
                             //conventStudent(data.student);
                             if(data.err === 0){
-                                    $root.reportDetail = data.result;     
+                                    $root.reportDetail = data.result;
+                                    var num = 0;
+                                    _.each(data.result.results,function(item){
+                                        num += item.weightedScore;
+                                    }); 
+                                    $root.reportDetail.allNum = num.toFixed(2);
                                     console.log('拉报表成功',data.result);
                             }else{
                                 $root.$emit(MSG,data.err);
