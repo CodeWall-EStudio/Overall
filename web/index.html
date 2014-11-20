@@ -189,10 +189,10 @@
 	 		<div class="content-info" >
 				<dl class="content-summary" >
 					<dt>
-						总分：{{oneReport.summary.totalScore}} 平均分： {{parseFloat(oneReport.summary.averageScore).toFixed(2)}}
+						总分：{{oneReport.summary.totalScore}} 平均分： {{oneReport.summary.averageScore.toFixed(2)}}
 					</dt>
 					<dt>
-						<span class="tit">{{oneReport.appraisers[nowSelectedUserIdx].name}} 打分：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.totalScore}}</span> 问卷：{{oneReport.appraisers[nowSelectedUserIdx].questionnaire.name}}
+						<span class="tit">{{oneReport.appraisers[nowSelectedUserIdx].name}} 打分：{{oneReport.appraisers[nowSelectedUserIdx].eoIndicateScore.totalScore || 0}}</span> 问卷：{{oneReport.appraisers[nowSelectedUserIdx].questionnaire.name}}
 					</dt>
 				</dl>
 				<dl class="content-score" ng-repeat="item in oneReport.appraisers[nowSelectedUserIdx].questionnaire.questions">	

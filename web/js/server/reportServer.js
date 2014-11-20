@@ -241,6 +241,7 @@ angular.module('ov.services.report',[
                             $root.oneReport.questionMap[item._id] = item;
                         });
                     }
+                    //console.log($root.oneReport);
                 }
 
                 return {
