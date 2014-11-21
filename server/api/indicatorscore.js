@@ -778,7 +778,7 @@ function calculateTeacherEOIScores(parameter, callback) {
                 name: 1
             }, ep.group('handleShips', function(doc) {
                 result.teacherGroup = doc;
-                console.log(teacher.id, count++, evaluationType);
+                // console.log(teacher.id, count++, evaluationType);
             }));
 
             // 2.
@@ -803,13 +803,13 @@ function calculateTeacherEOIScores(parameter, callback) {
                         };
                     }
                     totalScore += doc.totalScore;
-                    console.log(teacher.id, count++);
+                    // console.log(teacher.id, count++);
                 }
 
                 // 3.
                 db.Questionnaires.findOne(param, ep.group('handleShips', function(doc) {
                     result.questionnaire = doc;
-                    console.log(teacher.id, count++);
+                    // console.log(teacher.id, count++);
                 }));
             }));
 
