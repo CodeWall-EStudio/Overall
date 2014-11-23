@@ -2,8 +2,8 @@
     angular.module('index', [
         //'ov.controllers.grade', //年级列表
         'ov.controllers.report', //导航条
-        'ov.controllers.reportmore', //更多报表信息
-        'ov.controllers.reportinfo', //报表详情
+        // 'ov.controllers.reportmore', //更多报表信息
+        // 'ov.controllers.reportinfo', //报表详情
         'ov.controllers.toolbar', //工具条
         'ov.controllers.relat', //工具条
         'ov.controllers.term', //学期模块

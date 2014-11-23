@@ -41,13 +41,13 @@ var jqlib = [
   src+'/js/lib/messenger.min.js'
 ];
 var indexjs = [
-	src+'/js/constant/contant.js',
+	src+'/js/constant/constant.js',
 	src+'/js/server/gradeServer.js',
 	src+'/js/controller/gradeController.js',
 	src+'/js/index.js'	
 ];
 var mangaejs = [
-  src+'/js/constant/contant.js',
+  src+'/js/constant/constant.js',
   src+'/js/server/termServer.js',
   src+'/js/server/importServer.js',
   src+'/js/server/loginServer.js',
@@ -72,7 +72,7 @@ var mangaejs = [
   src+'/js/manage.js'
 ];
 var importjs = [
-  src+'/js/constant/contant.js',
+  src+'/js/constant/constant.js',
   src+'/js/server/importServer.js',
   src+'/js/server/quotaServer.js',
   src+'/js/server/termServer.js',
@@ -89,7 +89,7 @@ var importjs = [
   src+'/js/import.js'
 ];
 var overjs = [
-    src+'/js/constant/contant.js',
+    src+'/js/constant/constant.js',
     src+'/js/server/importServer.js',
     src+'/js/server/quotaServer.js',
     src+'/js/server/questionServer.js',
@@ -112,7 +112,7 @@ var overjs = [
 ];
 
 var loginjs = [
-    src+'/js/constant/contant.js',
+    src+'/js/constant/constant.js',
     src+'/js/server/loginServer.js',
     src+'/js/server/utilServer.js',
     src+'/js/controller/loginController.js',
@@ -120,7 +120,7 @@ var loginjs = [
     src+'/js/login.js'
 ];
 var indexjs = [
-    src+'/js/constant/contant.js',
+    src+'/js/constant/constant.js',
     src+'/js/server/termServer.js',
     src+'/js/server/reportServer.js',
     src+'/js/server/loginServer.js',
@@ -135,8 +135,8 @@ var indexjs = [
     src+'/js/controller/gradeController.js',
     src+'/js/controller/termController.js',
     src+'/js/controller/reportController.js',
-    src+'/js/controller/reportmoreController.js',
-    src+'/js/controller/reportinfoController.js',
+    // src+'/js/controller/reportmoreController.js',
+    // src+'/js/controller/reportinfoController.js',
     src+'/js/controller/quotaController.js',
     src+'/js/controller/toolbarController.js',
     src+'/js/controller/teacherController.js',
@@ -166,14 +166,14 @@ gulp.task('concat',function(){
 		.pipe(concat('import.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('./public/js'));	
-            gulp.src(loginjs)
-                .pipe(concat('login.js'))
-                .pipe(uglify())
-                .pipe(gulp.dest('./public/js'));  
-            gulp.src(overjs)
-                .pipe(concat('over.js'))
-                .pipe(uglify())
-                .pipe(gulp.dest('./public/js'));                      
+  gulp.src(loginjs)
+      .pipe(concat('login.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('./public/js'));  
+  gulp.src(overjs)
+      .pipe(concat('over.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest('./public/js'));                      
 	console.log('concat complite!')			;
 });
 
@@ -185,8 +185,8 @@ gulp.task('build',function(){
 		'managecss' : 'css/manage.css?t='+new Date().getTime(),
 		'lib' : 'js/lib/jslib.js',
 		'indexjs' : 'js/index.js?t='+new Date().getTime(),
-                            'overjs' : 'js/over.js?t='+new Date().getTime(),
-                            'loginjs' : 'js/login.js?t='+new Date().getTime(),
+    'overjs' : 'js/over.js?t='+new Date().getTime(),
+    'loginjs' : 'js/login.js?t='+new Date().getTime(),
 		'managejs' : 'js/manage.js?t='+new Date().getTime(),
 		'importjs' : 'js/import.js?t='+new Date().getTime()
 	}))
