@@ -699,33 +699,45 @@ function calculateTeacherEOIScores(parameter, callback) {
     ep.fail(callback);
 
     // 拉被评分人
+    // var param = {
+    //     term: term,
+    //     teachers: {
+    //         $elemMatch: {
+    //             id: appraiseeId,
+    //             value: {
+    //                 $gt: 0
+    //             }
+    //         }
+    //     },
+    //     id: {
+    //         $ne: appraiseeId
+    //     }
+    // };
+
+    // RelationShips 的行是被评价人, 值是他能否被别人评价
     var param = {
         term: term,
-        teachers: {
-            $elemMatch: {
-                id: appraiseeId,
-                value: {
-                    $gt: 0
-                }
-            }
-        },
-        id: {
-            $ne: appraiseeId
-        }
-
+        id: appraiseeId
     };
 
 
-
     Logger.debug('[calculateTeacherEOIScores] query', param);
-    db.RelationShips.find(param, function(err, ships) {
+    db.RelationShips.findOne(param, function(err, ship) {
         if (err) {
             return callback(err);
         }
         var results = [];
         var totalScore = 0;
 
-        ep.after('handleShips', ships.length * 3, function() {
+        // 过滤掉 他自己
+        var teachers = _.filter(ship.teachers, function(ship){
+            if(ship.id !== appraiseeId && ship.value !== 0){
+                return true;
+            }
+            return false;
+        });
+
+        ep.after('handleShips', teachers.length * 3, function() {
             callback(null, {
                 summary: {
                     totalScore: totalScore,
@@ -735,21 +747,21 @@ function calculateTeacherEOIScores(parameter, callback) {
             });
         });
 
-        ships.forEach(function(ship) {
+        teachers.forEach(function(teacher) {
             // 1. 拉评分人所在教师分组, 
             // 2. 拉评分人的打分结果, 
             // 3. 拉打分用的问卷
-            var evaluationType = 0;
-            for (var i = 0; i < ship.teachers.length; i++) {
-                if (ship.teachers[i].id === appraiseeId) {
-                    evaluationType = ship.teachers[i].value;
-                    break;
-                }
-            }
+            var evaluationType = teacher.value;
+            // for (var i = 0; i < ship.teachers.length; i++) {
+            //     if (ship.teachers[i].id === appraiseeId) {
+            //         evaluationType = ship.teachers[i].value;
+            //         break;
+            //     }
+            // }
 
             var result = {
-                id: ship.id,
-                name: ship.name,
+                id: teacher.id,
+                name: teacher.name,
                 teacherGroup: null,
                 eoIndicateScore: null,
                 questionnaire: null
@@ -760,20 +772,20 @@ function calculateTeacherEOIScores(parameter, callback) {
             // 1.
             db.TeacherGroups.findOne({
                 term: term,
-                'teachers.id': ship.id
+                'teachers.id': teacher.id
             }, {
                 id: 1,
                 name: 1
             }, ep.group('handleShips', function(doc) {
                 result.teacherGroup = doc;
-                console.log(ship.id, count++, evaluationType);
+                // console.log(teacher.id, count++, evaluationType);
             }));
 
             // 2.
             param = {
                 term: term,
                 appraiseeId: appraiseeId,
-                appraiserId: ship.id,
+                appraiserId: teacher.id,
                 type: 0
             };
             Logger.debug('[calculateTeacherEOIScores#EOIndicateScores.findOne] query', param);
@@ -791,13 +803,13 @@ function calculateTeacherEOIScores(parameter, callback) {
                         };
                     }
                     totalScore += doc.totalScore;
-                    console.log(ship.id, count++);
+                    // console.log(teacher.id, count++);
                 }
 
                 // 3.
                 db.Questionnaires.findOne(param, ep.group('handleShips', function(doc) {
                     result.questionnaire = doc;
-                    console.log(ship.id, count++);
+                    // console.log(teacher.id, count++);
                 }));
             }));
 
