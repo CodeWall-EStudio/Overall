@@ -448,7 +448,7 @@ function createReport(teacher, indGroups, callback) {
                         appraiseeId: teacher.id
                     }, ep2.group('EOIndicateAverageScores.findOne', function(doc) {
                         if (doc && doc.averageScore) {
-                            score.score = doc.averageScore;
+                            score.score = doc.averageScore.toFixed(2);
                         } else {
                             score.score = 0;
                         }
@@ -599,9 +599,11 @@ function createIndicatorReport(parameter, callback) {
 
                 // 这个组的平均得分
                 result.results[j].averageScore = (groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1);
+                result.results[j].averageScore = result.results[j].averageScore.toFixed(2);
 
                 // 这个组的加权平均得分
                 result.results[j].averageWeightedScore = (groupIndicatorTotalScore[j + 'weight'] || 0) / (result.totalTeacher || 1);
+                result.results[j].averageWeightedScore = result.results[j].averageWeightedScore.toFixed(2);
 
                 for (var k = 0; k < result.results[j].list.length; k++) {
                     var it = result.results[j].list[k];
@@ -610,6 +612,7 @@ function createIndicatorReport(parameter, callback) {
                         var key = j + '.' + it.indicator._id;
 
                         it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
+                        it.averageScore = it.averageScore.toFixed(2);
                     }
 
                 }
@@ -617,6 +620,7 @@ function createIndicatorReport(parameter, callback) {
 
             // 教师组的平均分
             result.averageScore = groupTotalScore / (result.totalTeacher || 0);
+            result.averageScore = result.averageScore.toFixed(2);
 
             result.createTime = Date.now();
 
