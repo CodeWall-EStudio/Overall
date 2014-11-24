@@ -14,6 +14,8 @@ longfukang  ---老师
 yuhao  --老师
 hongyuan  ---系统管理员
 cairongguang --数据管理员
+luxinyan
+renxincheng
 */
 		var url = $location.absUrl();
 

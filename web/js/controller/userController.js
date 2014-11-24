@@ -76,7 +76,7 @@ angular.module('ov.controllers.user',[
                 return;
             }
             if(role & 0x4){
-                if(url.indexOf('import.html') < 0){
+                if(url.indexOf('import.html') < 0 && url.indexOf('overall.html') < 0){
                     window.location.href='/import.html';
                 }
                 return;
