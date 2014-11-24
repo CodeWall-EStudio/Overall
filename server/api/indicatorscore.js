@@ -448,7 +448,7 @@ function createReport(teacher, indGroups, callback) {
                         appraiseeId: teacher.id
                     }, ep2.group('EOIndicateAverageScores.findOne', function(doc) {
                         if (doc && doc.averageScore) {
-                            score.score = doc.averageScore;
+                            score.score = parseFloat(doc.averageScore.toFixed(2));
                         } else {
                             score.score = 0;
                         }
@@ -598,10 +598,10 @@ function createIndicatorReport(parameter, callback) {
                 // results 的每个元素是一个指标组的得分
 
                 // 这个组的平均得分
-                result.results[j].averageScore = (groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1);
+                result.results[j].averageScore = parseFloat(((groupIndicatorTotalScore[j] || 0) / (result.totalTeacher || 1)).toFixed(2));
 
                 // 这个组的加权平均得分
-                result.results[j].averageWeightedScore = (groupIndicatorTotalScore[j + 'weight'] || 0) / (result.totalTeacher || 1);
+                result.results[j].averageWeightedScore = parseFloat(((groupIndicatorTotalScore[j + 'weight'] || 0) / (result.totalTeacher || 1)).toFixed(2));
 
                 for (var k = 0; k < result.results[j].list.length; k++) {
                     var it = result.results[j].list[k];
@@ -609,14 +609,14 @@ function createIndicatorReport(parameter, callback) {
                         result.results[j].list[k] = it = it.toObject ? it.toObject() : it;
                         var key = j + '.' + it.indicator._id;
 
-                        it.averageScore = (groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1);
+                        it.averageScore = parseFloat(((groupIndicatorTotalScore[key] || 0) / (result.totalTeacher || 1)).toFixed(2));
                     }
 
                 }
             }
 
             // 教师组的平均分
-            result.averageScore = groupTotalScore / (result.totalTeacher || 0);
+            result.averageScore = parseFloat((groupTotalScore / (result.totalTeacher || 0)).toFixed(2));
 
             result.createTime = Date.now();
 
@@ -741,7 +741,7 @@ function calculateTeacherEOIScores(parameter, callback) {
             callback(null, {
                 summary: {
                     totalScore: totalScore,
-                    averageScore: totalScore / (results.length || 0)
+                    averageScore: parseFloat((totalScore / (results.length || 0)).toFixed(2))
                 },
                 appraisers: results
             });
@@ -940,7 +940,7 @@ function calculateStudentEOIScores(parameter, callback) {
         callback(null, {
             summary: {
                 totalScore: totalScore,
-                averageScore: totalScore / (results.length || 0)
+                averageScore: parseFloat((totalScore / (results.length || 0)).toFixed(2))
             },
             questionnaire: quest,
             students: results
