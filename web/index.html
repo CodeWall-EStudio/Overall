@@ -121,7 +121,7 @@
  					<td>
  						{{item.teacherName}}
  					</td>
- 					<td ng-repeat="obj in item.scores">{{obj.toFixed(2)}}</td>
+ 					<td ng-repeat="obj in item.scores">{{obj.weightedScore.toFixed(2)}}</td>
  					<td>{{item.totalScore.toFixed(2)}}</td>
  				</tr>
  			</table>
