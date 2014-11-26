@@ -43,6 +43,14 @@ angular.module('ov.controllers.report',[
                 teachergroupLoad=false, 
                    quotaLoad = false;
 
+            $root.getTotalWeight = function(item){
+                var all = 0;
+                _.each(item,function(obj){
+                    all += obj.weightedScore;
+                });
+                return all.toFixed(2);
+            }
+
             /*登陆之后再拉报表*/
             $root.$on(TERMLOAD,function(){
                 termLoad = true;
