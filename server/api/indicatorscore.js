@@ -142,7 +142,7 @@ function createIndicatorSummary(parameter, callback) {
                 //     }
                 //     },
 
-                result.scores = {};
+                //result.scores = {};
                 for (var i in result.scores) {
                     delete result.scores[i].list;
                 }
