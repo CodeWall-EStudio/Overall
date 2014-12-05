@@ -10,7 +10,7 @@
     "eventproxy": "0.3.1",
     "express": "3.4.8",
     "mongodb": "1.4.19",
-    "mongoose": "3.8.17",
+    "mongoose": "*",
     "multer": "0.1.6",
     "underscore": "1.7.0",
     "xlsjs": "0.7.1",
