@@ -25,6 +25,7 @@ renxincheng
 			0 : '操作成功!',
 			11 : '学期名称不能为空',
 			12 : '该学期还未激活',
+			100 : '该学生所在学期已经不存在, 被删除了吗?',
 			1001 : '您还没有登录!',
 			1004 : '没有找到资源!',
 			1010 : '您没有查看该资源的权限!',
@@ -52,6 +53,7 @@ renxincheng
 			if(parseInt(code)){
 				obj.type = 'error'
 			}
+			console.log(obj);
 			Messenger().post(obj);	
 		});
 

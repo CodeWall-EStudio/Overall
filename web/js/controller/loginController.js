@@ -11,6 +11,7 @@ angular.module('ov.controllers.login',[
         $scope.pwd = '';
 
         $scope.studentLogin = function(){
+            console.log($scope.username,$scope.pwd);
             Login.studentLogin({
                 name : $scope.username,
                 id : $scope.pwd
