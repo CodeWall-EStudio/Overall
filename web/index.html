@@ -71,9 +71,9 @@
  			<div class="toolbar-left">
  				<button class="btn btn-default" ng-click="returnReport()">返回报表</button>
  				查看详情 ： {{nowTeacher.teacherName}}（分组{{nowTeacherGroup.name}}）
- 				<button class="btn btn-default" ng-click="showReport(2)">评价报告</button>
- 				<button class="btn btn-default" ng-click="showReport(0)">互评详情</button>
- 				<button class="btn btn-default" ng-click="showReport(1)">生评明细</button>
+ 				<button class="btn btn-default" ng-click="showReport(2)">questionnaire</button>
+ 				<button class="btn btn-default" ng-click="showReport(0)">教师满意度详情</button>
+ 				<button class="btn btn-default" ng-click="showReport(1)">学生满意度详情</button>
 		
  			</div>		
  			<div class="toolbar-right">	
@@ -206,7 +206,7 @@
 				</dl>			
 	 		</div>
  		</div>
- 		<!--生评明细-->
+ 		<!--学生满意度详情-->
  		<div class="content-main" ng-show="(reportMode !== 'summary' && reportMode !== 'group' && reportMode !== 'search') && reportSMode === 'student'">
 	 		<div class="content-list" ng-controller="relatController">
 	 			<table class="table table-striped table-hover">
